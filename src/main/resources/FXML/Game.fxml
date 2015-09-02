@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
+   <children>
+      <Pane prefHeight="650.0" prefWidth="991.0" style="-fx-border-style: solid;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Canvas fx:id="canvas" height="650.0" width="960.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="lives1" layoutX="22.0" layoutY="678.0" prefHeight="50.0" prefWidth="300.0" style="-fx-border-style: solid;" />
+      <Pane fx:id="lives2" layoutX="680.0" layoutY="678.0" prefHeight="50.0" prefWidth="300.0" style="-fx-border-style: solid;" />
+      <Label layoutX="30.0" layoutY="746.0" text="Player 1">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="score1" layoutX="141.0" layoutY="737.0" prefHeight="50.0" prefWidth="180.0" style="-fx-border-style: solid;" text="&lt;Score&gt;">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="score2" layoutX="680.0" layoutY="737.0" prefHeight="50.0" prefWidth="180.0" style="-fx-border-style: solid;" text="&lt;Score&gt;">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="885.0" layoutY="747.0" text="Player 2">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="407.0" layoutY="683.0" prefHeight="100.0" prefWidth="200.0" style="-fx-border-style: solid;" text="&lt;Level&gt;">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="stage" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
+   <children>
+      <Button layoutX="350.0" layoutY="340.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="60.0" prefWidth="300.0" text="Singleplayer" />
+   </children>
+</AnchorPane>
