@@ -1,16 +1,14 @@
 package doob.controller;
 
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import doob.model.Ball;
-import doob.model.Player;
+import doob.model.PlayerModel;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
@@ -38,11 +36,8 @@ public class GameController{
 	private int startHeight = 200;
 	private int ballSize = 100;
 
-	private Player player;
+	private PlayerController player;
 
-	public enum GameState {
-		PAUSED, RUNNING, WON, LOST
-	}
 	private GameState gameState;
 
 	@FXML
@@ -50,7 +45,7 @@ public class GameController{
 		gameState = GameState.RUNNING;
 		imageX = 400;
 		imageY = (int) (canvas.getHeight() - 80);
-		player = new Player(400, (int) (canvas.getHeight() - 80), 0, 200);
+        player = new PlayerController(400);
 		canvas.setFocusTraversable(true);
 		canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
@@ -99,7 +94,7 @@ public class GameController{
 	
 	public void paint() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		player.draw(gc);
+		player.invalidate(gc);
 		for(Ball b : balls) {
 			b.draw(gc);
 		}
@@ -125,5 +120,9 @@ public class GameController{
 					collide();
 	            }
 	        }.start();
+	}
+
+	public enum GameState {
+		PAUSED, RUNNING, WON, LOST
 	}
 }

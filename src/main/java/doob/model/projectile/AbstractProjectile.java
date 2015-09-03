@@ -1,10 +1,11 @@
 package doob.model.projectile;
 
-import doob.model.Collidable;
+import doob.controller.Collidable;
 import doob.model.Sprite;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Abstract class for any projectile to be fired from the Player.
+ * Abstract class for any projectile to be fired from the PlayerModel.
  */
 public abstract class AbstractProjectile implements Collidable {
 
@@ -23,6 +24,13 @@ public abstract class AbstractProjectile implements Collidable {
         this.pointSprite = pointSprite;
         this.tailSprite = tailSprite;
     }
+
+    /**
+     * Fire the projectile, straight up, from x.
+     * @param g GraphicsContext to draw projectile on.
+     * @param x location from where to fire projectile from.
+     */
+    public abstract void fire(GraphicsContext g, int x);
 
     /**
      * Get the speed of the projectile.

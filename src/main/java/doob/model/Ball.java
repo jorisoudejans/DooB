@@ -1,5 +1,6 @@
 package doob.model;
 
+import doob.controller.Collidable;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Ball extends Sprite implements Collidable {

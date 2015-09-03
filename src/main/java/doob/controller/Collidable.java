@@ -1,4 +1,4 @@
-package doob.model;
+package doob.controller;
 
 /**
  * Created by hidde on 9/3/15.
