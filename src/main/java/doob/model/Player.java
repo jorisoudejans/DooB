@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 /**
  * Created by hidde on 9/3/15.
  */
-public class Player extends Sprite {
+public class Player extends Sprite implements Collidable {
 
     private double x;
     private double y;
@@ -92,6 +92,10 @@ public class Player extends Sprite {
 
     public void move() {
         this.x = x + speed;
+    }
+
+    public boolean collides(Collidable other) {
+        return false;
     }
 
     public enum Direction {

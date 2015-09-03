@@ -23,6 +23,10 @@ public class App extends Application {
         loadScene("/FXML/Menu.fxml");
     }
 
+    /**
+     * Loads the given scene.
+     * @param path Location of the FXML file
+     */
     public static void loadScene(String path) {
         try {
             // Load the anchor pane
