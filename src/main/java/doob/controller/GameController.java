@@ -82,7 +82,7 @@ public class GameController{
 	
 	public void paint() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gc.drawImage(new Image("/Stand2.png"), imageX, imageY);
+		gc.drawImage(new Image("/image/Stand2.png"), imageX, imageY);
 		for(Ball b : balls) {
 			gc.fillOval(b.getX(), b.getY(), b.getSize(), b.getSize());
 		}

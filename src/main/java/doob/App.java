@@ -20,7 +20,7 @@ public class App extends Application {
     public void start(Stage stageIn) {
         stage = stageIn;
         stage.setTitle("DooB");
-        loadScene("src/main/res/FXML/menu.fxml");
+        loadScene("/FXML/Menu.fxml");
     }
 
     public static void loadScene(String path) {
@@ -28,7 +28,6 @@ public class App extends Application {
             // Load the anchor pane
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource(path));
-            java.net.URL url = App.class.getResource("resources/fxml/game.fxml");
             pane = loader.load();
 
             // Set the pane onto the scene
