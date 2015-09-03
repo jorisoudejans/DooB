@@ -1,6 +1,8 @@
 package doob.model;
 
-public class Ball {
+import javafx.scene.canvas.GraphicsContext;
+
+public class Ball extends Sprite {
 
 	private double x;
 	private double y;
@@ -14,6 +16,10 @@ public class Ball {
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.size = size;
+	}
+
+	public void draw(GraphicsContext graphicsContext) {
+		graphicsContext.fillOval(this.getX(), this.getY(), this.getSize(), this.getSize());
 	}
 	
 	public double getSize() {

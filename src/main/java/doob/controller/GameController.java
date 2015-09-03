@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import doob.model.Ball;
+import doob.model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,27 +30,32 @@ public class GameController{
 	@FXML
 	private Canvas canvas;
 	private GraphicsContext gc;
+
 	int imageX;
 	int imageY;
-	
 	private ArrayList<Ball> balls;
 	private int ballSpeed = 3;
 	private int startHeight = 200;
 	private int ballSize = 100;
 
+	private Player player;
+
 	@FXML
 	public void initialize() {
 		imageX = 400;
 		imageY = (int) (canvas.getHeight() - 80);
+		player = new Player(400, (int) (canvas.getHeight() - 80), 0, 200);
 		canvas.setFocusTraversable(true);
 		canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			
+
 			public void handle(KeyEvent key) {
 				if (key.getCode().equals(KeyCode.RIGHT) && imageX < canvas.getWidth() - 40) {
 					imageX += 20;
+					player.moveRight();
 					System.out.println("Rechts");
 				} else if (key.getCode().equals(KeyCode.LEFT) && imageX > 20) {
 					imageX -= 20;
+					player.moveLeft();
 					System.out.println("Links");
 				} else if (key.getCode().equals(KeyCode.RIGHT) && imageX > canvas.getWidth() - 40 && imageX < canvas.getWidth() - 20) {
 					imageX = (int) (canvas.getWidth() - 20);
@@ -57,8 +63,13 @@ public class GameController{
 					imageX = 0;
 					System.out.println("Links");
 				}
-			}	
-			
+			}
+
+		});
+		canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent event) {
+				player.stand();
+			}
 		});
 		canvas.requestFocus();
 		balls = new ArrayList<Ball>();
@@ -82,9 +93,9 @@ public class GameController{
 	
 	public void paint() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gc.drawImage(new Image("/image/Stand2.png"), imageX, imageY);
+		player.draw(gc);
 		for(Ball b : balls) {
-			gc.fillOval(b.getX(), b.getY(), b.getSize(), b.getSize());
+			b.draw(gc);
 		}
 	}
 
