@@ -101,7 +101,7 @@ public class GameController{
 			b.moveVertically();;
 			b.incrSpeedY(0.5);
 			if(b.getY() + b.getSize() > canvas.getHeight()) {
-				b.setSpeedY(-20);
+				b.setSpeedY(b.getBounceSpeed());
 			}
 		}
 	}
@@ -151,8 +151,10 @@ public class GameController{
 				Projectile p = iter2.next();
 				if(b.getBounds().intersects(p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight())) {
 					projectiles.remove(p);
-					balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
-					balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+					if(b.getSize() >= 15) {
+						balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
+						balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+					}
 					balls.remove(b);
 					System.out.println("HIT");
 				}
