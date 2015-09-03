@@ -40,8 +40,14 @@ public class GameController{
 
 	private Player player;
 
+	public enum GameState {
+		PAUSED, RUNNING, WON, LOST
+	}
+	private GameState gameState;
+
 	@FXML
 	public void initialize() {
+		gameState = GameState.RUNNING;
 		imageX = 400;
 		imageY = (int) (canvas.getHeight() - 80);
 		player = new Player(400, (int) (canvas.getHeight() - 80), 0, 200);
@@ -99,12 +105,24 @@ public class GameController{
 		}
 	}
 
+	/**
+	 * Determines the collisions in the game.
+	 */
+	public void collide() {
+		for (Ball b : balls) {
+			if (player.collides(b)) {
+				gameState = GameState.LOST;
+			}
+		}
+	}
+
 	public void startTimer() {
 		 new AnimationTimer() {
 	            @Override
 	            public void handle(long now) {
 	               moveBalls();
 	               paint();
+					collide();
 	            }
 	        }.start();
 	}

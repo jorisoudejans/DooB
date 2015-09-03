@@ -94,7 +94,21 @@ public class Player extends Sprite implements Collidable {
         this.x = x + speed;
     }
 
+    /**
+     * Whether a player collides with a ball
+     * @param other the other object
+     * @return whether it collides
+     */
     public boolean collides(Collidable other) {
+        if (other instanceof Ball) {
+            // a player only collides with a ball
+            Ball ball = (Ball)other;
+            double distanceX = Math.abs(x - ball.getX());
+            double distanceY = Math.abs(y - ball.getY());
+            double py = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY, 2) );
+
+            return py < ( getHeight() + ball.getSize() );
+        }
         return false;
     }
 
