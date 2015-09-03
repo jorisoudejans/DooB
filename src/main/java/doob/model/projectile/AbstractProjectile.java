@@ -1,11 +1,11 @@
 package doob.model.projectile;
 
-import doob.controller.Collidable;
+import doob.model.Collidable;
 import doob.model.Sprite;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Abstract class for any projectile to be fired from the PlayerModel.
+ * Abstract class for any projectile to be fired from the Player.
  */
 public abstract class AbstractProjectile implements Collidable {
 

@@ -1,6 +1,5 @@
 package doob.model;
 
-import doob.controller.Collidable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Circle;
 

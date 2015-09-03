@@ -11,6 +11,6 @@ public abstract class AbstractView {
      * Draw the view on the canvas.
      * @param g canvas holder.
      */
-    public abstract void draw(GraphicsContext g);
+    public abstract void draw(GraphicsContext g, int x, int y);
 
 }
