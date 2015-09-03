@@ -26,7 +26,7 @@ public class Player extends Sprite implements Collidable {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = 20;
+        this.speed = 0;
 
         imageStand = new Image("/image/character1_stand.png");
         imageLeft = new Image("/image/character1_left.gif");

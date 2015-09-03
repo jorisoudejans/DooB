@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import doob.model.Ball;
 import doob.model.Player;
+import doob.model.Player.Direction;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -55,18 +56,18 @@ public class GameController{
 		canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			public void handle(KeyEvent key) {
-				if (key.getCode().equals(KeyCode.RIGHT) && imageX < canvas.getWidth() - 40) {
-					imageX += 20;
-					player.moveRight();
+				if (key.getCode().equals(KeyCode.RIGHT) && player.getX() < canvas.getWidth() - 40) {
+					player.setSpeed(6);
+					player.setDirection(Direction.RIGHT);
 					System.out.println("Rechts");
-				} else if (key.getCode().equals(KeyCode.LEFT) && imageX > 20) {
-					imageX -= 20;
-					player.moveLeft();
+				} else if (key.getCode().equals(KeyCode.LEFT) && player.getX() > 20) {
+					player.setSpeed(-6);
+					player.setDirection(Direction.LEFT);
 					System.out.println("Links");
-				} else if (key.getCode().equals(KeyCode.RIGHT) && imageX > canvas.getWidth() - 40 && imageX < canvas.getWidth() - 20) {
-					imageX = (int) (canvas.getWidth() - 20);
-				} else if (key.getCode().equals(KeyCode.LEFT) && imageX > 0 && imageX <= 20) {
-					imageX = 0;
+				} else if (key.getCode().equals(KeyCode.RIGHT) && player.getX() >= canvas.getWidth() - 40) {
+					player.setSpeed(0);
+				} else if (key.getCode().equals(KeyCode.LEFT) && player.getX() <= 0) {
+					player.setSpeed(0);
 					System.out.println("Links");
 				}
 			}
@@ -74,6 +75,7 @@ public class GameController{
 		});
 		canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
+				player.setSpeed(0);
 				player.stand();
 			}
 		});
@@ -121,8 +123,9 @@ public class GameController{
 	            @Override
 	            public void handle(long now) {
 	               moveBalls();
+	               player.move();
 	               paint();
-					collide();
+	               collide();
 	            }
 	        }.start();
 	}
