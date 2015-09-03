@@ -22,19 +22,22 @@ public class PlayerView extends AbstractView {
 
     /**
      * Constructor for a player with initial location x.
-     * @param x initial location.
+     * @param x initial x location.
+     * @param y initial y location.
      * @param width view width.
      * @param height view height.
      */
-    public PlayerView(int x, int width, int height) {
+    public PlayerView(int x, int y, int width, int height) {
         this.x = x;
-        this.y = 0;
+        this.y = y;
         this.width = width;
         this.height = height;
 
         imageStand = new Image("/image/character1_stand.png");
         imageLeft = new Image("/image/character1_left.gif");
         imageRight = new Image("/image/character1_right.gif");
+
+        direction = Direction.STAND;
     }
 
     @Override

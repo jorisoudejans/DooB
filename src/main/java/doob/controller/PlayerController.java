@@ -3,6 +3,7 @@ package doob.controller;
 import doob.model.Ball;
 import doob.model.PlayerModel;
 import doob.view.PlayerView;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -13,17 +14,19 @@ public class PlayerController implements Collidable {
     private PlayerModel mPlayer;
     private PlayerView mView;
 
+    private Canvas canvas;
+
     private int speed;
 
     /**
      * Constructor for player controller.
-     * @param initialX initial location of the view.
+     * @param canvas Canvas to be drawn upon by view.
      */
-    public PlayerController(int initialX) {
+    public PlayerController(Canvas canvas) {
         this.mPlayer = new PlayerModel();
         //noinspections CheckStyle-IDEA
-        this.mView = new PlayerView(initialX, 100, 200);
-
+        this.canvas = canvas;
+        this.mView = new PlayerView((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 100), 100, 100);
         this.speed = 0;
     }
 

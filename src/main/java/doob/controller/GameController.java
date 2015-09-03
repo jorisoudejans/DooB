@@ -1,20 +1,21 @@
 package doob.controller;
 
-import java.util.ArrayList;
-
 import doob.model.Ball;
-import doob.model.PlayerModel;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
-public class GameController{
+import java.util.ArrayList;
+
+/**
+ * Controller for games.
+ */
+public class GameController {
 	
 	@FXML
 	private Pane lives1;
@@ -29,8 +30,6 @@ public class GameController{
 	private Canvas canvas;
 	private GraphicsContext gc;
 
-	int imageX;
-	int imageY;
 	private ArrayList<Ball> balls;
 	private int ballSpeed = 3;
 	private int startHeight = 200;
@@ -40,37 +39,36 @@ public class GameController{
 
 	private GameState gameState;
 
+    /**
+     * Initialization of the game pane.
+     */
 	@FXML
 	public void initialize() {
 		gameState = GameState.RUNNING;
-		imageX = 400;
-		imageY = (int) (canvas.getHeight() - 80);
-        player = new PlayerController(400);
+        player = new PlayerController(canvas);
 		canvas.setFocusTraversable(true);
 		canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			public void handle(KeyEvent key) {
-				if (key.getCode().equals(KeyCode.RIGHT) && imageX < canvas.getWidth() - 40) {
-					imageX += 20;
-					player.moveRight();
-					System.out.println("Rechts");
-				} else if (key.getCode().equals(KeyCode.LEFT) && imageX > 20) {
-					imageX -= 20;
-					player.moveLeft();
-					System.out.println("Links");
-				} else if (key.getCode().equals(KeyCode.RIGHT) && imageX > canvas.getWidth() - 40 && imageX < canvas.getWidth() - 20) {
-					imageX = (int) (canvas.getWidth() - 20);
-				} else if (key.getCode().equals(KeyCode.LEFT) && imageX > 0 && imageX <= 20) {
-					imageX = 0;
-					System.out.println("Links");
-				}
+                switch (key.getCode()) {
+                    case RIGHT:
+                        player.moveRight();
+                        break;
+                    case LEFT:
+                        player.moveLeft();
+                        break;
+                    default:
+                        break;
+                }
 			}
 
 		});
 		canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
 			public void handle(KeyEvent event) {
 				player.stand();
 			}
+
 		});
 		canvas.requestFocus();
 		balls = new ArrayList<Ball>();
@@ -78,30 +76,39 @@ public class GameController{
 		gc = canvas.getGraphicsContext2D();
 		startTimer();
 	}
-	
+
+    /**
+     * Move the balls.
+     */
 	public void moveBalls() {
-		for(Ball b : balls) {
+		for (Ball b: balls) {
 			b.moveHorizontally();
-			if(b.getX() + b.getSize() >= canvas.getWidth()) b.setSpeedX(-ballSpeed);
-			else if(b.getX() <= 0) b.setSpeedX(ballSpeed);
-			b.moveVertically();;
+			if (b.getX() + b.getSize() >= canvas.getWidth()) {
+                b.setSpeedX(-ballSpeed);
+            } else if (b.getX() <= 0) {
+                b.setSpeedX(ballSpeed);
+            }
+			b.moveVertically();
 			b.incrSpeedY(0.5);
-			if(b.getY() + b.getSize() > canvas.getHeight()) {
+			if (b.getY() + b.getSize() > canvas.getHeight()) {
 				b.setSpeedY(-20);
 			}
 		}
 	}
-	
+
+    /**
+     * Paint all views.
+     */
 	public void paint() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		player.invalidate(gc);
-		for(Ball b : balls) {
+		for (Ball b: balls) {
 			b.draw(gc);
 		}
 	}
 
 	/**
-	 * Determines the collisions in the game.
+	 * Loops through every object in the game to detect collisions.
 	 */
 	public void collide() {
 		for (Ball b : balls) {
@@ -111,6 +118,9 @@ public class GameController{
 		}
 	}
 
+    /**
+     * Timer for animation.
+     */
 	public void startTimer() {
 		 new AnimationTimer() {
 	            @Override
@@ -122,6 +132,9 @@ public class GameController{
 	        }.start();
 	}
 
+    /**
+     * States the game can be in.
+     */
 	public enum GameState {
 		PAUSED, RUNNING, WON, LOST
 	}
