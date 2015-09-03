@@ -14,7 +14,11 @@ public class PlayerController implements Collidable {
     private PlayerModel mPlayer;
     private PlayerView mView;
 
-    private Canvas canvas;
+    public PlayerView getView() {
+		return mView;
+	}
+
+	private Canvas canvas;
 
     private int speed;
 
@@ -55,6 +59,10 @@ public class PlayerController implements Collidable {
     public void moveLeft() {
         mView.moveLeft();
     }
+    
+    /*public void shoot() {
+    	mView.shoot();
+    }*/
 
     public void stand() {
         mView.stand();

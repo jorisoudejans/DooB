@@ -2,6 +2,7 @@ package doob.model;
 
 import doob.controller.Collidable;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Circle;
 
 public class Ball extends Sprite implements Collidable {
 
@@ -83,7 +84,7 @@ public class Ball extends Sprite implements Collidable {
 		return false;
 	}
 
-	//public Rectangle getBounds() {
-		//return new Rectangle(x, y, size, size);
-	//}
+	public Circle getBounds() {
+		return new Circle(x, y, size);
+	}
 }

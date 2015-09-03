@@ -1,6 +1,11 @@
 package doob.view;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import doob.model.PlayerModel;
+import doob.model.Projectile;
+import doob.model.Spike;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -14,11 +19,16 @@ public class PlayerView extends AbstractView {
     private int y;
     private int width;
     private int height;
-
+    private int speed;
+    private int shootSpeed = 12;
+    
     private Image imageStand;
     private Image imageLeft;
     private Image imageRight;
     private Image playerShoot;
+    
+    //TODO see other todo on this page
+	//private ArrayList<Projectile> projectiles;
 
     /**
      * Constructor for a player with initial location x.
@@ -32,11 +42,14 @@ public class PlayerView extends AbstractView {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.speed = 0;
 
         imageStand = new Image("/image/character1_stand.png");
         imageLeft = new Image("/image/character1_left.gif");
         imageRight = new Image("/image/character1_right.gif");
-
+        
+        //projectiles = new ArrayList<Projectile>();
+        
         direction = Direction.STAND;
     }
 
@@ -73,7 +86,26 @@ public class PlayerView extends AbstractView {
         this.x = x - 20;
         this.direction = Direction.LEFT;
     }
-
+    
+    /*
+    //TODO These two methods are not yet used here, they are used in gamecontroller 
+    //but they should eventually be here (I think)
+    public void shoot() {
+    	projectiles.add(new Spike(x, height, shootSpeed));
+    	shootProjectiles();
+    }
+    
+	public void shootProjectiles() {
+		for (Iterator<Projectile> iter = projectiles.listIterator(); iter.hasNext(); ) {
+		    Projectile p = iter.next();
+		    if (p.getY() <= 0) {
+		        iter.remove();
+		    } else {
+		    	p.shoot();
+		    }
+		}
+	}
+    */
     /**
      * The character stands in idle.
      */
