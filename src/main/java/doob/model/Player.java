@@ -147,5 +147,4 @@ public class Player extends Sprite implements Collidable {
         this.direction = Direction.STAND;
     }
 
-
 }
