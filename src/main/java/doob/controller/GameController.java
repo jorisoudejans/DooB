@@ -141,14 +141,19 @@ public class GameController{
 	}
 	
 	public void detectCollisions() {
-		for(Ball b : balls) {
+		for (Iterator<Ball> iter = balls.listIterator(); iter.hasNext(); ) {
+			Ball b = iter.next();
 			if(b.getBounds().intersects(player.getX(), player.getY(), player.getWidth(), player.getHeight())) {
 				//TODO
 				System.out.println("Crushed");
 			}
-			for(Projectile p : projectiles) {
+			for (Iterator<Projectile> iter2 = projectiles.listIterator(); iter2.hasNext(); ) {
+				Projectile p = iter2.next();
 				if(b.getBounds().intersects(p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight())) {
-					//TODO
+					projectiles.remove(p);
+					balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
+					balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+					balls.remove(b);
 					System.out.println("HIT");
 				}
 			}
