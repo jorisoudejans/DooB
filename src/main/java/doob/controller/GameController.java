@@ -94,7 +94,20 @@ public class GameController {
     	projectiles.add(new Spike(player.getView().getX(), canvas.getHeight(), shootSpeed));
     	//shootProjectiles();
     }
-    
+	
+	public void moveBalls() {
+		for(Ball b : balls) {
+			b.moveHorizontally();
+			if(b.getX() + b.getSize() >= canvas.getWidth()) b.setSpeedX(-ballSpeed);
+			else if(b.getX() <= 0) b.setSpeedX(ballSpeed);
+			b.moveVertically();;
+			b.incrSpeedY(0.5);
+			if(b.getY() + b.getSize() > canvas.getHeight()) {
+				b.setSpeedY(b.getBounceSpeed());
+			}
+		}
+	}
+	
 	public void shootProjectiles() {
 		for (Iterator<Projectile> iter = projectiles.listIterator(); iter.hasNext(); ) {
 		    Projectile p = iter.next();
@@ -103,24 +116,6 @@ public class GameController {
 		    } else {
 		    	p.shoot();
 		    }
-		}
-	}
-    /**
-     * Move the balls.
-     */
-	public void moveBalls() {
-		for (Ball b: balls) {
-			b.moveHorizontally();
-			if (b.getX() + b.getSize() >= canvas.getWidth()) {
-                b.setSpeedX(-ballSpeed);
-            } else if (b.getX() <= 0) {
-                b.setSpeedX(ballSpeed);
-            }
-			b.moveVertically();
-			b.incrSpeedY(0.5);
-			if (b.getY() + b.getSize() > canvas.getHeight()) {
-				b.setSpeedY(-20);
-			}
 		}
 	}
 
@@ -151,10 +146,15 @@ public class GameController {
 				System.out.println("Crushed");
 				gameState = GameState.LOST;
 			}
-			for (Projectile p : projectiles) {
-				if (b.getBounds().intersects(p.getX(), p.getY(), 
-						p.getImg().getWidth(), p.getImg().getHeight())) {
-					//TODO
+			for (Iterator<Projectile> iter2 = projectiles.listIterator(); iter2.hasNext(); ) {
+				Projectile p = iter2.next();
+				if(b.getBounds().intersects(p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight())) {
+					projectiles.remove(p);
+					if(b.getSize() >= 15) {
+						balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
+						balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+					}
+					balls.remove(b);
 					System.out.println("HIT");
 				}
 			}

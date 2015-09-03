@@ -87,4 +87,17 @@ public class Ball extends Sprite implements Collidable {
 	public Circle getBounds() {
 		return new Circle(x, y, size);
 	}
+	
+	public double getBounceSpeed() {
+		if(size == 100) {
+			return -20;
+		} else if(size == 50) {
+			return -18;
+		} else if(size == 25) {
+			return -16;
+		} else if(size == 12.5) {
+			return -14;
+		}
+		return -12;
+	}
 }
