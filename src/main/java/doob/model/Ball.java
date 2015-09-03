@@ -2,7 +2,7 @@ package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class Ball extends Sprite {
+public class Ball extends Sprite implements Collidable {
 
 	private double x;
 	private double y;
@@ -76,6 +76,10 @@ public class Ball extends Sprite {
 	
 	public void incrSpeedY(double speedDY) {
 		this.speedY = speedY + speedDY;
+	}
+
+	public boolean collides(Collidable other) {
+		return false;
 	}
 
 	//public Rectangle getBounds() {
