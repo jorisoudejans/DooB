@@ -1,14 +1,16 @@
-package doob.model;
+package doob.model.game;
+
+import doob.model.Level;
 
 import java.util.ArrayList;
 
-public abstract class Game {
+public abstract class AbstractGame {
 	
 	private int score;
 	private int difficulty;
 	private ArrayList<Level> levels;
 	
-	public Game(int score, int difficulty, ArrayList<Level> levels) {
+	public AbstractGame(int score, int difficulty, ArrayList<Level> levels) {
 		this.score = score;
 		this.difficulty = difficulty;
 		this.levels = levels;

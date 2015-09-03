@@ -1,8 +1,11 @@
-package doob.model;
+package doob.model.game;
+
+import doob.model.Level;
+import doob.model.Player;
 
 import java.util.ArrayList;
 
-public class MultiPlayerGame extends Game{	
+public class MultiPlayerGame extends AbstractGame {
 
 	private Player player1;
 	private Player player2;

@@ -20,12 +20,12 @@ public class App extends Application {
     public void start(Stage stageIn) {
         stage = stageIn;
         stage.setTitle("DooB");
-        loadScene("/FXML/Menu.fxml");
+        loadScene("/fxml/menu.fxml");
     }
 
     /**
      * Loads the given scene.
-     * @param path Location of the FXML file
+     * @param path Location of the fxml file
      */
     public static void loadScene(String path) {
         try {

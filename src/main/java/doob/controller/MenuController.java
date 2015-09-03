@@ -7,7 +7,7 @@ public class MenuController {
 	
 	@FXML
 	public void playSinglePlayer() {
-		App.loadScene("/FXML/Game.fxml");
+		App.loadScene("/fxml/game.fxml");
 	}
 	
 }
