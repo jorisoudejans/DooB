@@ -4,147 +4,111 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
- * Created by hidde on 9/3/15.
+ * Player class, acts as both model and view.
  */
-public class Player extends Sprite implements Collidable {
+public class Player implements Collidable, Drawable {
 
-    private double x;
-    private double y;
-    private double width;
-    private double height;
-    private double speed;
-
-    private Direction direction;
+    private int width;
+    private int height;
+    private int x;
+    private int y;
+    private int speed;
 
     private Image imageStand;
     private Image imageLeft;
     private Image imageRight;
-    private Image playerShoot;
 
-    public Player(double x, double y, double width, double height) {
-        this.x = x;
-        this.y = y;
+    /**
+     * Constructor for a player with initial location x.
+     * @param x initial x location.
+     * @param y initial y location.
+     * @param width view width.
+     * @param height view height.
+     */
+    public Player(int x, int y, int width, int height) {
         this.width = width;
         this.height = height;
+        this.x = x;
+        this.y = y;
         this.speed = 0;
 
         imageStand = new Image("/image/character1_stand.png");
         imageLeft = new Image("/image/character1_left.gif");
         imageRight = new Image("/image/character1_right.gif");
-        //playerShoot = new Image("/image/characte")
 
-        this.direction = Direction.STAND;
+        //projectiles = new ArrayList<Projectile>();
+    }
+
+    /**
+     * Whether a player collides with another object.
+     * @param other the other object.
+     * @return whether it collides.
+     */
+    public boolean collides(Collidable other) {
+        if (other instanceof Ball) {
+            // a player only collides with a ball
+            Ball ball = (Ball) other;
+            double distanceX = Math.abs(x - ball.getX());
+            double distanceY = Math.abs(y - ball.getY());
+            double py = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+
+            return py < (getHeight() + ball.getSize());
+        }
+        return false;
     }
 
     public void draw(GraphicsContext g) {
-        switch (direction) {
-            case STAND:
-                g.drawImage(imageStand, x, y);
-                break;
-            case LEFT:
-                g.drawImage(imageLeft, x, y);
-                break;
-            case RIGHT:
-                g.drawImage(imageRight, x, y);
-                break;
+        Image image = imageStand;
+        if (speed > 0) {
+            image = imageRight;
         }
+        if (speed < 0) {
+            image = imageLeft;
+        }
+        g.drawImage(image, x, y);
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
-    public double getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(int height) {
         this.height = height;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
     }
 
     public void move() {
         this.x = x + speed;
     }
 
-    /**
-     * Whether a player collides with a ball
-     * @param other the other object
-     * @return whether it collides
-     */
-    public boolean collides(Collidable other) {
-        if (other instanceof Ball) {
-            // a player only collides with a ball
-            Ball ball = (Ball)other;
-            double distanceX = Math.abs(x - ball.getX());
-            double distanceY = Math.abs(y - ball.getY());
-            double py = Math.sqrt( Math.pow(distanceX, 2) + Math.pow(distanceY, 2) );
-
-            return py < ( getHeight() + ball.getSize() );
-        }
-        return false;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
-    public enum Direction {
-        STAND, LEFT, RIGHT
+    public int getX() {
+        return x;
     }
 
-    public Direction getDirection() {
-        return direction;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public int getY() {
+        return y;
     }
 
-    /**
-     * Moves the character to the right.
-     */
-    public void moveRight() {
-        this.x = x + speed;
-        this.direction = Direction.RIGHT;
+    public void setY(int y) {
+        this.y = y;
     }
 
-    /**
-     * Moves the character to the left.
-     */
-    public void moveLeft() {
-        this.x = x - speed;
-        this.direction = Direction.LEFT;
+    public int getSpeed() {
+        return speed;
     }
-
-    /**
-     * The character stands in idle.
-     */
-    public void stand() {
-        this.direction = Direction.STAND;
-    }
-
 }

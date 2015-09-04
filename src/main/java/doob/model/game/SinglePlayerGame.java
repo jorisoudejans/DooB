@@ -1,8 +1,11 @@
-package doob.model;
+package doob.model.game;
+
+import doob.model.Level;
+import doob.model.Player;
 
 import java.util.ArrayList;
 
-public class SinglePlayerGame extends Game{
+public class SinglePlayerGame extends AbstractGame {
 	private Player player;
 
 	public SinglePlayerGame(int score, int difficulty, 

@@ -2,22 +2,22 @@ package doob.model;
 
 public abstract class PowerUp {
 	
-	private double duration;
+	private int duration;
 	private Sprite sprite;
-	private double disappear;
+	private int timeOfDisappear;
 	
-	public PowerUp(double duration, Sprite sprite, double disappear) {
+	public PowerUp(int duration, Sprite sprite, int timeOfDisappear) {
 		//super();
 		this.duration = duration;
 		this.sprite = sprite;
-		this.disappear = disappear;
+		this.timeOfDisappear = timeOfDisappear;
 	}
 
 	public double getDuration() {
 		return duration;
 	}
 
-	public void setDuration(double duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
@@ -29,12 +29,12 @@ public abstract class PowerUp {
 		this.sprite = sprite;
 	}
 
-	public double getDisappear() {
-		return disappear;
+	public double getTimeOfDisappear() {
+		return timeOfDisappear;
 	}
 
-	public void setDisappear(double disappear) {
-		this.disappear = disappear;
+	public void setTimeOfDisappear(int timeOfDisappear) {
+		this.timeOfDisappear = timeOfDisappear;
 	}
 	
 

@@ -1,14 +1,27 @@
-package doob.model;
+package doob.model.game;
+
+import doob.model.Level;
 
 import java.util.ArrayList;
 
-public abstract class Game {
+/**
+ * Abstract class which is extended by SinglePlayerGame and MultiPlayerGame.
+ * @author Cas
+ *
+ */
+public abstract class AbstractGame {
 	
 	private int score;
 	private int difficulty;
 	private ArrayList<Level> levels;
 	
-	public Game(int score, int difficulty, ArrayList<Level> levels) {
+	/**
+	 * Simple constructor.
+	 * @param score The current score
+	 * @param difficulty An integer which describes the difficulty of the game
+	 * @param levels The list of available levels for the game
+	 */
+	public AbstractGame(int score, int difficulty, ArrayList<Level> levels) {
 		this.score = score;
 		this.difficulty = difficulty;
 		this.levels = levels;
