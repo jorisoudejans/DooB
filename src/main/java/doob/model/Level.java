@@ -4,10 +4,14 @@ import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 
+/**
+ * Level class, created from TODO LevelFactory.
+ */
 public class Level {
 
 	private Canvas canvas;
@@ -16,13 +20,13 @@ public class Level {
 	private ArrayList<Ball> balls;
 	private ArrayList<Projectile> projectiles;
 	private ArrayList<Player> players;
-	private int ballSpeed = 3;
 	private int shootSpeed = 12;
 	private int startHeight = 200;
 	private int ballSize = 100;
 
 	/**
 	 * Initialize javaFx.
+	 * @param canvas the canvas to be drawn upon.
 	 */
 	public Level(Canvas canvas) {
 		this.canvas = canvas;
@@ -32,12 +36,24 @@ public class Level {
 
 		canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
-				players.get(0).setSpeed(0);
+				if (key.getCode() != KeyCode.SPACE) {
+					players.get(0).setSpeed(0);
+				}
 			}
 		});
+
 		canvas.requestFocus();
 		balls = new ArrayList<Ball>();
-		balls.add(new Ball(0, startHeight, ballSpeed, 0, ballSize));
+		balls.add(
+				new Ball(
+						0,
+						startHeight,
+						3,
+						0,
+						ballSize,
+						(int) canvas.getWidth(),
+						(int) canvas.getHeight())
+		);
 		players = new ArrayList<Player>();
 		players.add(new Player(
 				(int) (canvas.getWidth() / 2),
@@ -50,7 +66,7 @@ public class Level {
 	}
 
 	/**
-	 * Create a new projectile and shoot it.
+	 * Create a new projectile and move it.
 	 * @param player the player that shoots the projectile.
 	 */
 	public void shoot(Player player) {
@@ -62,19 +78,18 @@ public class Level {
 	 */
 	public void detectCollisions() {
 		for (Ball b : balls) {
-			if (b.getBounds().intersects(players.get(0).getX(), players.get(0).getY(),
-					players.get(0).getWidth(), players.get(0).getHeight())) {
-				//TODO
-				System.out.println("Crushed");
+			for (Player p : players) {
+				if (p.collides(b)) {
+					//TODO
+					System.out.println("Crushed");
+				}
 			}
 			for (Projectile p : projectiles) {
-				if (b.getBounds().intersects(
-						p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight()
-				)) {
+				if (p.collides(b)) {
 					projectiles.remove(p);
 					if (b.getSize() >= 15) {
-						balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
-						balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+						balls.add(new Ball(b.getX(), b.getY(), 3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
+						balls.add(new Ball(b.getX(), b.getY(), -3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
 					}
 					balls.remove(b);
 					System.out.println("HIT");
@@ -88,30 +103,7 @@ public class Level {
 	 */
 	public void moveBalls() {
 		for (Ball b: balls) {
-			b.moveHorizontally();
-			if (b.getX() + b.getSize() >= canvas.getWidth()) {
-				b.setSpeedX(-ballSpeed);
-			} else if (b.getX() <= 0) {
-				b.setSpeedX(ballSpeed);
-			}
-			b.moveVertically();
-			b.incrSpeedY(0.5);
-			if (b.getY() + b.getSize() > canvas.getHeight()) {
-				b.setSpeedY(b.getBounceSpeed());
-			}
-		}
-	}
-
-	/**
-	 * Handles movement of projectiles.
-	 */
-	public void shootProjectiles() {
-		for (Projectile p : projectiles) {
-			if (p.getY() <= 0) {
-				projectiles.remove(p);
-			} else {
-				p.shoot();
-			}
+			b.move();
 		}
 	}
 
@@ -124,6 +116,7 @@ public class Level {
 		players.get(0).draw(gc);
 		for (Projectile p : projectiles) {
 			gc.drawImage(p.getImg(), p.getX(), p.getY());
+			p.draw(gc);
 		}
 		for (Ball b: balls) {
 			b.draw(gc);
@@ -137,9 +130,12 @@ public class Level {
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				moveBalls();
-				shootProjectiles();
+				for (Drawable drawable : projectiles) {
+					drawable.move();
+					drawable.draw(gc);
+				}
 				detectCollisions();
+				moveBalls();
 				paint();
 				for (Player player : players) {
 					player.move();

@@ -3,7 +3,7 @@ package doob.model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Circle;
 
-public class Ball extends Sprite implements Collidable {
+public class Ball implements Collidable, Drawable {
 
 	private double x;
 	private double y;
@@ -11,18 +11,47 @@ public class Ball extends Sprite implements Collidable {
 	private double speedY;
 	private double size;
 
-	public Ball(double x, double y, double speedX, double speedY, double size) {
+	private int ballSpeed = 3;
+
+	private int canvasWidth;
+	private int canvasHeight;
+
+	public Ball(double x, double y, double speedX, double speedY, double size, int canvasWidth, int canvasHeight) {
 		this.x = x;
 		this.y = y;
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.size = size;
+
+		this.canvasWidth = canvasWidth;
+		this.canvasHeight = canvasHeight;
 	}
 
 	public void draw(GraphicsContext graphicsContext) {
 		graphicsContext.fillOval(this.getX(), this.getY(), this.getSize(), this.getSize());
 	}
-	
+
+	/**
+	 * Move the ball in a physics simulation.
+	 */
+	public void move() {
+		moveHorizontally();
+		if (x + size >= canvasWidth) {
+			setSpeedX(-ballSpeed);
+		} else if (x <= 0) {
+			setSpeedX(ballSpeed);
+		}
+		moveVertically();
+		incrSpeedY(0.5);
+		if (y + size > canvasHeight) {
+			setSpeedY(getBounceSpeed());
+		}
+	}
+
+	public boolean collides(Collidable other) {
+		return false;
+	}
+
 	public double getSize() {
 		return size;
 	}
@@ -79,22 +108,18 @@ public class Ball extends Sprite implements Collidable {
 		this.speedY = speedY + speedDY;
 	}
 
-	public boolean collides(Collidable other) {
-		return false;
-	}
-
 	public Circle getBounds() {
 		return new Circle(x, y, size);
 	}
 	
 	public double getBounceSpeed() {
-		if(size == 100) {
+		if (size == 100) {
 			return -20;
-		} else if(size == 50) {
+		} else if (size == 50) {
 			return -18;
-		} else if(size == 25) {
+		} else if (size == 25) {
 			return -16;
-		} else if(size == 12.5) {
+		} else if (size == 12.5) {
 			return -14;
 		}
 		return -12;

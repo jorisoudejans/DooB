@@ -13,4 +13,9 @@ public interface Drawable {
      */
     void draw(GraphicsContext gc);
 
+    /**
+     * Moves the view each animation frame. Does not have to move.
+     */
+    void move();
+
 }
