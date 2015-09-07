@@ -98,38 +98,50 @@ public class Level {
 	 * 
 	 */
 	public void projectileCeilingCollision() {
-		for (Projectile p : projectiles) {
+	  int projHitIndex = -1;
+		for (int i = 0; i < projectiles.size(); i++) {
 			//TODO If projectile collides with wall, it should be removed. 
 			//Wall object has to be created.
+		  Projectile p = projectiles.get(i);
 			if (p.getY() <= 0) {
-				projectiles.remove(p);
+			  projHitIndex = i;
+				//projectiles.remove(p);
 			}
 		}
+		if (projHitIndex != -1) projectiles.remove(projHitIndex);
 	}
 	
 	/**
 	 * Checks for each ball if it collides with a projectile.
 	 */
 	public void ballProjectileCollision() {
-		for (Ball b : balls) {
+	  int ballHitIndex = -1;
+	  int projHitIndex = -1;
+		for (int i = 0; i < balls.size(); i++) {
+		  Ball b = balls.get(i);
 			for (Player p : players) {
 				if (p.collides(b)) {
-					//TODO Player should die, but for now it collides too fast, boundaries should be modified.
+					//TODO Player should die, but for now it collides too fast, boundaries should be modified.				  
 					System.out.println("Crushed");
 				}
 			}
-			for (Projectile p : projectiles) {
+			for (int j = 0; j < projectiles.size(); j++) {
+			  Projectile p = projectiles.get(j);
 				if (p.collides(b)) {
-					projectiles.remove(p);
+					//projectiles.remove(p);
+				  projHitIndex = j;
 					if (b.getSize() >= 15) {
 						balls.add(new Ball(b.getX(), b.getY(), 3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
 						balls.add(new Ball(b.getX(), b.getY(), -3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
 					}
-					balls.remove(b);
+					//balls.remove(b);
+					ballHitIndex = i;
 					System.out.println("HIT");
 				}
 			}
 		}
+		if (ballHitIndex != -1) balls.remove(ballHitIndex);
+		if (projHitIndex != -1) projectiles.remove(projHitIndex);
 	}
 	
 	/**
