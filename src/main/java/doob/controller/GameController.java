@@ -44,7 +44,6 @@ public class GameController {
      */
 	@FXML
 	public void initialize() {
-		projectiles = new ArrayList<Projectile>();
 		gameState = GameState.RUNNING;
 		level = new Level(canvas);
 	}
