@@ -48,8 +48,7 @@ public class Level {
 
 		canvas.requestFocus();
 		balls = new ArrayList<Ball>();
-		balls.add(
-				new Ball(
+		balls.add(new Ball(
 						0,
 						startHeight,
 						3,
@@ -79,12 +78,11 @@ public class Level {
 			projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
 		}
 	}
-
+	
 	/**
-	 * Loops through every object in the game to detect collisions.
+	 * For testing purposes, an endless level.
 	 */
-	public void detectCollisions() {
-		//Endless level
+	public void endlessLevel() {
 		if (endlessLevel && balls.size() == 0) {
 			balls.add(new Ball(0,
 						startHeight,
@@ -94,13 +92,25 @@ public class Level {
 						(int) canvas.getWidth(),
 						(int) canvas.getHeight()));
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void projectileCeilingCollision() {
 		for (Projectile p : projectiles) {
 			//TODO If projectile collides with wall, it should be removed. 
 			//Wall object has to be created.
-			if (p.getY() <= 0) {//canvas.getHeight()) {
+			if (p.getY() <= 0) {
 				projectiles.remove(p);
 			}
 		}
+	}
+	
+	/**
+	 * Checks for each ball if it collides with a projectile.
+	 */
+	public void ballProjectileCollision() {
 		for (Ball b : balls) {
 			for (Player p : players) {
 				if (p.collides(b)) {
@@ -120,6 +130,15 @@ public class Level {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Loops through every object in the game to detect collisions.
+	 */
+	public void detectCollisions() {
+		//TODO split in different collision functions.
+		projectileCeilingCollision();
+		ballProjectileCollision();
 	}
 
 	/**
@@ -158,13 +177,13 @@ public class Level {
 					drawable.move();
 					drawable.draw(gc);
 				}
+				endlessLevel();
 				detectCollisions();
 				moveBalls();
 				paint();
 				for (Player player : players) {
 					player.move();
 				}
-				//collide();
 			}
 		}.start();
 	}
