@@ -23,12 +23,15 @@ public class Level {
 	private int shootSpeed = 12;
 	private int startHeight = 200;
 	private int ballSize = 100;
+	
+	private boolean endlessLevel;
 
 	/**
 	 * Initialize javaFx.
 	 * @param canvas the canvas to be drawn upon.
 	 */
 	public Level(Canvas canvas) {
+		this.endlessLevel = true;
 		this.canvas = canvas;
 		gc = canvas.getGraphicsContext2D();
 		canvas.setFocusTraversable(true);
@@ -70,17 +73,37 @@ public class Level {
 	 * @param player the player that shoots the projectile.
 	 */
 	public void shoot(Player player) {
-		projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
+		if(projectiles.size() < 1) {
+			//TODO there can be a powerup for which there can be more than one projectile.
+			projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
+		}
 	}
 
 	/**
 	 * Loops through every object in the game to detect collisions.
 	 */
 	public void detectCollisions() {
+		//Endless level
+		if (endlessLevel && balls.size() == 0) {
+			balls.add(new Ball(0,
+						startHeight,
+						3,
+						0,
+						ballSize,
+						(int) canvas.getWidth(),
+						(int) canvas.getHeight()));
+		}
+		for (Projectile p : projectiles) {
+			//TODO If projectile collides with wall, it should be removed. 
+			//Wall object has to be created.
+			if (p.getY() <= 0) {//canvas.getHeight()) {
+				projectiles.remove(p);
+			}
+		}
 		for (Ball b : balls) {
 			for (Player p : players) {
 				if (p.collides(b)) {
-					//TODO
+					//TODO Player should die, but for now it collides too fast, boundaries should be modified.
 					System.out.println("Crushed");
 				}
 			}
@@ -165,6 +188,14 @@ public class Level {
 					break;
 			}
 		}
+	}
+
+	public boolean isEndlessLevel() {
+		return endlessLevel;
+	}
+
+	public void setEndlessLevel(boolean endlessLevel) {
+		this.endlessLevel = endlessLevel;
 	}
 
 }
