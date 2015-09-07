@@ -2,7 +2,11 @@ package doob.controller;
 
 import doob.model.Ball;
 import doob.model.Level;
+import doob.model.Player;
 import doob.model.Projectile;
+import doob.model.Wall;
+import doob.model.Level.Builder;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,9 +49,37 @@ public class GameController {
 	@FXML
 	public void initialize() {
 		gameState = GameState.RUNNING;
-		level = new Level(canvas);
+		Builder b = new Builder();
+		b.setCanvas(canvas);
+		ArrayList<Player> players = new ArrayList<Player>();
+		players.add(new Player(
+				(int) (canvas.getWidth() / 2),
+				(int) (canvas.getHeight() - 72),
+				72,
+				50
+		));
+		b.setPlayers(players);
+		balls = new ArrayList<Ball>();
+		balls.add(new Ball(
+						0,
+						startHeight,
+						3,
+						0,
+						ballSize
+						));
+		b.setBalls(balls);
+		level = b.build();	
+		startTimer();
 	}
-
+	
+	public void startTimer() {
+		new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				level.update();
+			}
+		}.start();
+	}
     /**
      * States the game can be in.
      */
