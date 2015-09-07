@@ -23,6 +23,7 @@ public class Level {
 	private int shootSpeed = 12;
 	private int startHeight = 200;
 	private int ballSize = 100;
+    private int playerSpeed = 6;
 	
 	private boolean endlessLevel;
 
@@ -168,17 +169,29 @@ public class Level {
 		}.start();
 	}
 
-	/**
+    public void setBalls(ArrayList<Ball> balls) {
+        this.balls = balls;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+    /**
 	 * Handler for key presses.
 	 */
 	private class KeyPressHandler implements EventHandler<KeyEvent> {
 		public void handle(KeyEvent key) {
 			switch (key.getCode()) {
 				case RIGHT:
-					players.get(0).setSpeed(6);
+					players.get(0).setSpeed(playerSpeed);
 					break;
 				case LEFT:
-					players.get(0).setSpeed(-6);
+					players.get(0).setSpeed(-playerSpeed);
 					break;
 				case SPACE:
 					shoot(players.get(0));
@@ -196,6 +209,53 @@ public class Level {
 
 	public void setEndlessLevel(boolean endlessLevel) {
 		this.endlessLevel = endlessLevel;
+	}
+
+	/**
+	 * Builder class
+	 */
+	public static class Builder {
+
+        private Canvas canvas;
+        private ArrayList<Ball> balls;
+        private ArrayList<Player> players;
+        private int playerSpeed = 12;
+
+        /**
+         * Constructor.
+         */
+        public Builder() {
+            super();
+        }
+
+        public Builder setCanvas(Canvas canvas) {
+            this.setCanvas(canvas);
+            return this;
+        }
+
+        public Builder setBalls(ArrayList<Ball> balls) {
+            this.setBalls(balls);
+            return this;
+        }
+
+        public Builder setPlayers(ArrayList<Player> players) {
+            this.setPlayers(players);
+            return this;
+        }
+
+        public Builder setPlayerSpeed(int playerSpeed) {
+            this.playerSpeed = playerSpeed;
+            return this;
+        }
+
+        public Level build() {
+            Level level = new Level(canvas);
+            level.setBalls(balls);
+            level.setPlayers(players);
+            level.setPlayerSpeed(playerSpeed);
+            return level;
+        }
+
 	}
 
 }
