@@ -11,8 +11,7 @@ public class Ball implements Collidable, Drawable {
 	private double speedY;
 	private double size;
 	private int bounceSpeed;
-	private int verticalSpeed;
-
+	private int splitBounce;
 	private int ballSpeed;
 
 	private int canvasWidth;
@@ -34,7 +33,7 @@ public class Ball implements Collidable, Drawable {
 		this.size = size;
 		this.ballSpeed = 3;
 		this.bounceSpeed = -8;
-		this.verticalSpeed = 3;
+		this.splitBounce = -10;
 	}
 
 	public void draw(GraphicsContext graphicsContext) {
@@ -62,8 +61,8 @@ public class Ball implements Collidable, Drawable {
 	 * @return A list of new balls.
 	 */
 	public Ball[] split() {
-		Ball ball1 = new Ball(this.x, this.y, verticalSpeed, bounceSpeed, this.size / 2);
-		Ball ball2 = new Ball(this.x, this.y, -verticalSpeed, bounceSpeed, this.size / 2);
+		Ball ball1 = new Ball(this.x, this.y, ballSpeed, splitBounce, this.size / 2);
+		Ball ball2 = new Ball(this.x, this.y, -ballSpeed, splitBounce, this.size / 2);
 		Ball[] res =  new Ball[2];
 		res[0] = ball1;
 		res[1] = ball2;
@@ -147,12 +146,12 @@ public class Ball implements Collidable, Drawable {
 		return -12;
 	}
 
-	public int getVerticalSpeed() {
-		return verticalSpeed;
+	public int getsplitBounce() {
+		return splitBounce;
 	}
 
-	public void setVerticalSpeed(int verticalSpeed) {
-		this.verticalSpeed = verticalSpeed;
+	public void setsplitBounce(int splitBounce) {
+		this.splitBounce = splitBounce;
 	}
 
 	public int getBallSpeed() {

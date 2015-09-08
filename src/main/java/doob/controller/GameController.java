@@ -7,11 +7,19 @@ import doob.model.Projectile;
 import doob.model.Wall;
 import doob.model.Level.Builder;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -19,77 +27,102 @@ import java.util.ArrayList;
  * Controller for games.
  */
 public class GameController {
-	
-	@FXML
-	private Pane lives1;
-	@FXML
-	private Pane lives2;
-	@FXML
-	private Label score1;
-	@FXML
-	private Label score2;
-	
-	@FXML
-	private Canvas canvas;
-	private GraphicsContext gc;
 
-	private GameState gameState;
-	private Level level;
-	
-	private ArrayList<Ball> balls;
-	private ArrayList<Projectile> projectiles;
-	private int ballSpeed = 3;
-	private int shootSpeed = 12;
-	private int startHeight = 200;
-	private int ballSize = 100;
+  @FXML
+  private Pane lives1;
+  @FXML
+  private Pane lives2;
+  @FXML
+  private Label score1;
+  @FXML
+  private Label score2;
+  @FXML
+  private ProgressBar progressBar;
 
-    /**
-     * Initialization of the game pane.
-     */
-	@FXML
-	public void initialize() {
-		gameState = GameState.RUNNING;
-		Builder b = new Builder();
-		b.setCanvas(canvas);
-		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(new Player(
-				(int) (canvas.getWidth() / 2),
-				(int) (canvas.getHeight() - 72),
-				72,
-				50
-		));
-		b.setPlayers(players);
-		balls = new ArrayList<Ball>();
-		balls.add(new Ball(
-						0,
-						startHeight,
-						3,
-						0,
-						ballSize
-						));
-		b.setBalls(balls);
-		level = b.build();	
-		startTimer();
-	}
-	
-	public void startTimer() {
-		new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				level.update();
-				updateScore();
-			}
-		}.start();
-	}
-	
-	public void updateScore() {
-	  int score = level.getScore();
-	  score1.setText(score + "");
-	}
-    /**
-     * States the game can be in.
-     */
-	public enum GameState {
-		PAUSED, RUNNING, WON, LOST
-	}
+  @FXML
+  private Canvas canvas;
+  private GraphicsContext gc;
+  private AnimationTimer timer;
+
+  private GameState gameState;
+  private Level level;
+
+  private ArrayList<Ball> balls;
+  private ArrayList<Projectile> projectiles;
+  private int ballSpeed = 3;
+  private int shootSpeed = 12;
+  private int startHeight = 200;
+  private int ballSize = 96;
+
+  /**
+   * Initialization of the game pane.
+   */
+  @FXML
+  public void initialize() {
+    gameState = GameState.RUNNING;
+    Builder b = new Builder();
+    b.setCanvas(canvas);
+    ArrayList<Player> players = new ArrayList<Player>();
+    players.add(new Player((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 72), 72, 50));
+    b.setPlayers(players);
+    balls = new ArrayList<Ball>();
+    balls.add(new Ball(0, startHeight, 3, 0, ballSize));
+    b.setBalls(balls);
+    level = b.build();
+    createTimer();
+    timer.start();
+  }
+
+  public void createTimer() {
+    timer = new AnimationTimer() {
+      @Override
+      public void handle(long now) {
+        level.update();
+        updateScore();
+        updateProgressBar();
+      }
+    };
+  }
+
+  public void updateScore() {
+    int score = level.getScore();
+    score1.setText(score + "");
+  }
+
+  public void updateProgressBar() {
+    double progress = level.getCurrentTime() / level.getTime();
+    if (progress <= 0) {
+      timer.stop();
+      createFreeze();
+      level.setCurrentTime(level.getTime());
+      // TODO level.gameOver();
+    }
+    progressBar.setProgress(progress);
+  }
+
+  public void createFreeze() {
+    Task<Void> sleeper = new Task<Void>() {
+      @Override
+      protected Void call() throws Exception {
+        try {
+          Thread.sleep(3000);
+        } catch (InterruptedException e) {
+        }
+        return null;
+      }
+    };
+    sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+      public void handle(WorkerStateEvent event) {
+        timer.start();
+      }
+    });
+    new Thread(sleeper).start();
+  }
+
+  /**
+   * States the game can be in.
+   */
+  public enum GameState {
+    PAUSED, RUNNING, WON, LOST
+  }
 }
