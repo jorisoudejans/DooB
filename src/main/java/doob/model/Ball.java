@@ -10,21 +10,30 @@ public class Ball implements Collidable, Drawable {
 	private double speedX;
 	private double speedY;
 	private double size;
-
-	private int ballSpeed = 3;
+	private int bounceSpeed;
+	private int splitBounce;
+	private int ballSpeed;
 
 	private int canvasWidth;
 	private int canvasHeight;
-
-	public Ball(double x, double y, double speedX, double speedY, double size, int canvasWidth, int canvasHeight) {
+	
+	/**
+	 * Constructor.
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @param speedX x-axis speed
+	 * @param speedY y-axis speed
+	 * @param size the size of the ball
+	 */
+	public Ball(double x, double y, double speedX, double speedY, double size) {
 		this.x = x;
 		this.y = y;
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.size = size;
-
-		this.canvasWidth = canvasWidth;
-		this.canvasHeight = canvasHeight;
+		this.ballSpeed = 3;
+		this.bounceSpeed = -8;
+		this.splitBounce = -10;
 	}
 
 	public void draw(GraphicsContext graphicsContext) {
@@ -36,16 +45,28 @@ public class Ball implements Collidable, Drawable {
 	 */
 	public void move() {
 		moveHorizontally();
-		if (x + size >= canvasWidth) {
+		/*if (x + size >= canvasWidth) {
 			setSpeedX(-ballSpeed);
 		} else if (x <= 0) {
 			setSpeedX(ballSpeed);
-		}
+		}*/
 		moveVertically();
 		incrSpeedY(0.5);
-		if (y + size > canvasHeight) {
+		/*if (y + size > canvasHeight) {
 			setSpeedY(getBounceSpeed());
-		}
+		}*/
+	}
+	/**
+	 * Split function which handles the creation of new balls after one is hit.
+	 * @return A list of new balls.
+	 */
+	public Ball[] split() {
+		Ball ball1 = new Ball(this.x, this.y, ballSpeed, splitBounce, this.size / 2);
+		Ball ball2 = new Ball(this.x, this.y, -ballSpeed, splitBounce, this.size / 2);
+		Ball[] res =  new Ball[2];
+		res[0] = ball1;
+		res[1] = ball2;
+		return res;		
 	}
 
 	public boolean collides(Collidable other) {
@@ -109,19 +130,39 @@ public class Ball implements Collidable, Drawable {
 	}
 
 	public Circle getBounds() {
-		return new Circle(x, y, size);
+		return new Circle(x + size / 2, y + size / 2, size / 2);
 	}
 	
 	public double getBounceSpeed() {
-		if (size == 100) {
+		if (size == 96) {
 			return -20;
-		} else if (size == 50) {
+		} else if (size == 48) {
 			return -18;
-		} else if (size == 25) {
+		} else if (size == 24) {
 			return -16;
-		} else if (size == 12.5) {
+		} else if (size == 12) {
 			return -14;
 		}
 		return -12;
+	}
+
+	public int getsplitBounce() {
+		return splitBounce;
+	}
+
+	public void setsplitBounce(int splitBounce) {
+		this.splitBounce = splitBounce;
+	}
+
+	public int getBallSpeed() {
+		return ballSpeed;
+	}
+
+	public void setBallSpeed(int ballSpeed) {
+		this.ballSpeed = ballSpeed;
+	}
+
+	public void setBounceSpeed(int bounceSpeed) {
+		this.bounceSpeed = bounceSpeed;
 	}
 }
