@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -62,7 +63,10 @@ public class Level {
 				(int) (canvas.getWidth() / 2),
 				(int) (canvas.getHeight() - 72),
 				72,
-				50
+				50,
+				new Image("/image/character1_stand.png"),
+				new Image("/image/character1_left.gif"),
+				new Image("/image/character1_right.gif")
 		));
 		startTimer();
 		projectiles = new ArrayList<Projectile>();
