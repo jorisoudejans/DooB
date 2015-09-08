@@ -1,5 +1,6 @@
 package doob.model;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
@@ -10,22 +11,20 @@ import java.util.ArrayList;
  */
 public class LevelFactory {
 
-    String file;
+    File file;
     Canvas canvas;
     ArrayList<Player> playerList;
     ArrayList<Ball> ballList;
 
 
-    public LevelFactory(String file, Canvas canvas){
-        this.file = file;
+    public LevelFactory(String path, Canvas canvas){
+        this.file = new File(path);
         this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
     }
 
-
-
-    public void build() {
+    public Level build() {
 
         //XML parsing
         try {
@@ -54,7 +53,15 @@ public class LevelFactory {
                             .item(0)
                             .getTextContent());
 
-                    Player pl = new Player(x, y, width, height);
+                    Player pl = new Player(
+                            x,
+                            y,
+                            width,
+                            height,
+                            new Image("/image/character1_stand.png"),
+                            new Image("/image/character1_left.png"),
+                            new Image("/image/character1_right.png")
+                    );
                     playerList.add(pl);
                 }
             }
@@ -81,7 +88,7 @@ public class LevelFactory {
                             .item(0)
                             .getTextContent());
 
-                    Ball ball = new Ball(x, y, speedX, speedY, size, (int) canvas.getWidth(), (int) canvas.getHeight());
+                    Ball ball = new Ball(x, y, speedX, speedY, size);
                     ballList.add(ball);
                 }
             }
@@ -95,9 +102,7 @@ public class LevelFactory {
         builder.setCanvas(canvas);
         builder.setPlayers(playerList);
 
-        builder.build();
-
-
+        return builder.build();
     }
 
 }

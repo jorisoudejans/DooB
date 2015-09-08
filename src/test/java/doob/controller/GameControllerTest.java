@@ -1,3 +1,4 @@
+/*
 package doob.controller;
 
 import doob.FXTestCase;
@@ -12,9 +13,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
+*/
 /**
  * Created by hidde on 9/8/15.
- */
+ *//*
+
 public class GameControllerTest extends FXTestCase {
 
     @Spy
@@ -29,28 +32,35 @@ public class GameControllerTest extends FXTestCase {
         gameController = new GameController(canvas);
     }
 
-    /**
+    */
+/**
      * Tests game initialization.
-     */
+     *//*
+
     @Test
     public void testConstructor() {
         GameController gameController = new GameController(canvas);
         assertNotNull(gameController);
     }
 
-    /**
+    */
+/**
      * Tests the level function.
-     */
+     *//*
+
     @Test
     public void testGetLevel() {
         assertNotNull(gameController.getLevel());
     }
 
-    /**
+    */
+/**
      * Verifies the game state method
-     */
+     *//*
+
     @Test
     public void testGetGameState() {
         assertEquals(GameController.GameState.RUNNING, gameController.getGameState());
     }
 }
+*/

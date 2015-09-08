@@ -1,10 +1,6 @@
 package doob.controller;
 
-import doob.model.Ball;
-import doob.model.Level;
-import doob.model.Player;
-import doob.model.Projectile;
-import doob.model.Wall;
+import doob.model.*;
 import doob.model.Level.Builder;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -29,6 +25,8 @@ import java.util.ArrayList;
  */
 public class GameController {
 
+    @FXML Canvas canvas;
+
   @FXML
   private Pane lives1;
   @FXML
@@ -40,6 +38,11 @@ public class GameController {
   @FXML
   private ProgressBar progressBar;
 
+/*    public GameController(Canvas canvas) {
+        this.canvas = canvas;
+        initialize();
+    }*/
+
     /**
      * Initialization of the game pane.
      */
@@ -47,6 +50,9 @@ public class GameController {
 	public void initialize() {
 		gameState = GameState.RUNNING;
 		level = new Level(canvas);
+        level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
+        createTimer();
+        timer.start();
 	}
 
   private GameState gameState;
@@ -59,24 +65,7 @@ public class GameController {
   private int startHeight = 200;
   private int ballSize = 96;
 
-  /**
-   * Initialization of the game pane.
-   */
-  @FXML
-  public void initialize() {
-    gameState = GameState.RUNNING;
-    Builder b = new Builder();
-    b.setCanvas(canvas);
-    ArrayList<Player> players = new ArrayList<Player>();
-    players.add(new Player((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 72), 50, 72));
-    b.setPlayers(players);
-    balls = new ArrayList<Ball>();
-    balls.add(new Ball(0, startHeight, 3, 0, ballSize));
-    b.setBalls(balls);
-    level = b.build();
-    createTimer();
-    timer.start();
-  }
+  private AnimationTimer timer;
 
   public void createTimer() {
     timer = new AnimationTimer() {
@@ -129,7 +118,15 @@ public class GameController {
 
   }
 
-  /**
+    public Level getLevel() {
+        return level;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    /**
    * States the game can be in.
    */
   public enum GameState {
