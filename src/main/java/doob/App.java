@@ -22,7 +22,7 @@ public class App extends Application {
     public void start(Stage stageIn) {
         stage = stageIn;
         stage.setTitle("DooB");
-        loadScene("/FXML/Menu.fxml");
+        loadScene("/FXML/menu.fxml");
     }
 
     /**
