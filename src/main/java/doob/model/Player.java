@@ -25,18 +25,17 @@ public class Player implements Collidable, Drawable {
      * @param width view width.
      * @param height view height.
      */
-    public Player(int x, int y, int width, int height) {
+    public Player(int x, int y, int width, int height, Image imageS, Image imageL, Image imageR) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.speed = 0;
 
-        imageStand = new Image("/image/character1_stand.png");
-        imageLeft = new Image("/image/character1_left.gif");
-        imageRight = new Image("/image/character1_right.gif");
+        imageStand = imageS;
+        imageLeft = imageL;
+        imageRight = imageR;
 
-        //projectiles = new ArrayList<Projectile>();
     }
 
     /**
@@ -58,6 +57,8 @@ public class Player implements Collidable, Drawable {
     }
 
     public void draw(GraphicsContext g) {
+        if (g == null)
+            throw new IllegalStateException("GraphicsContext can not be null");
         Image image = imageStand;
         if (speed > 0) {
             image = imageRight;

@@ -6,7 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Hello world!
@@ -20,7 +22,7 @@ public class App extends Application {
     public void start(Stage stageIn) {
         stage = stageIn;
         stage.setTitle("DooB");
-        loadScene("/fxml/menu.fxml");
+        loadScene("/FXML/Menu.fxml");
     }
 
     /**
