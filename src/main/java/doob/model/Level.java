@@ -4,10 +4,14 @@ import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 
+/**
+ * Level class, created from TODO LevelFactory.
+ */
 public class Level {
 
 	private Canvas canvas;
@@ -16,15 +20,19 @@ public class Level {
 	private ArrayList<Ball> balls;
 	private ArrayList<Projectile> projectiles;
 	private ArrayList<Player> players;
-	private int ballSpeed = 3;
 	private int shootSpeed = 12;
 	private int startHeight = 200;
 	private int ballSize = 100;
+    private int playerSpeed = 6;
+	
+	private boolean endlessLevel;
 
 	/**
 	 * Initialize javaFx.
+	 * @param canvas the canvas to be drawn upon.
 	 */
 	public Level(Canvas canvas) {
+		this.endlessLevel = true;
 		this.canvas = canvas;
 		gc = canvas.getGraphicsContext2D();
 		canvas.setFocusTraversable(true);
@@ -32,12 +40,23 @@ public class Level {
 
 		canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent key) {
-				players.get(0).setSpeed(0);
+				if (key.getCode() != KeyCode.SPACE) {
+					players.get(0).setSpeed(0);
+				}
 			}
 		});
+
 		canvas.requestFocus();
 		balls = new ArrayList<Ball>();
-		balls.add(new Ball(0, startHeight, ballSpeed, 0, ballSize));
+		balls.add(new Ball(
+						0,
+						startHeight,
+						3,
+						0,
+						ballSize,
+						(int) canvas.getWidth(),
+						(int) canvas.getHeight())
+		);
 		players = new ArrayList<Player>();
 		players.add(new Player(
 				(int) (canvas.getWidth() / 2),
@@ -50,37 +69,88 @@ public class Level {
 	}
 
 	/**
-	 * Create a new projectile and shoot it.
+	 * Create a new projectile and move it.
 	 * @param player the player that shoots the projectile.
 	 */
 	public void shoot(Player player) {
-		projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
+		if(projectiles.size() < 1) {
+			//TODO there can be a powerup for which there can be more than one projectile.
+			projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
+		}
 	}
-
+	
 	/**
-	 * Loops through every object in the game to detect collisions.
+	 * For testing purposes, an endless level.
 	 */
-	public void detectCollisions() {
-		for (Ball b : balls) {
-			if (b.getBounds().intersects(players.get(0).getX(), players.get(0).getY(),
-					players.get(0).getWidth(), players.get(0).getHeight())) {
-				//TODO
-				System.out.println("Crushed");
+	public void endlessLevel() {
+		if (endlessLevel && balls.size() == 0) {
+			balls.add(new Ball(0,
+						startHeight,
+						3,
+						0,
+						ballSize,
+						(int) canvas.getWidth(),
+						(int) canvas.getHeight()));
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void projectileCeilingCollision() {
+	  int projHitIndex = -1;
+		for (int i = 0; i < projectiles.size(); i++) {
+			//TODO If projectile collides with wall, it should be removed. 
+			//Wall object has to be created.
+		  Projectile p = projectiles.get(i);
+			if (p.getY() <= 0) {
+			  projHitIndex = i;
+				//projectiles.remove(p);
 			}
-			for (Projectile p : projectiles) {
-				if (b.getBounds().intersects(
-						p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight()
-				)) {
-					projectiles.remove(p);
+		}
+		if (projHitIndex != -1) projectiles.remove(projHitIndex);
+	}
+	
+	/**
+	 * Checks for each ball if it collides with a projectile.
+	 */
+	public void ballProjectileCollision() {
+	  int ballHitIndex = -1;
+	  int projHitIndex = -1;
+		for (int i = 0; i < balls.size(); i++) {
+		  Ball b = balls.get(i);
+			for (Player p : players) {
+				if (p.collides(b)) {
+					//TODO Player should die, but for now it collides too fast, boundaries should be modified.				  
+					System.out.println("Crushed");
+				}
+			}
+			for (int j = 0; j < projectiles.size(); j++) {
+			  Projectile p = projectiles.get(j);
+				if (p.collides(b)) {
+					//projectiles.remove(p);
+				  projHitIndex = j;
 					if (b.getSize() >= 15) {
-						balls.add(new Ball(b.getX(), b.getY(), ballSpeed, -5, b.getSize() / 2));
-						balls.add(new Ball(b.getX(), b.getY(), -ballSpeed, -5, b.getSize() / 2));
+						balls.add(new Ball(b.getX(), b.getY(), 3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
+						balls.add(new Ball(b.getX(), b.getY(), -3, -5, b.getSize() / 2, (int) canvas.getWidth(), (int) canvas.getHeight()));
 					}
-					balls.remove(b);
+					//balls.remove(b);
+					ballHitIndex = i;
 					System.out.println("HIT");
 				}
 			}
 		}
+		if (ballHitIndex != -1) balls.remove(ballHitIndex);
+		if (projHitIndex != -1) projectiles.remove(projHitIndex);
+	}
+	
+	/**
+	 * Loops through every object in the game to detect collisions.
+	 */
+	public void detectCollisions() {
+		//TODO split in different collision functions.
+		projectileCeilingCollision();
+		ballProjectileCollision();
 	}
 
 	/**
@@ -88,30 +158,7 @@ public class Level {
 	 */
 	public void moveBalls() {
 		for (Ball b: balls) {
-			b.moveHorizontally();
-			if (b.getX() + b.getSize() >= canvas.getWidth()) {
-				b.setSpeedX(-ballSpeed);
-			} else if (b.getX() <= 0) {
-				b.setSpeedX(ballSpeed);
-			}
-			b.moveVertically();
-			b.incrSpeedY(0.5);
-			if (b.getY() + b.getSize() > canvas.getHeight()) {
-				b.setSpeedY(b.getBounceSpeed());
-			}
-		}
-	}
-
-	/**
-	 * Handles movement of projectiles.
-	 */
-	public void shootProjectiles() {
-		for (Projectile p : projectiles) {
-			if (p.getY() <= 0) {
-				projectiles.remove(p);
-			} else {
-				p.shoot();
-			}
+			b.move();
 		}
 	}
 
@@ -124,6 +171,7 @@ public class Level {
 		players.get(0).draw(gc);
 		for (Projectile p : projectiles) {
 			gc.drawImage(p.getImg(), p.getX(), p.getY());
+			p.draw(gc);
 		}
 		for (Ball b: balls) {
 			b.draw(gc);
@@ -137,29 +185,44 @@ public class Level {
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				moveBalls();
-				shootProjectiles();
+				for (Drawable drawable : projectiles) {
+					drawable.move();
+					drawable.draw(gc);
+				}
+				endlessLevel();
 				detectCollisions();
+				moveBalls();
 				paint();
 				for (Player player : players) {
 					player.move();
 				}
-				//collide();
 			}
 		}.start();
 	}
 
-	/**
+    public void setBalls(ArrayList<Ball> balls) {
+        this.balls = balls;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+    /**
 	 * Handler for key presses.
 	 */
 	private class KeyPressHandler implements EventHandler<KeyEvent> {
 		public void handle(KeyEvent key) {
 			switch (key.getCode()) {
 				case RIGHT:
-					players.get(0).setSpeed(6);
+					players.get(0).setSpeed(playerSpeed);
 					break;
 				case LEFT:
-					players.get(0).setSpeed(-6);
+					players.get(0).setSpeed(-playerSpeed);
 					break;
 				case SPACE:
 					shoot(players.get(0));
@@ -169,6 +232,61 @@ public class Level {
 					break;
 			}
 		}
+	}
+
+	public boolean isEndlessLevel() {
+		return endlessLevel;
+	}
+
+	public void setEndlessLevel(boolean endlessLevel) {
+		this.endlessLevel = endlessLevel;
+	}
+
+	/**
+	 * Builder class
+	 */
+	public static class Builder {
+
+        private Canvas canvas;
+        private ArrayList<Ball> balls;
+        private ArrayList<Player> players;
+        private int playerSpeed = 12;
+
+        /**
+         * Constructor.
+         */
+        public Builder() {
+            super();
+        }
+
+        public Builder setCanvas(Canvas canvas) {
+            this.setCanvas(canvas);
+            return this;
+        }
+
+        public Builder setBalls(ArrayList<Ball> balls) {
+            this.setBalls(balls);
+            return this;
+        }
+
+        public Builder setPlayers(ArrayList<Player> players) {
+            this.setPlayers(players);
+            return this;
+        }
+
+        public Builder setPlayerSpeed(int playerSpeed) {
+            this.playerSpeed = playerSpeed;
+            return this;
+        }
+
+        public Level build() {
+            Level level = new Level(canvas);
+            level.setBalls(balls);
+            level.setPlayers(players);
+            level.setPlayerSpeed(playerSpeed);
+            return level;
+        }
+
 	}
 
 }
