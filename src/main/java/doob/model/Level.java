@@ -26,6 +26,7 @@ public class Level {
 	private int startHeight = 200;
 	private int ballSize = 100;
     private int playerSpeed = 6;
+    private int score = 0;
     
     private Wall right;
     private Wall left;
@@ -126,6 +127,7 @@ public class Level {
 						balls.add(res[1]);
 					}
 					ballHitIndex = i;
+					score += 100;
 					System.out.println("HIT");
 				}
 			}
@@ -264,6 +266,14 @@ public class Level {
 
     public void setPlayerSpeed(int playerSpeed) {
         this.playerSpeed = playerSpeed;
+    }
+    
+    public int getScore() {
+      return score;
+    }
+    
+    public void setScore(int score) {
+      this.score = score;
     }
 
     /**

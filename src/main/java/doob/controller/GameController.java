@@ -77,8 +77,14 @@ public class GameController {
 			@Override
 			public void handle(long now) {
 				level.update();
+				updateScore();
 			}
 		}.start();
+	}
+	
+	public void updateScore() {
+	  int score = level.getScore();
+	  score1.setText(score + "");
 	}
     /**
      * States the game can be in.
