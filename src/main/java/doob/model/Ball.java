@@ -130,7 +130,7 @@ public class Ball implements Collidable, Drawable {
 	}
 
 	public Circle getBounds() {
-		return new Circle(x, y, size);
+		return new Circle(x + size / 2, y + size / 2, size / 2);
 	}
 	
 	public double getBounceSpeed() {

@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Shape;
@@ -71,7 +72,7 @@ public class Level {
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
       // TODO there can be a powerup for which there can be more than one projectile.
-      projectiles.add(new Spike(player.getX(), canvas.getHeight(), shootSpeed));
+      projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(), shootSpeed));
     }
   }
 
@@ -107,18 +108,6 @@ public class Level {
     int projHitIndex = -1;
     for (int i = 0; i < balls.size(); i++) {
       Ball b = balls.get(i);
-      for (Player p : players) {
-        if (p.collides(b)) {
-          try {
-            Thread.sleep(50);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          // TODO Player should die, but for now it collides too fast,
-          // boundaries should be modified.
-          System.out.println("Crushed");
-        }
-      }
       for (int j = 0; j < projectiles.size(); j++) {
         Projectile p = projectiles.get(j);
         if (p.collides(b)) {
@@ -171,6 +160,18 @@ public class Level {
         p.setX((int) canvas.getWidth() - p.getWidth());
       }
     }
+  }
+
+  public boolean ballPlayerCollision() {
+    boolean res = false;
+    for (Ball b : balls) {
+      for (Player p : players) {
+        if (p.collides(b)) {
+          res = true;
+        }
+      }
+    }
+    return res;
   }
 
   // TODO Collisionfunctions should be moved
@@ -226,6 +227,28 @@ public class Level {
     for (Player player : players) {
       player.move();
     }
+  }
+
+  public void nextLevel() {
+    // TODO
+  }
+
+  public void gameOver() {
+    // lives -1;
+    currentTime = time;
+    restartLevel();
+  }
+
+  public void restartLevel() {
+    balls.clear();
+    balls.add(new Ball(0, startHeight, 3, 0, ballSize));
+    projectiles.clear();
+    players.get(0).setX((int) (canvas.getWidth() / 2));
+  }
+
+  public void drawCrushed() {
+    Image i = new Image("/image/crushed.png");
+    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
   }
 
   public Wall getRight() {

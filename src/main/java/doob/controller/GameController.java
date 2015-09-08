@@ -18,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
@@ -63,7 +64,7 @@ public class GameController {
     Builder b = new Builder();
     b.setCanvas(canvas);
     ArrayList<Player> players = new ArrayList<Player>();
-    players.add(new Player((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 72), 72, 50));
+    players.add(new Player((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 72), 50, 72));
     b.setPlayers(players);
     balls = new ArrayList<Ball>();
     balls.add(new Ball(0, startHeight, 3, 0, ballSize));
@@ -80,6 +81,10 @@ public class GameController {
         level.update();
         updateScore();
         updateProgressBar();
+        if(level.ballPlayerCollision()){
+          level.drawCrushed();
+          createFreeze();
+        }
       }
     };
   }
@@ -92,10 +97,8 @@ public class GameController {
   public void updateProgressBar() {
     double progress = level.getCurrentTime() / level.getTime();
     if (progress <= 0) {
-      timer.stop();
       createFreeze();
-      level.setCurrentTime(level.getTime());
-      // TODO level.gameOver();
+      return;
     }
     progressBar.setProgress(progress);
   }
@@ -105,7 +108,7 @@ public class GameController {
       @Override
       protected Void call() throws Exception {
         try {
-          Thread.sleep(3000);
+          Thread.sleep(2000);
         } catch (InterruptedException e) {
         }
         return null;
@@ -113,10 +116,13 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
+        level.gameOver();
         timer.start();
       }
     });
     new Thread(sleeper).start();
+    timer.stop();
+
   }
 
   /**
