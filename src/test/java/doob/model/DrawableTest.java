@@ -2,6 +2,7 @@ package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
 import junit.framework.TestCase;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Created by hidde on 9/8/15.
  */
-public class DrawableTest extends TestCase {
+public class DrawableTest {
 
     @Mock protected Drawable drawable;
     @Mock protected GraphicsContext graphicsContextMock;
@@ -20,6 +21,7 @@ public class DrawableTest extends TestCase {
     /**
      * Sets up the drawable to be tested.
      */
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
@@ -27,6 +29,7 @@ public class DrawableTest extends TestCase {
     /**
      * Test the draw function of a drawable.
      */
+    @Test
     public void testDraw() {
         drawable.draw(graphicsContextMock);
 
@@ -39,7 +42,5 @@ public class DrawableTest extends TestCase {
     @Test(expected=IllegalStateException.class)
     public void testDrawNull() {
         drawable.draw(null);
-
-
     }
 }

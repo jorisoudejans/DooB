@@ -7,7 +7,7 @@ import junit.framework.TestCase;
  *
  * Cases with some simple game smoke tests (launching the game)
  */
-public class AppSmokeTest extends TestCase {
+public class AppSmokeTest {
 
 
 
