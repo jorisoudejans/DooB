@@ -9,8 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by hidde on 9/8/15.
@@ -27,6 +26,8 @@ public class DrawableTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        doThrow(new IllegalStateException("Mocked exception")).when(drawable).draw(null);
     }
 
     /**
@@ -34,9 +35,7 @@ public class DrawableTest {
      * still a problem.
      */
     @Test
-    @Ignore
     public void testDraw() {
-        drawable.draw(null);
 
         // we can't verify anything at the moment, this should be done in the subclassed testcases
     }
