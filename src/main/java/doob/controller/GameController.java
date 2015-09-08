@@ -39,6 +39,11 @@ public class GameController {
 	private int startHeight = 200;
 	private int ballSize = 100;
 
+	public GameController(Canvas c) {
+		this.canvas = c;
+		initialize();
+	}
+
     /**
      * Initialization of the game pane.
      */
@@ -46,6 +51,22 @@ public class GameController {
 	public void initialize() {
 		gameState = GameState.RUNNING;
 		level = new Level(canvas);
+	}
+
+	/**
+	 * Returns the current game's state.
+	 * @return the game's state
+	 */
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	/**
+	 * Returns the current level.
+	 * @return the current level.
+	 */
+	public Level getLevel() {
+		return level;
 	}
 
     /**
