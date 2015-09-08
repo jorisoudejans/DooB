@@ -3,8 +3,12 @@ package doob.model;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
+ *
+ * Testing Player on implementing Drawable.
+ *
  * Created by hidde on 9/8/15.
  */
 public class PlayerTest extends DrawableTest {
@@ -20,9 +24,19 @@ public class PlayerTest extends DrawableTest {
     @Override
     public void setUp() {
 
-
         this.player = new Player(PLAYER_INITIAL_X, PLAYER_INITIAL_Y, 100, 100, null, null, null);
         this.drawable = this.player; // init drawable for superclass tests
+    }
+
+    /**
+     * Tests the construction of player.
+     */
+    @Test
+    public void testConstructor() {
+
+        this.player = new Player(PLAYER_INITIAL_X, PLAYER_INITIAL_Y, 100, 100, null, null, null);
+        assertNotNull(this.player);
+
     }
 
     /**
