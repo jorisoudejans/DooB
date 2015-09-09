@@ -59,8 +59,8 @@ public class LevelFactory {
                             width,
                             height,
                             new Image("/image/character1_stand.png"),
-                            new Image("/image/character1_left.png"),
-                            new Image("/image/character1_right.png")
+                            new Image("/image/character1_left.gif"),
+                            new Image("/image/character1_right.gif")
                     );
                     playerList.add(pl);
                 }
