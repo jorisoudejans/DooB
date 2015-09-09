@@ -16,7 +16,6 @@ public class LevelFactory {
     ArrayList<Player> playerList;
     ArrayList<Ball> ballList;
 
-
     public LevelFactory(String path, Canvas canvas){
         this.file = new File(path);
         this.canvas = canvas;
