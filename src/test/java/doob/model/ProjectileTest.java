@@ -1,8 +1,10 @@
 package doob.model;
 
 import static org.junit.Assert.*;
+import javafx.scene.image.Image;
 
 import org.mockito.*;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -11,6 +13,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,20 +25,24 @@ public class ProjectileTest {
 	
 	private Projectile p1;
 	
-	@Mock
 	private Ball b1;
 	
 	@Before
 	public void setup() {
-		p1 = new Spike(220, 200, 10);
+		p1 = new Spike(220, 200, -1);
+		b1 = new Ball(220, 200, 30, 30, 30);
 	}
 	
 	@Test
 	public void ProjectileBallCollisiontest() {
-		when(b1.getX()).thenReturn((double) 220);
-		when(b1.getY()).thenReturn((double) 200);
-		when(b1.getSize()).thenReturn((double) 30);
 		assertTrue(p1.collides(b1));
 	}
+	
+	/*@Test
+	public void getterSetterTest() {
+		assertSame(p1.getX(), 220.0);
+		assertSame(p1.getY(), 200.0);
+		assertSame(p1.getShootSpeed(), -1);
+	}*/
 
 }
