@@ -35,8 +35,11 @@ public abstract class Projectile implements Drawable, Collidable {
     public boolean collides(Collidable other) {
         if (other instanceof Ball) {
             Ball b = (Ball) other;
-            return b.getBounds().intersects(x, y, img.getWidth(), img.getHeight());
-        }
+			if (img != null) {
+				return b.getBounds().intersects(x, y, img.getWidth(), img.getHeight());
+			}
+			return b.getBounds().intersects(x, y, 20, 20); // for testing
+		}
         return false;
     }
 	

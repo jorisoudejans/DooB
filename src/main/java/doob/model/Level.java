@@ -317,6 +317,9 @@ public class Level {
     this.currentTime = currentTime;
   }
 
+  public void setShootSpeed(int shootSpeed) {
+    this.shootSpeed = shootSpeed;
+  }
   /**
    * Handler for key presses.
    */
