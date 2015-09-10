@@ -30,9 +30,9 @@ import java.util.ArrayList;
 public class GameController {
 
   @FXML
-  private Pane lives1;
+  private Canvas lives1;
   @FXML
-  private Pane lives2;
+  private Canvas lives2;
   @FXML
   private Label score1;
   @FXML
@@ -50,6 +50,7 @@ public class GameController {
 
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
+  private ArrayList<Player> players;
   private int ballSpeed = 3;
   private int shootSpeed = 12;
   private int startHeight = 200;
@@ -63,7 +64,8 @@ public class GameController {
     gameState = GameState.RUNNING;
     Builder b = new Builder();
     b.setCanvas(canvas);
-    ArrayList<Player> players = new ArrayList<Player>();
+    gc = lives1.getGraphicsContext2D();
+    players = new ArrayList<Player>();
     players.add(new Player((int) (canvas.getWidth() / 2), (int) (canvas.getHeight() - 72), 50, 72));
     b.setPlayers(players);
     balls = new ArrayList<Ball>();
@@ -81,6 +83,7 @@ public class GameController {
         level.update();
         updateScore();
         updateProgressBar();
+        updateLives();
         if(level.ballPlayerCollision()){
           level.drawCrushed();
           createFreeze();
@@ -101,6 +104,16 @@ public class GameController {
       return;
     }
     progressBar.setProgress(progress);
+  }
+  
+  public void updateLives() {
+    gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
+    for(Player p : players) {
+      System.out.println(p.getLives());
+      for(int i = 0; i < p.getLives(); i++) {
+        gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
+      }
+    }
   }
 
   public void createFreeze() {

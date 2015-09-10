@@ -234,7 +234,8 @@ public class Level {
   }
 
   public void gameOver() {
-    // lives -1;
+    Player p = players.get(0);
+    p.setLives(p.getLives() - 1);
     currentTime = time;
     restartLevel();
   }
