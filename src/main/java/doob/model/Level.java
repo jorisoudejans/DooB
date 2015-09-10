@@ -134,15 +134,13 @@ public class Level {
    */
   public void ballWallCollision() {
     for (Ball b : balls) {
-      if (b.getBounds().intersects(floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight())) {
+      if (b.collides(floor)) {
         System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
-      } else if (b.getBounds().intersects(left.getX(), left.getY(), left.getWidth(),
-          left.getHeight())) {
+      } else if (b.collides(left)) {
         System.out.println("Hit the left wall");
         b.setSpeedX(b.getBallSpeed());
-      } else if (b.getBounds().intersects(right.getX(), right.getY(), right.getWidth(),
-          right.getHeight())) {
+      } else if (b.collides(right)) {
         System.out.println("Het the right wall");
         b.setSpeedX(-1 * (b.getBallSpeed()));
       }

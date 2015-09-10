@@ -70,7 +70,21 @@ public class Ball implements Collidable, Drawable {
 	}
 
 	public boolean collides(Collidable other) {
-		return false;
+        if (other instanceof Wall) {
+            Wall w = (Wall) other;
+            if (this.getBounds().intersects(w.getX(), w.getY(), w.getWidth(), w.getHeight())) {
+                System.out.println("Hit a wall");
+                return true;
+            }
+        }
+        else if (other instanceof Projectile) {
+            Projectile p = (Projectile) other;
+            if (this.getBounds().intersects(p.getX(), p.getY(), p.getImg().getWidth(), p.getImg().getHeight())) {
+                return true;
+            }
+        }
+        return false;
+
 	}
 
 	public double getSize() {
