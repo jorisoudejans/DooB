@@ -1,25 +1,20 @@
 package doob.controller;
 
-import doob.App;
-import doob.FXTestCase;
-import doob.JavaFXThreadingRule;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Pane;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
-import java.io.IOException;
+import org.hamcrest.core.IsNot;
+import org.junit.Test;
+import doob.model.Level;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
+ * Tests controller of game by using a junit rule.
+ *
  * Created by hidde on 9/8/15.
  */
 
@@ -30,8 +25,7 @@ public class GameControllerTest extends ControllerTest {
      */
     @Test
     public void testBasic() {
-        GameController gameController = (GameController)getController("/fxml/game.fxml");
-        assertNotNull(gameController);
+        assertNotNull(getGameController());
     }
 
     /**
@@ -39,8 +33,7 @@ public class GameControllerTest extends ControllerTest {
      */
     @Test
     public void testInitialize() {
-        GameController gameController = (GameController)getController("/fxml/game.fxml");
-        assertNotNull(gameController.getLevel());
+        assertNotNull(getGameController().getLevel());
     }
 
     /**
@@ -48,9 +41,22 @@ public class GameControllerTest extends ControllerTest {
      */
     @Test
     public void testGetGameState() {
+        assertEquals(GameController.GameState.RUNNING, getGameController().getGameState());
+    }
 
-        GameController gameController = (GameController)getController("/fxml/game.fxml");
-        assertEquals(GameController.GameState.RUNNING, gameController.getGameState());
+    @Test
+    public void testCreateFreeze() throws InterruptedException{
+        /*GameController gameController = getGameController();
+        Level level = gameController.getLevel();
+        level.update(); // times now differ
+        assertThat(level.getTime(), IsNot.not(equalTo(level.getCurrentTime())));
 
+        gameController.createFreeze();
+        Thread.sleep(3000);
+        assertEquals(level.getTime(), level.getCurrentTime());*/
+    }
+
+    private GameController getGameController() {
+        return (GameController)getController("/fxml/game.fxml");
     }
 }
