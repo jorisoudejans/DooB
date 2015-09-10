@@ -85,7 +85,11 @@ public class GameController {
         updateProgressBar();
         updateLives();
         if(level.ballPlayerCollision()){
-          level.drawCrushed();
+          if(players.get(0).getLives() == 1) {
+            level.drawGameOver();
+          } else {
+            level.drawCrushed();
+          }
           createFreeze();
         }
       }
@@ -109,7 +113,6 @@ public class GameController {
   public void updateLives() {
     gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
     for(Player p : players) {
-      System.out.println(p.getLives());
       for(int i = 0; i < p.getLives(); i++) {
         gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
       }
@@ -129,8 +132,12 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
-        level.gameOver();
-        timer.start();
+        if(players.get(0).getLives() == 1) {
+          level.gameOver();
+        } else {
+          level.crushed();
+          timer.start();
+        }
       }
     });
     new Thread(sleeper).start();
