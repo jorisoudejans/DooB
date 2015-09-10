@@ -11,16 +11,23 @@ import java.util.ArrayList;
  */
 public class LevelFactory {
 
-    File file;
-    Canvas canvas;
-    ArrayList<Player> playerList;
-    ArrayList<Ball> ballList;
+    private File file;
+    private Canvas canvas;
+    private ArrayList<Player> playerList;
+    private ArrayList<Ball> ballList;
+    private Image[] playerImages;
 
     public LevelFactory(String path, Canvas canvas){
         this.file = new File(path);
         this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
+
+        playerImages = new Image[1];
+    }
+
+    public void setPlayerImages(Image[] images) {
+        this.playerImages = images;
     }
 
     public Level build() {
@@ -52,14 +59,20 @@ public class LevelFactory {
                             .item(0)
                             .getTextContent());
 
+                    if (playerImages.length < 3) {
+                        playerImages = new Image[] { new Image("/image/character1_stand.png"),
+                                new Image("/image/character1_left.gif"),
+                                new Image("/image/character1_right.gif") };
+                    }
+
                     Player pl = new Player(
                             x,
                             y,
                             width,
                             height,
-                            new Image("/image/character1_stand.png"),
-                            new Image("/image/character1_left.gif"),
-                            new Image("/image/character1_right.gif")
+                            playerImages[0],
+                            playerImages[1],
+                            playerImages[2]
                     );
                     playerList.add(pl);
                 }

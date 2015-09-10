@@ -6,7 +6,9 @@ public class Spike extends Projectile {
 	
 	public Spike(double x, double y, double shootSpeed) {
 		super(x, y, shootSpeed);
-		this.setImg(new Image("/image/Spike.png"));
+		if (shootSpeed != -1) {
+			this.setImg(new Image("/image/Spike.png"));
+		}
 	}
 
 }

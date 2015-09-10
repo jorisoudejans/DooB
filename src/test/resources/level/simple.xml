@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<level>
+    <playerList>
+        <player id="1">
+            <x>500</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+    </playerList>
+    <ballList>
+    </ballList>
+
+</level>
