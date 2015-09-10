@@ -14,14 +14,6 @@ public class AppSmokeTest {
     @Test
     public void testSmokeTest() throws Exception {
 
-        Thread t = new Thread("JavaFX Init Thread") {
-            public void run() {
-                Application.launch(App.class, new String[0]);
 
-
-            }
-        };
-        t.start();
-        Thread.sleep(4000);
     }
 }
