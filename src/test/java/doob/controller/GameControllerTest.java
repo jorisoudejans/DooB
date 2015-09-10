@@ -42,4 +42,15 @@ public class GameControllerTest extends ControllerTest {
         GameController gameController = (GameController)getController("/fxml/game.fxml");
         assertNotNull(gameController.getLevel());
     }
+
+    /**
+     * Checks the game's initial state.
+     */
+    @Test
+    public void testGetGameState() {
+
+        GameController gameController = (GameController)getController("/fxml/game.fxml");
+        assertEquals(GameController.GameState.RUNNING, gameController.getGameState());
+
+    }
 }
