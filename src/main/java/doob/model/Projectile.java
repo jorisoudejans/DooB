@@ -13,6 +13,12 @@ public abstract class Projectile implements Drawable, Collidable {
 	private double y;
 	private double shootSpeed;
 	
+	/**
+	 * Abstract projectile.
+	 * @param x the x-location of the projectile.
+	 * @param y the y-location of the projectile.
+	 * @param shootSpeed the speed at which the y-location of the projectile changes.
+	 */
 	public Projectile(double x, double y, double shootSpeed) {
 		this.x = x;
 		this.y = y;
@@ -74,7 +80,10 @@ public abstract class Projectile implements Drawable, Collidable {
 	public void setY(double y) {
 		this.y = y;
 	}
-
+	
+	/**
+	 * Moves the projectile in y direction (up and down).
+	 */
 	public void move() {
 		this.y = y - shootSpeed;
 	}
