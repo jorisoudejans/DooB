@@ -189,7 +189,7 @@ public class GameController {
         if (level.getPlayers().get(0).getLives() == 1) {
           level.gameOver();
         } else if (level.getBalls().size() == 0) {
-          if(currentLevel < levelList.size()) {
+          if(currentLevel < levelList.size() - 1) {
             currentLevel++;
             newLevel();
             timer.start();

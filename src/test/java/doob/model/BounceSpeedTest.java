@@ -15,8 +15,8 @@ public class BounceSpeedTest {
   
   @Parameters
   public static Collection<Object[]> data() {
-    return Arrays.asList(new Object[][] { { 8, -9 }, { 16, -12 }, { 32, -15 }, { 64, -18 }, { 128, -21 },
-        { 256, -24 } });
+    return Arrays.asList(new Object[][] { { 8, -6 }, { 16, -8 }, { 32, -10 }, { 64, -12 }, { 128, -14 },
+        { 256, -16 } });
   }
 
   private int input;

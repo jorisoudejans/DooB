@@ -12,7 +12,7 @@
         <ball id="1">
             <x>0</x>
             <y>200</y>
-            <speedX>-3</speedX>
+            <speedX>-2</speedX>
             <speedY>0</speedY>
             <size>128</size>
         </ball>

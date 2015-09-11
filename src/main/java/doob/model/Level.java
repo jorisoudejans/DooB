@@ -28,7 +28,7 @@ public class Level {
   private int shootSpeed = 12;
   private int startHeight = 200;
   private int ballSize = 96;
-  private int playerSpeed = 6;
+  private int playerSpeed = 3;
   private int score = 0;
   private double time = 2000;
   private double currentTime = 2000;
@@ -363,7 +363,7 @@ public class Level {
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
-    private int playerSpeed = 12;
+    private int playerSpeed = 6;
 
     /**
      * Constructor.
