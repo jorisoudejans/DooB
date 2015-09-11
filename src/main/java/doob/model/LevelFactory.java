@@ -7,9 +7,11 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Created by Shane on 8-9-2015.
+ * Class for parsing levels.
  */
 public class LevelFactory {
+
+    public static final int NUMBER_OF_PLAYER_IMAGES = 3;
 
     private File file;
     private Canvas canvas;
@@ -18,12 +20,12 @@ public class LevelFactory {
     private Image[] playerImages;
 
     /**
-     * Creates a LevelFactory object which all that is needed to build a level
+     * Creates a LevelFactory object which all that is needed to build a level.
      *
      * @param path path to the XML-file
      * @param canvas javaFX canvas
      */
-    public LevelFactory(String path, Canvas canvas){
+    public LevelFactory(String path, Canvas canvas) {
         this.file = new File(path);
         this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
@@ -37,13 +39,13 @@ public class LevelFactory {
     }
 
     /**
-     * parses an int out of an xml line
+     * parses an int out of an xml line.
      *
      * @param s The XML-tag to parse from
      * @param eElement The XML-Element to parse from
      * @return The parsed int
      */
-    public int parseInt(String s, Element eElement){
+    public int parseInt(String s, Element eElement) {
         return Integer.parseInt(eElement.getElementsByTagName(s)
                 .item(0)
                 .getTextContent());
@@ -51,13 +53,13 @@ public class LevelFactory {
     }
 
     /**
-     * Parses and adds players in the XML to the playerList
+     * Parses and adds players in the XML to the playerList.
      *
      * @param doc Document build from the XML
      */
-    public void parsePlayers(Document doc){
+    public void parsePlayers(Document doc) {
         NodeList nListPlayer = doc.getElementsByTagName("player");
-        for(int i = 0; i < nListPlayer.getLength(); i++){
+        for (int i = 0; i < nListPlayer.getLength(); i++) {
             Node nNode = nListPlayer.item(i);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
@@ -66,7 +68,7 @@ public class LevelFactory {
                 int width = parseInt("width", eElement);
                 int height = parseInt("height", eElement);
 
-                if (playerImages.length < 3) {
+                if (playerImages.length < NUMBER_OF_PLAYER_IMAGES) {
                     playerImages = new Image[] { new Image("/image/character1_stand.png"),
                             new Image("/image/character1_left.gif"),
                             new Image("/image/character1_right.gif") };
@@ -87,13 +89,13 @@ public class LevelFactory {
     }
 
     /**
-     * Parses and adds balls in the XML to the ballList
+     * Parses and adds balls in the XML to the ballList.
      *
      * @param doc Document build from the XML
      */
-    public void parseBalls(Document doc){
+    public void parseBalls(Document doc) {
         NodeList nListBall = doc.getElementsByTagName("ball");
-        for(int i = 0; i < nListBall.getLength(); i++){
+        for (int i = 0; i < nListBall.getLength(); i++) {
             Node nNode = nListBall.item(i);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
@@ -110,9 +112,9 @@ public class LevelFactory {
     }
 
     /**
-     * Parses the XML and adds all parsed objects to their respective lists
+     * Parses the XML and adds all parsed objects to their respective lists.
      */
-    public void parseXML(){
+    public void parseXML() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
@@ -123,14 +125,14 @@ public class LevelFactory {
             parsePlayers(doc);
             parseBalls(doc);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
     /**
-     * Builds the level from the parsed XML
+     * Builds the level from the parsed XML.
      * @return The build level
      */
     public Level build() {
