@@ -12,7 +12,6 @@ public class Ball implements Collidable, Drawable {
 	private int size;
 	private int bounceSpeed;
 	private int splitBounce;
-	private int ballSpeed;
 
 	private int canvasWidth;
 	private int canvasHeight;
@@ -31,7 +30,6 @@ public class Ball implements Collidable, Drawable {
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.size = size;
-		this.ballSpeed = 3;
 		this.bounceSpeed = -8;
 		this.splitBounce = -10;
 	}
@@ -61,8 +59,8 @@ public class Ball implements Collidable, Drawable {
 	 * @return A list of new balls.
 	 */
 	public Ball[] split() {
-		Ball ball1 = new Ball(this.x, this.y, ballSpeed, splitBounce, this.size / 2);
-		Ball ball2 = new Ball(this.x, this.y, -ballSpeed, splitBounce, this.size / 2);
+		Ball ball1 = new Ball(this.x, this.y, speedX, splitBounce, this.size / 2);
+		Ball ball2 = new Ball(this.x, this.y, -speedX, splitBounce, this.size / 2);
 		Ball[] res =  new Ball[2];
 		res[0] = ball1;
 		res[1] = ball2;
@@ -162,15 +160,23 @@ public class Ball implements Collidable, Drawable {
 		this.splitBounce = splitBounce;
 	}
 
-	public int getBallSpeed() {
-		return ballSpeed;
-	}
-
-	public void setBallSpeed(int ballSpeed) {
-		this.ballSpeed = ballSpeed;
-	}
-
 	public void setBounceSpeed(int bounceSpeed) {
 		this.bounceSpeed = bounceSpeed;
 	}
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    Ball other = (Ball) obj;
+    if (size == other.size && speedX == other.speedX && speedY == other.speedY && x == other.x && y == other.y){
+      return true;
+    }
+    return false;
+  }
+	
 }
