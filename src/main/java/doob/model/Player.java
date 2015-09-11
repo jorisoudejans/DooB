@@ -102,4 +102,12 @@ public class Player implements Collidable, Drawable {
     public int getSpeed() {
         return speed;
     }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
 }

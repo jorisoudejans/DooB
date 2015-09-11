@@ -51,6 +51,7 @@ public class GameController {
 		gameState = GameState.RUNNING;
 		level = new Level(canvas);
         level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
+        gc = lives1.getGraphicsContext2D();
         createTimer();
         timer.start();
 	}
@@ -67,6 +68,7 @@ public class GameController {
   private int ballSize = 96;
 
   private AnimationTimer timer;
+  private GraphicsContext gc;
 
   public void createTimer() {
     timer = new AnimationTimer() {
@@ -76,8 +78,8 @@ public class GameController {
         updateScore();
         updateProgressBar();
         updateLives();
-        if(level.ballPlayerCollision()){
-          if(players.get(0).getLives() == 1) {
+        if (level.ballPlayerCollision()) {
+          if (players.get(0).getLives() == 1) {
             level.drawGameOver();
           } else {
             level.drawCrushed();
@@ -104,8 +106,8 @@ public class GameController {
 
   public void updateLives() {
     gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
-    for(Player p : players) {
-      for(int i = 0; i < p.getLives(); i++) {
+    for (Player p : players) {
+      for (int i = 0; i < p.getLives(); i++) {
         gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
       }
     }
