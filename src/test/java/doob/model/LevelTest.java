@@ -132,6 +132,7 @@ public class LevelTest {
     @Test
     public void testProjectileCeilingCollision() {
         Level level = basicLevel();
+        level.setShootSpeed(-1);
         Player player = new Player(100, -10, 20, 20, null, null, null);
         ArrayList<Player> players = new ArrayList<Player>();
         players.add(player);
