@@ -143,10 +143,10 @@ public class Level {
         b.setSpeedY(b.getBounceSpeed());
       } else if (b.collides(left)) {
         //System.out.println("Hit the left wall");
-        b.setSpeedX(b.getBallSpeed());
+        b.setSpeedX(-b.getSpeedX());
       } else if (b.collides(right)) {
         //System.out.println("Het the right wall");
-        b.setSpeedX(-1 * (b.getBallSpeed()));
+        b.setSpeedX(-b.getSpeedX());
       }
       // TODO Balls can collide with the ceiling, and a special bonus has to be added.
     }
