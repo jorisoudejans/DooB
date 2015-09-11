@@ -128,6 +128,35 @@ public class LevelTest {
         assertEquals(300, level.getScore());
     }
 
+    @Test
+    public void testLevelTimeUpdateOnce() {
+        Level level = complicatedLevel();
+
+        level.setCurrentTime(5.0);
+        level.update();
+        assertEquals(4.0, level.getCurrentTime(), 0.01);
+    }
+
+    @Test
+    public void testLevelTimeUpdateTwice() {
+        Level level = complicatedLevel();
+
+        level.setCurrentTime(5.0);
+        level.update();
+        level.update();
+        assertEquals(3.0, level.getCurrentTime(), 0.01);
+    }
+
+    @Test
+    public void testLevelTimeGameOver() {
+        Level level = complicatedLevel();
+
+        level.setCurrentTime(5.0);
+        level.setTime(10.0);
+        level.gameOver();
+        assertEquals(10.0, level.getCurrentTime(), 0.01);
+    }
+
     /**
      * Generates a basic level with basic walls.
      * @return Standard level
@@ -137,6 +166,23 @@ public class LevelTest {
         level.setLeft(leftWall);
         level.setRight(rightWall);
         level.setFloor(floor);
+        return level;
+    }
+
+    /**
+     * Generates a level with one player and one ball.
+     * @return level with player and ball
+     */
+    private Level complicatedLevel() {
+        Level level = basicLevel();
+        Ball ball = new Ball(100, 0, 1, 1, 20);
+        ArrayList<Ball> balls = new ArrayList<Ball>();
+        balls.add(ball);
+        level.setBalls(balls);
+        Player player = new Player(100, 0, 20, 20, null, null, null);
+        ArrayList<Player> players = new ArrayList<Player>();
+        players.add(player);
+        level.setPlayers(players);
         return level;
     }
 }
