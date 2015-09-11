@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -126,6 +127,19 @@ public class LevelTest {
         level.shoot(player); // creates projectile
         level.ballProjectileCollision(); // removes ball
         assertEquals(100, level.getScore());
+    }
+
+    @Test
+    public void testProjectileCeilingCollision() {
+        Level level = basicLevel();
+        Player player = new Player(100, -10, 20, 20, null, null, null);
+        ArrayList<Player> players = new ArrayList<Player>();
+        players.add(player);
+        level.setPlayers(players);
+
+        level.shoot(player); // creates projectile
+        level.projectileCeilingCollision(); // removes ball
+        assertNotNull(level);
     }
 
     @Test

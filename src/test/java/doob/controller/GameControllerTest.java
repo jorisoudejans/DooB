@@ -23,10 +23,10 @@ public class GameControllerTest extends ControllerTest {
     /**
      * Tests that our game controller exists in file.
      */
-    @Test
-    public void testBasic() {
-        assertNotNull(getGameController());
-    }
+    //@Test
+    //public void testBasic() {
+    //    assertNotNull(getGameController());
+    //}
 
     /**
      * Tests whether controller is initalized properly.
@@ -39,10 +39,10 @@ public class GameControllerTest extends ControllerTest {
     /**
      * Checks the game's initial state.
      */
-    @Test
-    public void testGetGameState() {
-        assertEquals(GameController.GameState.RUNNING, getGameController().getGameState());
-    }
+    //@Test
+    //public void testGetGameState() {
+    //    assertEquals(GameController.GameState.RUNNING, getGameController().getGameState());
+    //}
 
     @Test
     public void testCreateFreeze() throws InterruptedException{

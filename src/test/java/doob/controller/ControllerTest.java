@@ -22,10 +22,10 @@ public class ControllerTest {
     /**
      * Tests controller can load.
      */
-    @Test
-    public void testBasic() {
-        assertNotNull(getController("/fxml/menu.fxml"));
-    }
+    //@Test
+    //public void testBasic() {
+    //    assertNotNull(getController("/fxml/menu.fxml"));
+    //}
 
     protected Object getController(String path) {
         FXMLLoader fxmlLoader = new FXMLLoader();
