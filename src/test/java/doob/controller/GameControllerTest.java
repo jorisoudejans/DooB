@@ -31,10 +31,10 @@ public class GameControllerTest extends ControllerTest {
     /**
      * Tests whether controller is initalized properly.
      */
-    @Test
-    public void testInitialize() {
-        assertNotNull(getGameController().getLevel());
-    }
+    //@Test
+    //public void testInitialize() {
+    //    assertNotNull(getGameController().getLevel());
+    //}
 
     /**
      * Checks the game's initial state.
