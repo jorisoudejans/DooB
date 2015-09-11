@@ -1,17 +1,13 @@
 package doob.model;
 
-import javafx.animation.AnimationTimer;
+import java.util.ArrayList;
+
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Shape;
-
-import java.util.ArrayList;
-
 import doob.App;
 
 /**
@@ -25,13 +21,14 @@ public class Level {
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
-  private int shootSpeed = 12;
-  private int startHeight = 200;
-  private int ballSize = 96;
-  private int playerSpeed = 3;
   private int score = 0;
-  private double time = 2000;
-  private double currentTime = 2000;
+  private double currentTime = TIME;
+  private int playerSpeed = PLAYERSPEED;
+  public static final int SHOOTSPEED = 12;
+  public static final int STARTHEIGHT = 200;
+  public static final int BALLSIZE = 96;
+  public static final int PLAYERSPEED = 3;
+  public static final double TIME = 2000;
 
   private Wall right;
   private Wall left;
@@ -74,7 +71,8 @@ public class Level {
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
       // TODO there can be a powerup for which there can be more than one projectile.
-      projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(), shootSpeed));
+      projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
+          SHOOTSPEED));
     }
   }
 
@@ -83,7 +81,7 @@ public class Level {
    */
   public void endlessLevel() {
     if (endlessLevel && balls.size() == 0) {
-      balls.add(new Ball(0, startHeight, 3, 0, ballSize));
+      balls.add(new Ball(0, STARTHEIGHT, 3, 0, BALLSIZE));
     }
   }
 
@@ -127,7 +125,7 @@ public class Level {
       balls.remove(ballHitIndex);
     }
     if (projHitIndex != -1) {
-     projectiles.remove(projHitIndex);
+      projectiles.remove(projHitIndex);
     }
     if (res != null) {
       balls.add(res[0]);
@@ -141,13 +139,13 @@ public class Level {
   public void ballWallCollision() {
     for (Ball b : balls) {
       if (b.collides(floor)) {
-        //System.out.println("Hit the floor");
+        // System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
       } else if (b.collides(left)) {
-        //System.out.println("Hit the left wall");
+        // System.out.println("Hit the left wall");
         b.setSpeedX(-b.getSpeedX());
       } else if (b.collides(right)) {
-        //System.out.println("Het the right wall");
+        // System.out.println("Het the right wall");
         b.setSpeedX(-b.getSpeedX());
       }
       // TODO Balls can collide with the ceiling, and a special bonus has to be added.
@@ -223,7 +221,7 @@ public class Level {
       drawable.move();
       drawable.draw(gc);
     }
-    //endlessLevel();
+    // endlessLevel();
     detectCollisions();
     moveBalls();
     paint();
@@ -236,15 +234,16 @@ public class Level {
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
-    currentTime = time;
+    currentTime = TIME;
   }
-  
+
   public void gameOver() {
     App.loadScene("/fxml/Menu.fxml");
   }
 
   public void drawText(Image i) {
-    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
+    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
+        canvas.getHeight() / 2 - i.getHeight());
   }
 
   public Wall getRight() {
@@ -299,14 +298,6 @@ public class Level {
     this.score = score;
   }
 
-  public double getTime() {
-    return time;
-  }
-
-  public void setTime(double time) {
-    this.time = time;
-  }
-
   public double getCurrentTime() {
     return currentTime;
   }
@@ -315,10 +306,6 @@ public class Level {
     this.currentTime = currentTime;
   }
 
-  public void setShootSpeed(int shootSpeed) {
-    this.shootSpeed = shootSpeed;
-  }
-  
   public ArrayList<Player> getPlayers() {
     return players;
   }
@@ -358,14 +345,14 @@ public class Level {
   }
 
   /**
-   * Builder class
+   * Builder class.
    */
   public static class Builder {
 
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
-    private int playerSpeed = 6;
+    private int playerSpeed = PLAYERSPEED;
 
     /**
      * Constructor.
@@ -378,21 +365,40 @@ public class Level {
       this.canvas = canvas;
     }
 
+    /**
+     * Balls Setter.
+     * @param balls balls
+     * @return builder
+     */
     public Builder setBalls(ArrayList<Ball> balls) {
       this.balls = balls;
       return this;
     }
 
+    /**
+     * Player Setter.
+     * @param players players
+     * @return builder
+     */
     public Builder setPlayers(ArrayList<Player> players) {
       this.players = players;
       return this;
     }
 
+    /**
+     * Playerspeed Setter.
+     * @param playerSpeed playerspeed
+     * @return builder
+     */
     public Builder setPlayerSpeed(int playerSpeed) {
       this.playerSpeed = playerSpeed;
       return this;
     }
 
+    /**
+     * Builds the level.
+     * @return level
+     */
     public Level build() {
       Level level = new Level(canvas);
       Wall right = new Wall((int) canvas.getWidth(), 0, 1, (int) canvas.getHeight());

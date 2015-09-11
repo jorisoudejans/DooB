@@ -1,14 +1,12 @@
 package doob;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * Hello world!
@@ -52,6 +50,11 @@ public class App extends Application {
         return stage;
     }
 
+    /**
+     * Starts the game.
+     * @param args param
+     * @throws IOException exception
+     */
     public static void main(String[] args) throws IOException {
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         launch(args);

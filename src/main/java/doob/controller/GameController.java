@@ -74,6 +74,8 @@ public class GameController {
   private AnimationTimer timer;
   private GraphicsContext gc;
   public static final long FREEZE_TIME = 2000;
+  public static final int HEART_SPACE = 40;
+  public static final int HEART_Y = 8;
 
   /**
    * Initializes the timer which uses an animationtimer to handle game steps. The method handle
@@ -156,7 +158,7 @@ public class GameController {
    * restarts.
    */
   public void updateProgressBar() {
-    double progress = level.getCurrentTime() / level.getTime();
+    double progress = level.getCurrentTime() / Level.TIME;
     if (progress <= 0) {
       createFreeze();
       return;
@@ -171,7 +173,7 @@ public class GameController {
     gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
     for (Player p : level.getPlayers()) {
       for (int i = 0; i < p.getLives(); i++) {
-        gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
+        gc.drawImage(new Image("/image/heart.png"), i * HEART_SPACE, HEART_Y);
       }
     }
   }
