@@ -28,9 +28,9 @@ public class GameController {
     @FXML Canvas canvas;
 
   @FXML
-  private Pane lives1;
+  private Canvas lives1;
   @FXML
-  private Pane lives2;
+  private Canvas lives2;
   @FXML
   private Label score1;
   @FXML
@@ -60,6 +60,7 @@ public class GameController {
 
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
+  private ArrayList<Player> players;
   private int ballSpeed = 3;
   private int shootSpeed = 12;
   private int startHeight = 200;
@@ -74,8 +75,13 @@ public class GameController {
         level.update();
         updateScore();
         updateProgressBar();
+        updateLives();
         if(level.ballPlayerCollision()){
-          level.drawCrushed();
+          if(players.get(0).getLives() == 1) {
+            level.drawGameOver();
+          } else {
+            level.drawCrushed();
+          }
           createFreeze();
         }
       }
@@ -96,6 +102,15 @@ public class GameController {
     progressBar.setProgress(progress);
   }
 
+  public void updateLives() {
+    gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
+    for(Player p : players) {
+      for(int i = 0; i < p.getLives(); i++) {
+        gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
+      }
+    }
+  }
+
   public void createFreeze() {
     Task<Void> sleeper = new Task<Void>() {
       @Override
@@ -109,8 +124,12 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
-        level.gameOver();
-        timer.start();
+        if(players.get(0).getLives() == 1) {
+          level.gameOver();
+        } else {
+          level.crushed();
+          timer.start();
+        }
       }
     });
     new Thread(sleeper).start();

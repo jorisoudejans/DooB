@@ -12,6 +12,8 @@ import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 
+import doob.App;
+
 /**
  * Level class, created from TODO LevelFactory.
  */
@@ -231,10 +233,15 @@ public class Level {
     // TODO
   }
 
-  public void gameOver() {
-    // lives -1;
+  public void crushed() {
+    Player p = players.get(0);
+    p.setLives(p.getLives() - 1);
     currentTime = time;
     restartLevel();
+  }
+  
+  public void gameOver() {
+    App.loadScene("/fxml/Menu.fxml");
   }
 
   public void restartLevel() {
@@ -246,6 +253,11 @@ public class Level {
 
   public void drawCrushed() {
     Image i = new Image("/image/crushed.png");
+    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
+  }
+  
+  public void drawGameOver() {
+    Image i = new Image("/image/gameover.png");
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
   }
 

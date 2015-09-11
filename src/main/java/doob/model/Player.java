@@ -13,6 +13,7 @@ public class Player implements Collidable, Drawable {
     private int x;
     private int y;
     private int speed;
+    private int lives;
 
     private Image imageStand;
     private Image imageLeft;
@@ -31,6 +32,7 @@ public class Player implements Collidable, Drawable {
         this.x = x;
         this.y = y;
         this.speed = 0;
+        this.lives = 5;
 
         imageStand = imageS;
         imageLeft = imageL;
@@ -91,5 +93,13 @@ public class Player implements Collidable, Drawable {
 
     public int getY() {
         return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 }
