@@ -111,6 +111,10 @@ public class GameController {
       }
     }
   }
+  
+  public void restartLevel() {
+    level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
+  }
 
   public void createFreeze() {
     Task<Void> sleeper = new Task<Void>() {
@@ -129,6 +133,7 @@ public class GameController {
           level.gameOver();
         } else {
           level.crushed();
+          restartLevel();
           timer.start();
         }
       }
