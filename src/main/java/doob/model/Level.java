@@ -231,10 +231,6 @@ public class Level {
     }
   }
 
-  public void nextLevel() {
-    // TODO
-  }
-
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
@@ -245,13 +241,7 @@ public class Level {
     App.loadScene("/fxml/Menu.fxml");
   }
 
-  public void drawCrushed() {
-    Image i = new Image("/image/crushed.png");
-    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
-  }
-  
-  public void drawGameOver() {
-    Image i = new Image("/image/gameover.png");
+  public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
   }
 
@@ -329,6 +319,10 @@ public class Level {
   
   public ArrayList<Player> getPlayers() {
     return players;
+  }
+
+  public ArrayList<Ball> getBalls() {
+    return balls;
   }
 
   /**

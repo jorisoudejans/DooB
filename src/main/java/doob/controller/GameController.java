@@ -1,5 +1,6 @@
 package doob.controller;
 
+import doob.App;
 import doob.model.*;
 import doob.model.Level.Builder;
 import javafx.animation.AnimationTimer;
@@ -18,14 +19,40 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+
+
+
+
+
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Controller for games.
  */
 public class GameController {
 
-    @FXML Canvas canvas;
+  @FXML
+  Canvas canvas;
 
   @FXML
   private Canvas lives1;
@@ -38,34 +65,29 @@ public class GameController {
   @FXML
   private ProgressBar progressBar;
 
-/*    public GameController(Canvas canvas) {
-        this.canvas = canvas;
-        initialize();
-    }*/
+  /*
+   * public GameController(Canvas canvas) { this.canvas = canvas; initialize(); }
+   */
 
-    /**
-     * Initialization of the game pane.
-     */
-	@FXML
-	public void initialize() {
-		gameState = GameState.RUNNING;
-		level = new Level(canvas);
-        level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
-        gc = lives1.getGraphicsContext2D();
-        createTimer();
-        timer.start();
-	}
+  /**
+   * Initialization of the game pane.
+   */
+  @FXML
+  public void initialize() {
+    levelList = new ArrayList<String>();
+    readLevels();
+    gameState = GameState.RUNNING;
+    level = new Level(canvas);
+    level = new LevelFactory(levelList.get(currentLevel), canvas).build();
+    gc = lives1.getGraphicsContext2D();
+    createTimer();
+    timer.start();
+  }
 
   private GameState gameState;
+  private ArrayList<String> levelList;
+  private int currentLevel;
   private Level level;
-
-  private ArrayList<Ball> balls;
-  private ArrayList<Projectile> projectiles;
-  private int ballSpeed = 3;
-  private int shootSpeed = 12;
-  private int startHeight = 200;
-  private int ballSize = 96;
-
   private AnimationTimer timer;
   private GraphicsContext gc;
 
@@ -77,16 +99,49 @@ public class GameController {
         updateScore();
         updateProgressBar();
         updateLives();
-        if (level.ballPlayerCollision()) {
-          if (level.getPlayers().get(0).getLives() == 1) {
-            level.drawGameOver();
-          } else {
-            level.drawCrushed();
-          }
-          createFreeze();
-        }
+        checkCollisions();
+        checkLevelComplete();
       }
     };
+  }
+  
+  public void readLevels() {
+    try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder dBuilder = factory.newDocumentBuilder();
+      
+      Document doc = dBuilder.parse(new File("src/main/resources/level/Levels.xml"));
+      doc.getDocumentElement().normalize();
+      
+      NodeList levels = doc.getElementsByTagName("LevelName");
+      for(int i = 0; i < levels.getLength(); i++) {
+        Node n = levels.item(i);
+        String s = "src/main/resources/level/" + n.getTextContent();
+        levelList.add(s);
+      }
+      currentLevel = 0;
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    } 
+  }
+
+  public void checkCollisions() {
+    if (level.ballPlayerCollision()) {
+      if (level.getPlayers().get(0).getLives() == 1) {
+        level.drawText(new Image("/image/gameover.png"));
+      } else {
+        level.drawText(new Image("/image/crushed.png"));
+      }
+      createFreeze();
+    }
+  }
+
+  public void checkLevelComplete() {
+    if (level.getBalls().size() <= 0) {
+      level.drawText(new Image("/image/levelcomplete.png"));
+      createFreeze();
+    }
   }
 
   public void updateScore() {
@@ -111,9 +166,11 @@ public class GameController {
       }
     }
   }
-  
-  public void restartLevel() {
-    level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
+
+  public void newLevel() {
+    int lives = level.getPlayers().get(0).getLives();
+    level = new LevelFactory(levelList.get(currentLevel), canvas).build();
+    level.getPlayers().get(0).setLives(lives);
   }
 
   public void createFreeze() {
@@ -129,11 +186,19 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
-        if(level.getPlayers().get(0).getLives() == 1) {
+        if (level.getPlayers().get(0).getLives() == 1) {
           level.gameOver();
+        } else if (level.getBalls().size() == 0) {
+          if(currentLevel < levelList.size()) {
+            currentLevel++;
+            newLevel();
+            timer.start();
+          } else {
+            App.loadScene("/fxml/menu.fxml");
+          }
         } else {
           level.crushed();
-          restartLevel();
+          newLevel();
           timer.start();
         }
       }
@@ -143,15 +208,15 @@ public class GameController {
 
   }
 
-    public Level getLevel() {
-        return level;
-    }
+  public Level getLevel() {
+    return level;
+  }
 
-    public GameState getGameState() {
-        return gameState;
-    }
+  public GameState getGameState() {
+    return gameState;
+  }
 
-    /**
+  /**
    * States the game can be in.
    */
   public enum GameState {
