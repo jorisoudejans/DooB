@@ -68,5 +68,25 @@ public class BallTest {
     Wall w = new Wall(200, 200, 50, 50);
     assertTrue(b.collides(w));
   }
+  
+  @Test
+  public void equalsTest1() {
+    Ball a = new Ball(0,0,0,0,0);
+    Ball b = new Ball(0,0,0,0,0);
+    assertTrue(a.equals(b));
+  }
+  
+  @Test
+  public void equalsTest2() {
+    Ball a = new Ball(0,0,0,0,0);
+    assertTrue(a.equals(a));
+  }
+  
+  @Test
+  public void equalsTest3() {
+    Ball a = new Ball(0,0,0,0,0);
+    Ball b = new Ball(1,0,0,0,0);
+    assertFalse(a.equals(b));
+  }
 
 }
