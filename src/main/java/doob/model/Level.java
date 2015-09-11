@@ -332,6 +332,11 @@ public class Level {
   public void setShootSpeed(int shootSpeed) {
     this.shootSpeed = shootSpeed;
   }
+  
+  public ArrayList<Player> getPlayers() {
+    return players;
+  }
+
   /**
    * Handler for key presses.
    */

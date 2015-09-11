@@ -61,7 +61,6 @@ public class GameController {
 
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
-  private ArrayList<Player> players;
   private int ballSpeed = 3;
   private int shootSpeed = 12;
   private int startHeight = 200;
@@ -79,7 +78,7 @@ public class GameController {
         updateProgressBar();
         updateLives();
         if (level.ballPlayerCollision()) {
-          if (players.get(0).getLives() == 1) {
+          if (level.getPlayers().get(0).getLives() == 1) {
             level.drawGameOver();
           } else {
             level.drawCrushed();
@@ -106,7 +105,7 @@ public class GameController {
 
   public void updateLives() {
     gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
-    for (Player p : players) {
+    for (Player p : level.getPlayers()) {
       for (int i = 0; i < p.getLives(); i++) {
         gc.drawImage(new Image("/image/heart.png"), i * 40, 8);
       }
@@ -126,7 +125,7 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
-        if(players.get(0).getLives() == 1) {
+        if(level.getPlayers().get(0).getLives() == 1) {
           level.gameOver();
         } else {
           level.crushed();
