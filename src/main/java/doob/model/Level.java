@@ -108,6 +108,7 @@ public class Level {
   public void ballProjectileCollision() {
     int ballHitIndex = -1;
     int projHitIndex = -1;
+    Ball[] res = null;
     for (int i = 0; i < balls.size(); i++) {
       Ball b = balls.get(i);
       for (int j = 0; j < projectiles.size(); j++) {
@@ -115,9 +116,7 @@ public class Level {
         if (p.collides(b)) {
           projHitIndex = j;
           if (b.getSize() >= 32) {
-            Ball[] res = b.split();
-            balls.add(res[0]);
-            balls.add(res[1]);
+            res = b.split();
           }
           ballHitIndex = i;
           score += 100;
@@ -127,9 +126,12 @@ public class Level {
     if (ballHitIndex != -1) {
       balls.remove(ballHitIndex);
     }
-    //System.out.print(projHitIndex + ", ");
     if (projHitIndex != -1) {
      projectiles.remove(projHitIndex);
+    }
+    if (res != null) {
+      balls.add(res[0]);
+      balls.add(res[1]);
     }
   }
 
