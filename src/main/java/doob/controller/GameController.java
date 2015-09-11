@@ -1,11 +1,9 @@
 package doob.controller;
 
-import doob.model.*;
-import doob.model.Level.Builder;
+import java.io.File;
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -15,17 +13,26 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
-import java.util.ArrayList;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import doob.App;
+import doob.model.Level;
+import doob.model.LevelFactory;
+import doob.model.Player;
 
 /**
  * Controller for games.
  */
 public class GameController {
 
-    @FXML Canvas canvas;
+  @FXML
+  private Canvas canvas;
 
   @FXML
   private Canvas lives1;
@@ -38,37 +45,37 @@ public class GameController {
   @FXML
   private ProgressBar progressBar;
 
-/*    public GameController(Canvas canvas) {
-        this.canvas = canvas;
-        initialize();
-    }*/
+  /*
+   * public GameController(Canvas canvas) { this.canvas = canvas; initialize(); }
+   */
 
-    /**
-     * Initialization of the game pane.
-     */
-	@FXML
-	public void initialize() {
-		gameState = GameState.RUNNING;
-		level = new Level(canvas);
-        level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
-        gc = lives1.getGraphicsContext2D();
-        createTimer();
-        timer.start();
-	}
+  /**
+   * Initialization of the game pane.
+   */
+  @FXML
+  public void initialize() {
+    levelList = new ArrayList<String>();
+    readLevels();
+    gameState = GameState.RUNNING;
+    level = new Level(canvas);
+    level = new LevelFactory(levelList.get(currentLevel), canvas).build();
+    gc = lives1.getGraphicsContext2D();
+    createTimer();
+    timer.start();
+  }
 
   private GameState gameState;
+  private ArrayList<String> levelList;
+  private int currentLevel;
   private Level level;
-
-  private ArrayList<Ball> balls;
-  private ArrayList<Projectile> projectiles;
-  private int ballSpeed = 3;
-  private int shootSpeed = 12;
-  private int startHeight = 200;
-  private int ballSize = 96;
-
   private AnimationTimer timer;
   private GraphicsContext gc;
+  public static final long FREEZE_TIME = 2000;
 
+  /**
+   * Initializes the timer which uses an animationtimer to handle game steps. The method handle
+   * defines what to do in each gamestep.
+   */
   public void createTimer() {
     timer = new AnimationTimer() {
       @Override
@@ -77,23 +84,74 @@ public class GameController {
         updateScore();
         updateProgressBar();
         updateLives();
-        if (level.ballPlayerCollision()) {
-          if (level.getPlayers().get(0).getLives() == 1) {
-            level.drawGameOver();
-          } else {
-            level.drawCrushed();
-          }
-          createFreeze();
-        }
+        checkCollisions();
+        checkLevelComplete();
       }
     };
   }
 
+  /**
+   * Reads all levels out of the levelsfile as a string and puts them in a list of strings with all
+   * levels.
+   */
+  public void readLevels() {
+    try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder dBuilder = factory.newDocumentBuilder();
+
+      Document doc = dBuilder.parse(new File("src/main/resources/level/Levels.xml"));
+      doc.getDocumentElement().normalize();
+
+      NodeList levels = doc.getElementsByTagName("LevelName");
+      for (int i = 0; i < levels.getLength(); i++) {
+        Node n = levels.item(i);
+        String s = "src/main/resources/level/" + n.getTextContent();
+        levelList.add(s);
+      }
+      currentLevel = 0;
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Checks if a player collides with a ball. If so the game freezes and shows a text depending on
+   * how many lives the player has left.
+   */
+  public void checkCollisions() {
+    if (level.ballPlayerCollision()) {
+      if (level.getPlayers().get(0).getLives() == 1) {
+        level.drawText(new Image("/image/gameover.png"));
+      } else {
+        level.drawText(new Image("/image/crushed.png"));
+      }
+      createFreeze();
+    }
+  }
+
+  /**
+   * Checks if there are any balls left. If not the game freezes and shows a text.
+   */
+  public void checkLevelComplete() {
+    if (level.getBalls().size() <= 0) {
+      level.drawText(new Image("/image/levelcomplete.png"));
+      createFreeze();
+    }
+  }
+
+  /**
+   * Updates the score every gamestep.
+   */
   public void updateScore() {
     int score = level.getScore();
     score1.setText(score + "");
   }
 
+  /**
+   * Updates the timebar every gamestep. If there is no time left the game freezes and the level
+   * restarts.
+   */
   public void updateProgressBar() {
     double progress = level.getCurrentTime() / level.getTime();
     if (progress <= 0) {
@@ -103,6 +161,9 @@ public class GameController {
     progressBar.setProgress(progress);
   }
 
+  /**
+   * Updates the amount of lives every gamestep.
+   */
   public void updateLives() {
     gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
     for (Player p : level.getPlayers()) {
@@ -111,17 +172,25 @@ public class GameController {
       }
     }
   }
-  
-  public void restartLevel() {
-    level = new LevelFactory("src/main/resources/level/level01.xml", canvas).build();
+
+  /**
+   * Resets the level depending on currentLevel. Only keeps amount of lives.
+   */
+  public void newLevel() {
+    int lives = level.getPlayers().get(0).getLives();
+    level = new LevelFactory(levelList.get(currentLevel), canvas).build();
+    level.getPlayers().get(0).setLives(lives);
   }
 
+  /**
+   * Create a freeze of 2 seconds when a level fails or is completed.
+   */
   public void createFreeze() {
     Task<Void> sleeper = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
         try {
-          Thread.sleep(2000);
+          Thread.sleep(FREEZE_TIME);
         } catch (InterruptedException e) {
         }
         return null;
@@ -129,29 +198,43 @@ public class GameController {
     };
     sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       public void handle(WorkerStateEvent event) {
-        if(level.getPlayers().get(0).getLives() == 1) {
-          level.gameOver();
-        } else {
-          level.crushed();
-          restartLevel();
-          timer.start();
-        }
+        afterFreeze();
       }
     });
     new Thread(sleeper).start();
     timer.stop();
-
   }
 
-    public Level getLevel() {
-        return level;
+  /**
+   * Defines what happens after the 2 seconds of freeze depending on amount of lives and balls.
+   */
+  public void afterFreeze() {
+    if (level.getPlayers().get(0).getLives() == 1) {
+      level.gameOver();
+    } else if (level.getBalls().size() == 0) {
+      if (currentLevel < levelList.size() - 1) {
+        currentLevel++;
+        newLevel();
+        timer.start();
+      } else {
+        App.loadScene("/fxml/menu.fxml");
+      }
+    } else {
+      level.crushed();
+      newLevel();
+      timer.start();
     }
+  }
+  
+  public Level getLevel() {
+    return level;
+  }
 
-    public GameState getGameState() {
-        return gameState;
-    }
+  public GameState getGameState() {
+    return gameState;
+  }
 
-    /**
+  /**
    * States the game can be in.
    */
   public enum GameState {

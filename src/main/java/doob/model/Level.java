@@ -28,7 +28,7 @@ public class Level {
   private int shootSpeed = 12;
   private int startHeight = 200;
   private int ballSize = 96;
-  private int playerSpeed = 6;
+  private int playerSpeed = 3;
   private int score = 0;
   private double time = 2000;
   private double currentTime = 2000;
@@ -108,6 +108,7 @@ public class Level {
   public void ballProjectileCollision() {
     int ballHitIndex = -1;
     int projHitIndex = -1;
+    Ball[] res = null;
     for (int i = 0; i < balls.size(); i++) {
       Ball b = balls.get(i);
       for (int j = 0; j < projectiles.size(); j++) {
@@ -115,9 +116,7 @@ public class Level {
         if (p.collides(b)) {
           projHitIndex = j;
           if (b.getSize() >= 32) {
-            Ball[] res = b.split();
-            balls.add(res[0]);
-            balls.add(res[1]);
+            res = b.split();
           }
           ballHitIndex = i;
           score += 100;
@@ -127,9 +126,12 @@ public class Level {
     if (ballHitIndex != -1) {
       balls.remove(ballHitIndex);
     }
-    //System.out.print(projHitIndex + ", ");
     if (projHitIndex != -1) {
      projectiles.remove(projHitIndex);
+    }
+    if (res != null) {
+      balls.add(res[0]);
+      balls.add(res[1]);
     }
   }
 
@@ -231,10 +233,6 @@ public class Level {
     }
   }
 
-  public void nextLevel() {
-    // TODO
-  }
-
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
@@ -245,13 +243,7 @@ public class Level {
     App.loadScene("/fxml/Menu.fxml");
   }
 
-  public void drawCrushed() {
-    Image i = new Image("/image/crushed.png");
-    gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
-  }
-  
-  public void drawGameOver() {
-    Image i = new Image("/image/gameover.png");
+  public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2, canvas.getHeight() / 2 - i.getHeight());
   }
 
@@ -331,6 +323,10 @@ public class Level {
     return players;
   }
 
+  public ArrayList<Ball> getBalls() {
+    return balls;
+  }
+
   /**
    * Handler for key presses.
    */
@@ -369,7 +365,7 @@ public class Level {
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
-    private int playerSpeed = 12;
+    private int playerSpeed = 6;
 
     /**
      * Constructor.

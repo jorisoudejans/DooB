@@ -10,18 +10,11 @@
     </playerList>
     <ballList>
         <ball id="1">
-            <x>400</x>
-            <y>600</y>
+            <x>0</x>
+            <y>200</y>
             <speedX>-2</speedX>
             <speedY>0</speedY>
-            <size>32</size>
-        </ball>
-        <ball id="2">
-            <x>600</x>
-            <y>600</y>
-            <speedX>2</speedX>
-            <speedY>0</speedY>
-            <size>32</size>
+            <size>128</size>
         </ball>
     </ballList>
 

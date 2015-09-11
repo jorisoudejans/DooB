@@ -10,7 +10,6 @@ public class Ball implements Collidable, Drawable {
 	private double speedX;
 	private double speedY;
 	private int size;
-	private int bounceSpeed;
 	private int splitBounce;
 
 	private int canvasWidth;
@@ -30,8 +29,7 @@ public class Ball implements Collidable, Drawable {
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.size = size;
-		this.bounceSpeed = -8;
-		this.splitBounce = -10;
+		this.splitBounce = -4;
 	}
 
 	public void draw(GraphicsContext graphicsContext) {
@@ -49,7 +47,7 @@ public class Ball implements Collidable, Drawable {
 			setSpeedX(ballSpeed);
 		}*/
 		moveVertically();
-		incrSpeedY(0.5);
+		incrSpeedY(0.2);
 		/*if (y + size > canvasHeight) {
 			setSpeedY(getBounceSpeed());
 		}*/
@@ -149,7 +147,7 @@ public class Ball implements Collidable, Drawable {
 	  if((size & (size - 1)) != 0 || size <= 0) {
 	    throw new IllegalArgumentException();
 	  }
-		return (int) -((Math.log(size) / Math.log(2)) * 3);
+		return (int) -((Math.log(size) / Math.log(2)) * 2);
 	}
 
 	public int getsplitBounce() {
@@ -158,10 +156,6 @@ public class Ball implements Collidable, Drawable {
 
 	public void setsplitBounce(int splitBounce) {
 		this.splitBounce = splitBounce;
-	}
-
-	public void setBounceSpeed(int bounceSpeed) {
-		this.bounceSpeed = bounceSpeed;
 	}
 
   @Override
