@@ -44,6 +44,8 @@ public class GameController {
   private Label score2;
   @FXML
   private ProgressBar progressBar;
+  @FXML
+  private Label levelLabel;
 
   /*
    * public GameController(Canvas canvas) { this.canvas = canvas; initialize(); }
@@ -56,6 +58,7 @@ public class GameController {
   public void initialize() {
     levelList = new ArrayList<String>();
     readLevels();
+    levelLabel.setText((currentLevel + 1) + "");
     gameState = GameState.RUNNING;
     level = new Level(canvas);
     level = new LevelFactory(levelList.get(currentLevel), canvas).build();
@@ -214,6 +217,7 @@ public class GameController {
     } else if (level.getBalls().size() == 0) {
       if (currentLevel < levelList.size() - 1) {
         currentLevel++;
+        levelLabel.setText((currentLevel + 1) + "");
         newLevel();
         timer.start();
       } else {

@@ -42,11 +42,16 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="407.0" layoutY="715.0" prefHeight="100.0" prefWidth="200.0" style="-fx-border-style: solid;" text="&lt;Level&gt;">
+      <Label fx:id="levelLabel" alignment="BOTTOM_RIGHT" layoutX="407.0" layoutY="715.0" prefHeight="100.0" prefWidth="200.0" style="-fx-border-style: solid;" text="&lt;Level&gt;">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <ProgressBar fx:id="progressBar" layoutX="21.0" layoutY="678.0" prefHeight="23.0" prefWidth="960.0" progress="0.0" />
+      <Label layoutX="415.0" layoutY="713.0" text="Level">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
