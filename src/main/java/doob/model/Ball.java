@@ -9,7 +9,7 @@ public class Ball implements Collidable, Drawable {
 	private double y;
 	private double speedX;
 	private double speedY;
-	private double size;
+	private int size;
 	private int bounceSpeed;
 	private int splitBounce;
 	private int ballSpeed;
@@ -25,7 +25,7 @@ public class Ball implements Collidable, Drawable {
 	 * @param speedY y-axis speed
 	 * @param size the size of the ball
 	 */
-	public Ball(double x, double y, double speedX, double speedY, double size) {
+	public Ball(double x, double y, double speedX, double speedY, int size) {
 		this.x = x;
 		this.y = y;
 		this.speedX = speedX;
@@ -73,7 +73,7 @@ public class Ball implements Collidable, Drawable {
         if (other instanceof Wall) {
             Wall w = (Wall) other;
             if (this.getBounds().intersects(w.getX(), w.getY(), w.getWidth(), w.getHeight())) {
-                System.out.println("Hit a wall");
+                //System.out.println("Hit a wall");
                 return true;
             }
         }
@@ -87,11 +87,11 @@ public class Ball implements Collidable, Drawable {
 
 	}
 
-	public double getSize() {
+	public int getSize() {
 		return size;
 	}
 
-	public void setSize(double size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
 
@@ -147,17 +147,11 @@ public class Ball implements Collidable, Drawable {
 		return new Circle(x + size / 2, y + size / 2, size / 2);
 	}
 	
-	public double getBounceSpeed() {
-		if (size == 96) {
-			return -20;
-		} else if (size == 48) {
-			return -18;
-		} else if (size == 24) {
-			return -16;
-		} else if (size == 12) {
-			return -14;
-		}
-		return -12;
+	public int getBounceSpeed() {
+	  if((size & (size - 1)) != 0 || size <= 0) {
+	    throw new IllegalArgumentException();
+	  }
+		return (int) -((Math.log(size) / Math.log(2)) * 3);
 	}
 
 	public int getsplitBounce() {

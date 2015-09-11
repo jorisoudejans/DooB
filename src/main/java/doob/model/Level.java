@@ -114,21 +114,23 @@ public class Level {
         Projectile p = projectiles.get(j);
         if (p.collides(b)) {
           projHitIndex = j;
-          if (b.getSize() >= 15) {
+          if (b.getSize() >= 32) {
             Ball[] res = b.split();
             balls.add(res[0]);
             balls.add(res[1]);
           }
           ballHitIndex = i;
           score += 100;
-          System.out.println("HIT");
         }
       }
     }
-    if (ballHitIndex != -1)
+    if (ballHitIndex != -1) {
       balls.remove(ballHitIndex);
-    if (projHitIndex != -1)
-      projectiles.remove(projHitIndex);
+    }
+    //System.out.print(projHitIndex + ", ");
+    if (projHitIndex != -1) {
+     projectiles.remove(projHitIndex);
+    }
   }
 
   /**
@@ -137,13 +139,13 @@ public class Level {
   public void ballWallCollision() {
     for (Ball b : balls) {
       if (b.collides(floor)) {
-        System.out.println("Hit the floor");
+        //System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
       } else if (b.collides(left)) {
-        System.out.println("Hit the left wall");
+        //System.out.println("Hit the left wall");
         b.setSpeedX(b.getBallSpeed());
       } else if (b.collides(right)) {
-        System.out.println("Het the right wall");
+        //System.out.println("Het the right wall");
         b.setSpeedX(-1 * (b.getBallSpeed()));
       }
       // TODO Balls can collide with the ceiling, and a special bonus has to be added.
@@ -219,7 +221,7 @@ public class Level {
       drawable.move();
       drawable.draw(gc);
     }
-    endlessLevel();
+    //endlessLevel();
     detectCollisions();
     moveBalls();
     paint();
@@ -237,18 +239,10 @@ public class Level {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
     currentTime = time;
-    restartLevel();
   }
   
   public void gameOver() {
     App.loadScene("/fxml/Menu.fxml");
-  }
-
-  public void restartLevel() {
-    balls.clear();
-    balls.add(new Ball(0, startHeight, 3, 0, ballSize));
-    projectiles.clear();
-    players.get(0).setX((int) (canvas.getWidth() / 2));
   }
 
   public void drawCrushed() {
