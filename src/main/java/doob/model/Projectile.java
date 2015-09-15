@@ -88,4 +88,11 @@ public abstract class Projectile implements Drawable, Collidable {
 		this.y = y - shootSpeed;
 	}
 
+	@Override
+	public String toString() {
+		return "Projectile{"
+				+ "x=" + x
+				+ ", y=" + y
+				+ ", shootSpeed=" + shootSpeed + '}';
+	}
 }

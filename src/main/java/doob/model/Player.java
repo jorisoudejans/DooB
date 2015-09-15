@@ -130,4 +130,11 @@ public class Player implements Collidable, Drawable {
   public void setLives(int lives) {
     this.lives = lives;
   }
+
+  @Override
+  public String toString() {
+    return "Player{"
+            + "x=" + x
+            + ", lives=" + lives + '}';
+  }
 }
