@@ -214,4 +214,11 @@ public class Ball implements Collidable, Drawable {
     return false;
   }
 
+  @Override
+  public String toString() {
+    return "Ball{"
+            + "x=" + (int) x
+            + ", y=" + (int) y
+            + ", size=" + size + '}';
+  }
 }

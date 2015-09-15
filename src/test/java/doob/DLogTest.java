@@ -20,7 +20,7 @@ import org.junit.Test;
 public class DLogTest {
 
   private BufferedReader mReader;
-  private static final String PATH = "DLog.log";
+  private static final String PATH = "DLogTest.log";
 
   /**
    * Set up testing.
@@ -46,7 +46,7 @@ public class DLogTest {
               DateFormat
                       .getTimeInstance()
                       .format(new Date())
-                      + ": Log file created. Path is "
+                      + ": -App- Log file created. Path is "
                       + PATH,
               mReader.readLine());
     } catch (IOException e) {
@@ -92,13 +92,14 @@ public class DLogTest {
               )
       );
       assertEquals(
-              fileReader.readLine(),
               DateFormat
                       .getTimeInstance()
                       .format(new Date())
                       + ": "
+                      + "-App- "
                       + DLog.LOG_CREATED_MESSAGE
-                      + PATH
+                      + PATH,
+              fileReader.readLine()
       );
     } catch (IOException e) {
       e.printStackTrace();
