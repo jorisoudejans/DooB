@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<level>
+    <playerList>
+        <player id="1">
+            <x>450</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+    </playerList>
+    <ballList>
+        <ball id="1">
+            <x>25</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="2">
+            <x>150</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="3">
+            <x>275</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="4">
+            <x>600</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="5">
+            <x>725</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="6">
+            <x>850</x>
+            <y>600</y>
+            <speedX>0</speedX>
+            <speedY>0</speedY>
+            <size>64</size>
+        </ball>
+    </ballList>
+
+</level>
