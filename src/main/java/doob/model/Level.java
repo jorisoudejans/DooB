@@ -2,6 +2,7 @@ package doob.model;
 
 import java.util.ArrayList;
 
+import doob.DLog;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -73,6 +74,7 @@ public class Level {
       // TODO there can be a powerup for which there can be more than one projectile.
       projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
           SHOOTSPEED));
+      DLog.i("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }
 
@@ -114,7 +116,10 @@ public class Level {
         if (p.collides(b)) {
           projHitIndex = j;
           if (b.getSize() >= 32) {
+            DLog.i(b.toString() + " splits", DLog.Type.COLLISION);
             res = b.split();
+          } else {
+            DLog.i(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
           score += 100;
@@ -170,6 +175,7 @@ public class Level {
       for (Player p : players) {
         if (p.collides(b)) {
           res = true;
+          DLog.i(p.toString() + " is hit by a ball", DLog.Type.COLLISION);
         }
       }
     }
@@ -237,8 +243,12 @@ public class Level {
     currentTime = TIME;
   }
 
+  /**
+   * Game lost, return to menu.
+   */
   public void gameOver() {
-    App.loadScene("/fxml/Menu.fxml");
+    DLog.i("Game over!", DLog.Type.STATE);
+    App.loadScene("/fxml/menu.fxml");
   }
 
   public void drawText(Image i) {
@@ -318,13 +328,22 @@ public class Level {
    * Handler for key presses.
    */
   private class KeyPressHandler implements EventHandler<KeyEvent> {
+    private KeyCode last = KeyCode.SPACE;
     public void handle(KeyEvent key) {
       switch (key.getCode()) {
       case RIGHT:
         players.get(0).setSpeed(playerSpeed);
+        if (last != KeyCode.RIGHT) {
+          DLog.i("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+          last = KeyCode.RIGHT;
+        }
         break;
       case LEFT:
         players.get(0).setSpeed(-playerSpeed);
+        if (last != KeyCode.LEFT) {
+          DLog.i("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+          last = KeyCode.LEFT;
+        }
         break;
       case SPACE:
         shoot(players.get(0));
