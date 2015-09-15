@@ -1,7 +1,6 @@
 package doob;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -13,54 +12,62 @@ import java.util.Date;
 /**
  * Class responsible for writing a log to a specified file.
  */
-public final class DooBLog {
+public final class DLog {
 
     private static Writer writer;
+    private static String path;
+
+    public static final String LOG_CREATED_MESSAGE = "Log file created. Path is ";
+    public static final String ENCODING = "utf-8";
 
     /**
      * Disable instantiation of the class.
      */
-    private DooBLog() { }
+    private DLog() { }
 
     /**
      * Specify where the log file should be written to. Overwrites the file of it already exists.
      * @param path The path the file should be written.
-     * @throws FileNotFoundException when the specified path can't be written to.
+     * @throws IOException when an I/O error occurs.
      */
-    public static void setFile(String path) throws FileNotFoundException {
+    public static void setFile(String path) throws IOException {
+        DLog.path = path;
         try {
             writer = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(path),
-                            "utf-8"
+                            ENCODING
                     )
             );
+            i(LOG_CREATED_MESSAGE + path);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Empties the current file.
+     * Empties the assigned file.
      * @throws IOException when an I/O error occurs.
      */
     public static void emptyFile() throws IOException {
-        writer.write("");
-        writer.flush();
+        setFile(path);
     }
 
     /**
      * Prints information log to console and to file.
      * @param text string to log.
-     * @throws IOException when an I/O error occurs.
      */
-    public static void i(String text) throws IOException {
+    public static void i(String text) {
         Date now = new Date();
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        DateFormat dateFormat = DateFormat.getTimeInstance();
         text = dateFormat.format(now) + ": " + text;
-        writer.append(text).append('\n');
-        System.out.print(text);
-        writer.flush();
+        try {
+            writer.append(text).append('\n');
+            System.out.println(text);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
