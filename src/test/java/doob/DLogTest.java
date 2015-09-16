@@ -94,7 +94,7 @@ public class DLogTest {
 	/**
 	 * Test for when a property is not enabled.
 	 * 
-	 * @throws IOException
+	 * @throws IOException exception
 	 */
 	@Test
 	public void notEnabledTest() throws IOException {
