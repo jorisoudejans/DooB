@@ -139,6 +139,11 @@ public final class DLog {
         i(text, Type.ERROR);
     }
 
+    /**
+     * Checks if the logging option is enabled for this type of log.
+     * @param type the type that is checked
+     * @return isEnabled boolean
+     */
     private static boolean isEnabled(Type type) {
         if (!isLogOn) {
             return false;

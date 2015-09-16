@@ -18,17 +18,26 @@ import org.junit.runners.Parameterized.Parameters;
 
 import doob.DLog.Type;
 
+/**
+ * Parameterized test class to test all types of logging.
+ */
 @RunWith(Parameterized.class)
-public class DLogStateTest {
+public class DLogTypeTest {
 
 	private static String log = "Log this.";
+	private static String time = DateFormat.getTimeInstance().format(new Date());
+	
+	/**
+	 * Types that are tested.
+	 * @return parameters
+	 */
 	@Parameters
 	  public static Collection<Object[]> data() {
-	    return Arrays.asList(new Object[][] { { log, Type.PLAYER_INTERACTION, DateFormat.getTimeInstance().format(new Date())
-			+ ": -Player interaction- Log this." }, { log, Type.COLLISION, DateFormat.getTimeInstance().format(new Date())
-				+ ": -Collision- Log this." }, { log, Type.STATE, DateFormat.getTimeInstance().format(new Date())
-					+ ": -State- Log this." }, { log, Type.APPLICATION, DateFormat.getTimeInstance().format(new Date())
-						+ ": -App- Log this." }, { log, Type.ERROR, DateFormat.getTimeInstance().format(new Date())
+	    return Arrays.asList(new Object[][] { { log, Type.PLAYER_INTERACTION, time
+			+ ": -Player interaction- Log this." }, { log, Type.COLLISION, time
+				+ ": -Collision- Log this." }, { log, Type.STATE, time
+					+ ": -State- Log this." }, { log, Type.APPLICATION, time
+						+ ": -App- Log this." }, { log, Type.ERROR, time
 							+ ": -ERROR- Log this." } });
 	  }
 
@@ -36,12 +45,22 @@ public class DLogStateTest {
 	  private Type type;
 	  private String expected;
 
-	  public DLogStateTest(String input, Type type, String expected) {
+	  /**
+	   * Constructor.
+	   * @param input String
+	   * @param type Type
+	   * @param expected String
+	   */
+	  public DLogTypeTest(String input, Type type, String expected) {
 	    this.input = input;
 	    this.type = type;
 	    this.expected = expected;
 	  }
 
+	  /**
+	   * Tests the types.
+	   * @throws IOException exception
+	   */
 	  @Test
 	  public void statesTest() throws IOException {
 		  DLog.setFile("DLogTest.log");
