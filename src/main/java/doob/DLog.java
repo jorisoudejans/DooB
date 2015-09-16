@@ -75,12 +75,13 @@ public final class DLog {
 
         // Check which types are enabled.
         String typesProperty = properties.getProperty(PROPERTY_LOG_TYPES_ENABLED).toUpperCase();
-        typesEnabled = new Type[
-                typesProperty.length() - typesProperty.replace(".", "").length() + 1
-        ];
         String[] typesString = typesProperty.split(",");
+        typesEnabled = new Type[
+                typesString.length
+        ];
         for (int i = 0; i < typesString.length; i++) {
             for (Type type : Type.values()) {
+            	typesString[i] = typesString[i].replace(" ", "");
                 if (type.toString().equals(typesString[i])) {
                     typesEnabled[i] = type;
                 }
@@ -105,7 +106,6 @@ public final class DLog {
         if (!isEnabled(type)) {
             return;
         }
-
         // Type tag
         text = getTag(type) + text;
 
