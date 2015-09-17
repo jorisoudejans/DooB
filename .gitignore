@@ -86,4 +86,7 @@ local.properties
 .target
 
 # TeXlipse plugin
+/DooBLog.log
 .texlipse
+
+*.log
