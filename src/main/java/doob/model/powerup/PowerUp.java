@@ -7,11 +7,11 @@ public abstract class PowerUp {
 	private int endTime;
 
 	/**
-	 * Construct powerup with endtime
-	 * @param timeOfDisappear
+	 * Construct powerup with current game time. Calculates the disappear time
+	 * @param currentTime current time of game
 	 */
-	public PowerUp(int timeOfDisappear) {
-		this.endTime = timeOfDisappear;
+	public PowerUp(int currentTime) {
+		this.endTime = currentTime + this.getTime();
 	}
 
 	/**
@@ -36,6 +36,14 @@ public abstract class PowerUp {
 	 */
 	public int getTime() {
 		return 0;
+	}
+
+	/**
+	 * Gives the chance this powerup will be dropped this cycle.
+	 * @return number between 0 and 1
+	 */
+	public double getChance() {
+		return 0.0;
 	}
 
 	/**
