@@ -1,5 +1,6 @@
 package doob.model.powerup;
 
+import doob.model.Collidable;
 import doob.model.Level;
 
 /**
@@ -7,17 +8,8 @@ import doob.model.Level;
  *
  * Created by hidde on 9/10/15.
  */
+@PowerUpChance(chance = 0.5)
 public class TimePowerUp extends PowerUp {
-
-
-    /**
-     * Construct powerup with endtime
-     *
-     * @param timeOfDisappear
-     */
-    public TimePowerUp(int timeOfDisappear) {
-        super(timeOfDisappear);
-    }
 
     /**
      * Powerup works one second.
@@ -28,6 +20,11 @@ public class TimePowerUp extends PowerUp {
         return 1;
     }
 
+    @Override
+    public String spritePath() {
+        return "/image/powerup/time.png";
+    }
+
     /**
      * Adds 5 seconds to level.
      * @param level the level the powerup is in
@@ -35,6 +32,11 @@ public class TimePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level) {
         super.onActivate(level);
-        level.setCurrentTime( level.getCurrentTime() + 500 );
+        level.setCurrentTime( Math.min(level.getCurrentTime() + 500, Level.TIME ));
+    }
+
+    @Override
+    public boolean collides(Collidable other) {
+        return false;
     }
 }

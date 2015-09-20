@@ -1,7 +1,9 @@
 package doob.model;
 
+import doob.model.powerup.PowerUp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Player class, acts as both model and view.
@@ -65,6 +67,10 @@ public class Player implements Collidable, Drawable {
       // a player only collides with a ball
       Ball b = (Ball) other;
       return b.getBounds().intersects(x, y, width, height);
+    } else if (other instanceof PowerUp) {
+      PowerUp p = (PowerUp) other;
+      Rectangle rect = new Rectangle(p.getLocationX(), p.getLocationY(), 30, 30);
+      return rect.intersects(x, y, width, height);
     }
     return false;
   }

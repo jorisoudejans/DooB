@@ -18,8 +18,8 @@ public class TimePowerUpTest {
     @Test
     public void testGetEndtime() {
 
-        TimePowerUp timePowerUp = new TimePowerUp(10);
-        assertEquals(10, timePowerUp.getEndTime(), 0.01);
+        TimePowerUp timePowerUp = new TimePowerUp();
+        assertEquals(1, timePowerUp.getActiveTime(), 0.01);
 
     }
 
@@ -27,7 +27,7 @@ public class TimePowerUpTest {
     @Test
     public void testGetTime() {
 
-        TimePowerUp timePowerUp = new TimePowerUp(10);
+        TimePowerUp timePowerUp = new TimePowerUp();
         assertEquals(1, timePowerUp.getTime());
 
     }
@@ -37,7 +37,7 @@ public class TimePowerUpTest {
         Level level = mock(Level.class);
         when(level.getCurrentTime()).thenReturn(500.0);
 
-        TimePowerUp timePowerUp = new TimePowerUp(10);
+        TimePowerUp timePowerUp = new TimePowerUp();
         timePowerUp.onActivate(level);
 
         verify(level).setCurrentTime(1000.0);
@@ -48,14 +48,14 @@ public class TimePowerUpTest {
     public void testOnDeactivate() {
         Level level = mock(Level.class);
 
-        TimePowerUp timePowerUp = new TimePowerUp(10);
+        TimePowerUp timePowerUp = new TimePowerUp();
         timePowerUp.onDeactivate(level);
 
     }
 
     @Test
     public void testSetEndTime() {
-        TimePowerUp timePowerUp = new TimePowerUp(10);
-        timePowerUp.setEndTime(10);
+        TimePowerUp timePowerUp = new TimePowerUp();
+        timePowerUp.setActiveTime(10);
     }
 }

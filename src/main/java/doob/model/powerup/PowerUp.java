@@ -1,17 +1,48 @@
 package doob.model.powerup;
 
+import doob.model.Collidable;
 import doob.model.Level;
+import javafx.scene.image.Image;
 
-public abstract class PowerUp {
+public abstract class PowerUp implements Collidable {
 
-	private int endTime;
+	private int waitTime;
+	private int activeTime;
+	private double locationX;
+	private double locationY;
+	private Image spriteImage;
+
+	public Image getSpriteImage() {
+		return spriteImage;
+	}
+
+	public void setSpriteImage(Image spriteImage) {
+		this.spriteImage = spriteImage;
+	}
+
+	public double getLocationY() {
+		return locationY;
+	}
+
+	public void setLocationY(double locationY) {
+		this.locationY = locationY;
+	}
+
+	public double getLocationX() {
+
+		return locationX;
+	}
+
+	public void setLocationX(double locationX) {
+		this.locationX = locationX;
+	}
 
 	/**
 	 * Construct powerup with current game time. Calculates the disappear time
-	 * @param currentTime current time of game
 	 */
-	public PowerUp(int currentTime) {
-		this.endTime = currentTime + this.getTime();
+	public PowerUp() {
+		this.activeTime = this.getTime();
+		this.waitTime = 500; //  seconds?
 	}
 
 	/**
@@ -34,32 +65,46 @@ public abstract class PowerUp {
 	 * Gives the time the powerup is working
 	 * @return time the powerup is working
 	 */
-	public int getTime() {
-		return 0;
-	}
+	public abstract int getTime();
 
 	/**
-	 * Gives the chance this powerup will be dropped this cycle.
-	 * @return number between 0 and 1
+	 * Path to the visual
+	 * @return path
 	 */
-	public double getChance() {
-		return 0.0;
-	}
+	public abstract String spritePath();
 
 	/**
 	 * Returns the end time in level
 	 * @return end time
 	 */
-	public double getEndTime() {
-		return this.endTime;
+	public double getActiveTime() {
+		return this.activeTime;
 	}
 
 	/**
 	 * Sets end time based from level
 	 * @param duration the end time
 	 */
-	public void setEndTime(int duration) {
-		this.endTime = duration;
+	public void setActiveTime(int duration) {
+		this.activeTime = duration;
+	}
+
+	public int getWaitTime() {
+		return waitTime;
+	}
+
+	/**
+	 * Game tick on powerup. Decrease time left
+	 */
+	public void tickActive() {
+		this.activeTime--;
+	}
+
+	/**
+	 * Game tick on powerup. Decrease time left
+	 */
+	public void tickWait() {
+		this.waitTime--;
 	}
 
 }

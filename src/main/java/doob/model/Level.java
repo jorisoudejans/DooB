@@ -1,8 +1,14 @@
 package doob.model;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Random;
 
+import com.google.common.reflect.ClassPath;
 import doob.DLog;
+import doob.model.powerup.PowerUp;
+import doob.model.powerup.PowerUpChance;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -38,6 +44,10 @@ public class Level {
 
   private boolean endlessLevel;
 
+  private ArrayList<Class<?>> availablePowerups;
+  private ArrayList<PowerUp> powerupsOnScreen;
+  private ArrayList<PowerUp> activePowerups;
+
   /**
    * Initialize javaFx.
    * 
@@ -61,6 +71,7 @@ public class Level {
 
     canvas.requestFocus();
     projectiles = new ArrayList<Projectile>();
+    initPowerups();
   }
 
   /**
@@ -123,6 +134,7 @@ public class Level {
           }
           ballHitIndex = i;
           score += 100;
+          processPowerups(b.getX(), b.getY()); // possible spawn a powerup at location of ball
         }
       }
     }
@@ -182,6 +194,23 @@ public class Level {
     return res;
   }
 
+  public void powerupPlayerCollision() {
+    PowerUp toRemove = null;
+    for (PowerUp powerup : powerupsOnScreen) {
+      for (Player p : players) {
+        if (p.collides(powerup)) {
+          DLog.i(p.toString() + " is hit by a powerup", DLog.Type.COLLISION);
+          powerup.onActivate(this);
+          toRemove = powerup;
+          activePowerups.add(powerup);
+        }
+      }
+    }
+    if (toRemove != null) {
+      powerupsOnScreen.remove(toRemove);
+    }
+  }
+
   // TODO Collisionfunctions should be moved
 
   /**
@@ -192,6 +221,7 @@ public class Level {
     ballProjectileCollision();
     playerWallCollision();
     ballWallCollision();
+    powerupPlayerCollision();
   }
 
   /**
@@ -217,6 +247,9 @@ public class Level {
     for (Ball b : balls) {
       b.draw(gc);
     }
+    for (PowerUp powerup : powerupsOnScreen) {
+      gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());
+    }
   }
 
   /**
@@ -235,12 +268,88 @@ public class Level {
     for (Player player : players) {
       player.move();
     }
+    ArrayList<PowerUp> toRemoveWait = new ArrayList<PowerUp>();
+    for (PowerUp powerup : powerupsOnScreen) { // move powerups down
+      if (powerup.getLocationY() < floor.getY()-30) {
+        powerup.setLocationY(powerup.getLocationY()+2);
+      }
+      powerup.tickWait();
+      if (powerup.getWaitTime() <= 0) {
+        toRemoveWait.add(powerup);
+      }
+    }
+    for (PowerUp p : toRemoveWait) {
+      powerupsOnScreen.remove(p);
+    }
+    ArrayList<PowerUp> toRemove = new ArrayList<PowerUp>();
+    for (PowerUp powerUp : activePowerups) { // deactivate active powerups, if needed
+      powerUp.tickActive();
+      if (powerUp.getActiveTime() <= 0) {
+        powerUp.onDeactivate(this);
+        toRemove.add(powerUp);
+      }
+    }
+    for (PowerUp p : toRemove) {
+      activePowerups.remove(p);
+    }
   }
 
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
     currentTime = TIME;
+  }
+
+  /**
+   * Determines whether a powerup will fall down
+   * @param locationX x where powerup should spawn
+   * @param locationY y where powerup should spawn
+   */
+  public void processPowerups(double locationX, double locationY) {
+    Random random = new Random();
+    for(Class<?> powerup : availablePowerups) {
+      double rand = random.nextDouble();
+      PowerUpChance chanceAnnotation = powerup.getAnnotation(PowerUpChance.class);
+      if (rand < chanceAnnotation.chance()) {
+        // drop powerup
+        try {
+          PowerUp p = (PowerUp)powerup.newInstance();
+          Image sprite = new Image(p.spritePath());
+          p.setSpriteImage(sprite);
+          p.setLocationX(locationX);
+          p.setLocationY(locationY);
+          powerupsOnScreen.add(p);
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  /**
+   * Looks up all available powerups
+   */
+  public void initPowerups() {
+    availablePowerups = new ArrayList<Class<?>>();
+    powerupsOnScreen = new ArrayList<PowerUp>();
+    activePowerups = new ArrayList<PowerUp>();
+    final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+    try {
+      for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
+        if (info.getName().startsWith("doob.model.powerup")) {
+          final Class<?> clazz = info.load();
+          if (clazz.getSuperclass() != null && clazz.getSuperclass().equals(PowerUp.class)) {
+            availablePowerups.add(clazz);
+          }
+          // do something with your clazz
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
