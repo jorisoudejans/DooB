@@ -17,6 +17,7 @@ public class LevelFactory {
     private Canvas canvas;
     private ArrayList<Player> playerList;
     private ArrayList<Ball> ballList;
+    private ArrayList<Wall> wallList;
     private Image[] playerImages;
 
     /**
@@ -50,6 +51,20 @@ public class LevelFactory {
                 .item(0)
                 .getTextContent());
 
+    }
+
+    /**
+     * parses a boolean out of an xml line.
+     *
+     * @param s The XML-tag to parse from
+     * @param eElement The XML-Element to parse from
+     * @return The parsed boolean
+     */
+    public boolean parseBoolean(String s, Element eElement) {
+        if(eElement.getElementsByTagName(s)
+                .item(0)
+                .getTextContent() == "true") return true;
+        return false;
     }
 
     /**
@@ -112,6 +127,36 @@ public class LevelFactory {
     }
 
     /**
+     * Parses and adds walls in the XML to the wallList.
+     *
+     * @param doc Document build from the XML
+     */
+    public void parseWalls(Document doc) {
+        NodeList nListBall = doc.getElementsByTagName("wall");
+        for (int i = 0; i < nListBall.getLength(); i++) {
+            Node nNode = nListBall.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                int x = parseInt("x", eElement);
+                int y = parseInt("y", eElement);
+                int width = parseInt("width", eElement);
+                int height = parseInt("height", eElement);
+                if(parseInt("moveable", eElement) == 1){
+                    int endx = parseInt("endx", eElement);
+                    int endy = parseInt("endy", eElement);
+                    int duration = parseInt("duration", eElement);
+                    String condition = eElement.getElementsByTagName("condition").item(0).getTextContent();
+                    Wall wall = new Wall(x, y, width, height, endx, endy, duration, condition);
+                    wallList.add(wall);
+                }else{
+                    Wall wall = new Wall(x, y, width, height);
+                    wallList.add(wall);
+                };
+            }
+        }
+    }
+
+    /**
      * Parses the XML and adds all parsed objects to their respective lists.
      */
     public void parseXML() {
@@ -124,6 +169,7 @@ public class LevelFactory {
 
             parsePlayers(doc);
             parseBalls(doc);
+            parseWalls(doc);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,6 +190,7 @@ public class LevelFactory {
         builder.setBalls(ballList);
         builder.setCanvas(canvas);
         builder.setPlayers(playerList);
+        builder.setWalls(wallList);
 
         return builder.build();
     }

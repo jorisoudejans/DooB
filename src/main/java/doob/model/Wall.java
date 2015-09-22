@@ -5,14 +5,32 @@ import javafx.scene.shape.Rectangle;
 public class Wall implements Collidable{
 	
 	private int x, y, width, height;
+	boolean moveable;
+	private int endx, endy;
+	private int duration;
+	private String condition;	//TODO Use an ENUM for this
 	private Rectangle r;
 	
 	public Wall (int x, int y, int width, int height) {
+		this.moveable = false;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+
+	public Wall (int x, int y, int width, int height, int endx, int endy, int duration, String condition) {
+		this.moveable = true;
+		r = new Rectangle(x, y, width, height);
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.endx = endx;
+		this.endy = endy;
+		this.duration = duration;
+		this.condition = condition;
 	}
 	
 	public Rectangle getBounds() {

@@ -22,6 +22,7 @@ public class Level {
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
+  private ArrayList<Wall> walls;
   private int score = 0;
   private double currentTime = TIME;
   private int playerSpeed = PLAYERSPEED;
@@ -253,7 +254,7 @@ public class Level {
 
   public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
-        canvas.getHeight() / 2 - i.getHeight());
+            canvas.getHeight() / 2 - i.getHeight());
   }
 
   public Wall getRight() {
@@ -290,6 +291,10 @@ public class Level {
 
   public void setBalls(ArrayList<Ball> balls) {
     this.balls = balls;
+  }
+
+  public void setWalls(ArrayList<Wall> walls) {
+    this.walls = walls;
   }
 
   public void setPlayers(ArrayList<Player> players) {
@@ -371,6 +376,7 @@ public class Level {
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
+    private ArrayList<Wall> walls;
     private int playerSpeed = PLAYERSPEED;
 
     /**
@@ -405,6 +411,16 @@ public class Level {
     }
 
     /**
+     * Walls Setter.
+     * @param walls walls
+     * @return builder
+     */
+    public Builder setWalls(ArrayList<Wall> walls) {
+      this.walls = walls;
+      return this;
+    }
+
+    /**
      * Playerspeed Setter.
      * @param playerSpeed playerspeed
      * @return builder
@@ -433,6 +449,7 @@ public class Level {
       level.setBalls(balls);
       level.setPlayers(players);
       level.setPlayerSpeed(playerSpeed);
+      level.setWalls(walls);
       return level;
     }
 

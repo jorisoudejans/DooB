@@ -24,5 +24,14 @@
             <size>32</size>
         </ball>
     </ballList>
+    <wallList>
+        <wall id="1">
+            <x>800</x>
+            <y>0</y>
+            <width>80</width>
+            <height>800</height>
+            <movable>0</movable>
+        </wall>
+    </wallList>
 
 </level>
