@@ -1,12 +1,10 @@
 package doob.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+import doob.DLog;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -43,9 +41,9 @@ public class GameController {
   @FXML
   private Canvas lives2;
   @FXML
-  private Label scoreTextView1;
+  private Label score1;
   @FXML
-  private Label scoreTextView2;
+  private Label score2;
   @FXML
   private ProgressBar progressBar;
   @FXML
@@ -135,24 +133,6 @@ public class GameController {
    */
   public void checkCollisions() {
     if (level.ballPlayerCollision()) {
-      if (level.getPlayers().get(0).getState() == Player.State.INVULNERABLE) {
-        for (final PowerUp powerUp : level.getActivePowerups()) {
-          if (powerUp instanceof ProtectOncePowerUp) {
-            if (powerUp.getPlayer().equals(level.getPlayers().get(0))) {
-              final ScheduledExecutorService executorService =
-                      Executors.newSingleThreadScheduledExecutor();
-              executorService.schedule(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                  powerUp.onDeactivate(level);
-                  return null;
-                }
-              }, 500, TimeUnit.MILLISECONDS);
-            }
-          }
-        }
-        return;
-      }
       if (level.getPlayers().get(0).getLives() == 1) {
         level.drawText(new Image("/image/gameover.png"));
       } else {
@@ -177,8 +157,8 @@ public class GameController {
    * Updates the score every gamestep.
    */
   public void updateScore() {
-    int score1 = level.getScore(0);
-    scoreTextView1.setText(score1 + "");
+    int score = level.getScore();
+    score1.setText(score + "");
   }
 
   /**

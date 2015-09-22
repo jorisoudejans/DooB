@@ -1,49 +1,40 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
 import doob.model.Level;
-import doob.model.Player;
 
 /**
- * Represents a powerup that adds extra time.
+ * Represents a powerup that adds extra time
+ *
+ * Created by hidde on 9/10/15.
  */
-@PowerUpChance(chance = PowerUp.CHANCE_TIME)
 public class TimePowerUp extends PowerUp {
 
-    public static final int CYCLES_TO_ADD = 500;
+
+    /**
+     * Construct powerup with endtime
+     *
+     * @param timeOfDisappear
+     */
+    public TimePowerUp(int timeOfDisappear) {
+        super(timeOfDisappear);
+    }
 
     /**
      * Powerup works one second.
      * @return duration
      */
     @Override
-    public int getDuration() {
-        return 0;
-    }
-
-    @Override
-    public String spritePath() {
-        return "/image/powerup/time.png";
+    public int getTime() {
+        return 1;
     }
 
     /**
-     * Adds cycles to level.
+     * Adds 5 seconds to level.
      * @param level the level the powerup is in
-     * @param player the player that picked up the power-up
      */
     @Override
-    public void onActivate(Level level, Player player) {
-        super.onActivate(level, player);
-        level.setCurrentTime(Math.min(level.getCurrentTime() + CYCLES_TO_ADD, Level.TIME));
-    }
-
-    @Override
-    public void onDeactivate(Level level) {
-        // empty
-    }
-
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
+    public void onActivate(Level level) {
+        super.onActivate(level);
+        level.setCurrentTime( level.getCurrentTime() + 500 );
     }
 }

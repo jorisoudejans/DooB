@@ -49,11 +49,11 @@ public class GameControllerTest extends ControllerTest {
         /*GameController gameController = getGameController();
         Level level = gameController.getLevel();
         level.update(); // times now differ
-        assertThat(level.getDuration(), IsNot.not(equalTo(level.getCurrentTime())));
+        assertThat(level.getTime(), IsNot.not(equalTo(level.getCurrentTime())));
 
         gameController.createFreeze();
         Thread.sleep(3000);
-        assertEquals(level.getDuration(), level.getCurrentTime());*/
+        assertEquals(level.getTime(), level.getCurrentTime());*/
     }
 
     private GameController getGameController() {
