@@ -11,8 +11,9 @@ import javafx.scene.image.Image;
 public abstract class PowerUp implements Collidable {
 
 	// Chances
-	public static final float CHANCE_TIME = 0.5f;
-	public static final float CHANCE_LIFE = 0.5f;
+	public static final float CHANCE_TIME = 0.1f;
+	public static final float CHANCE_LIFE = 0.1f;
+	public static final float CHANCE_POINTS = 0.1f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 

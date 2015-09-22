@@ -41,9 +41,9 @@ public class GameController {
   @FXML
   private Canvas lives2;
   @FXML
-  private Label score1;
+  private Label scoreTextView1;
   @FXML
-  private Label score2;
+  private Label scoreTextView2;
   @FXML
   private ProgressBar progressBar;
   @FXML
@@ -157,8 +157,8 @@ public class GameController {
    * Updates the score every gamestep.
    */
   public void updateScore() {
-    int score = level.getScore();
-    score1.setText(score + "");
+    int score1 = level.getScore(0);
+    scoreTextView1.setText(score1 + "");
   }
 
   /**

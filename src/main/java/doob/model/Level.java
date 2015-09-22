@@ -27,7 +27,6 @@ public class Level {
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
-  private int score = 0;
   private double currentTime = TIME;
   private int playerSpeed = PLAYERSPEED;
   public static final int SHOOTSPEED = 12;
@@ -132,7 +131,7 @@ public class Level {
             DLog.i(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
-          score += 100;
+          players.get(0).setScore(players.get(0).getScore() + 100);
           processPowerups(b.getX(), b.getY()); // possible spawn a powerup at location of ball
         }
       }
@@ -408,12 +407,8 @@ public class Level {
     this.playerSpeed = playerSpeed;
   }
 
-  public int getScore() {
-    return score;
-  }
-
-  public void setScore(int score) {
-    this.score = score;
+  public int getScore(int player) {
+    return players.get(player).getScore();
   }
 
   public double getCurrentTime() {

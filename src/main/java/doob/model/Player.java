@@ -16,6 +16,7 @@ public class Player implements Collidable, Drawable {
   private int y;
   private int speed;
   private int lives;
+  private int score;
   
   public static final int LIVES = 5;
 
@@ -47,6 +48,7 @@ public class Player implements Collidable, Drawable {
     this.x = x;
     this.y = y;
     this.speed = 0;
+    this.score = score;
     this.lives = LIVES;
 
     imageStand = imageS;
@@ -135,6 +137,14 @@ public class Player implements Collidable, Drawable {
 
   public void setLives(int lives) {
     this.lives = lives;
+  }
+
+  public int getScore() {
+    return score;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
   }
 
   @Override
