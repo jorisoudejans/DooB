@@ -4,13 +4,73 @@ import doob.model.Collidable;
 import doob.model.Level;
 import javafx.scene.image.Image;
 
+/**
+ * Abstract Power-up class to be extended by every possible power-up.
+ */
 public abstract class PowerUp implements Collidable {
 
-	private int waitTime;
+	// Chances
+	public static final float CHANCE_TIME = 0.5f;
+
+	public static final int DEFAULT_WAIT_CYCLES = 500;
+
+	private int currentWaitTime;
 	private int activeTime;
 	private double locationX;
 	private double locationY;
 	private Image spriteImage;
+
+	/**
+	 * Construct power-up with current game time. Calculates the disappear time.
+	 */
+	public PowerUp() {
+		this.activeTime = this.getTime();
+		this.currentWaitTime = DEFAULT_WAIT_CYCLES;
+	}
+
+	/**
+	 * Method that is called when power-up is activated.
+	 * @param level the level the power-up is in.
+	 */
+	public abstract void onActivate(Level level);
+
+	/**
+	 * Method that is called when power-up is deactivated.
+	 * @param level the level the power-up is in.
+	 */
+	public abstract void onDeactivate(Level level);
+
+	/**
+	 * Gives the time the power-up is working.
+	 * @return time the power-up is working.
+	 */
+	public abstract int getTime();
+
+	/**
+	 * Path to the visual.
+	 * @return path
+	 */
+	public abstract String spritePath();
+
+	/**
+	 * Returns the end time in level.
+	 * @return end time.
+	 */
+	public double getActiveTime() {
+		return this.activeTime;
+	}
+
+	/**
+	 * Sets end time based from level.
+	 * @param duration the end time.
+	 */
+	public void setActiveTime(int duration) {
+		this.activeTime = duration;
+	}
+
+	public int getCurrentWaitTime() {
+		return currentWaitTime;
+	}
 
 	public Image getSpriteImage() {
 		return spriteImage;
@@ -38,73 +98,17 @@ public abstract class PowerUp implements Collidable {
 	}
 
 	/**
-	 * Construct powerup with current game time. Calculates the disappear time
-	 */
-	public PowerUp() {
-		this.activeTime = this.getTime();
-		this.waitTime = 500; //  seconds?
-	}
-
-	/**
-	 * Method that is called when powerup is activated.
-	 * @param level the level the powerup is in
-	 */
-	public void onActivate(Level level) {
-		// custom
-	}
-
-	/**
-	 * Method that is called when powerup is deactivated.
-	 * @param level the level the powerup is in
-	 */
-	public void onDeactivate(Level level) {
-		// custom
-	}
-
-	/**
-	 * Gives the time the powerup is working
-	 * @return time the powerup is working
-	 */
-	public abstract int getTime();
-
-	/**
-	 * Path to the visual
-	 * @return path
-	 */
-	public abstract String spritePath();
-
-	/**
-	 * Returns the end time in level
-	 * @return end time
-	 */
-	public double getActiveTime() {
-		return this.activeTime;
-	}
-
-	/**
-	 * Sets end time based from level
-	 * @param duration the end time
-	 */
-	public void setActiveTime(int duration) {
-		this.activeTime = duration;
-	}
-
-	public int getWaitTime() {
-		return waitTime;
-	}
-
-	/**
-	 * Game tick on powerup. Decrease time left
+	 * Game tick on power-up. Decrease time left.
 	 */
 	public void tickActive() {
 		this.activeTime--;
 	}
 
 	/**
-	 * Game tick on powerup. Decrease time left
+	 * Game tick on power-up. Decrease time left.
 	 */
 	public void tickWait() {
-		this.waitTime--;
+		this.currentWaitTime--;
 	}
 
 }

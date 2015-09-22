@@ -4,12 +4,12 @@ import doob.model.Collidable;
 import doob.model.Level;
 
 /**
- * Represents a powerup that adds extra time
- *
- * Created by hidde on 9/10/15.
+ * Represents a powerup that adds extra time.
  */
-@PowerUpChance(chance = 0.5)
+@PowerUpChance(chance = PowerUp.CHANCE_TIME)
 public class TimePowerUp extends PowerUp {
+
+    public static final int CYCLES_TO_ADD = 500;
 
     /**
      * Powerup works one second.
@@ -26,13 +26,17 @@ public class TimePowerUp extends PowerUp {
     }
 
     /**
-     * Adds 5 seconds to level.
+     * Adds cycles to level.
      * @param level the level the powerup is in
      */
     @Override
     public void onActivate(Level level) {
-        super.onActivate(level);
-        level.setCurrentTime( Math.min(level.getCurrentTime() + 500, Level.TIME ));
+        level.setCurrentTime(Math.min(level.getCurrentTime() + CYCLES_TO_ADD, Level.TIME));
+    }
+
+    @Override
+    public void onDeactivate(Level level) {
+        // empty
     }
 
     @Override

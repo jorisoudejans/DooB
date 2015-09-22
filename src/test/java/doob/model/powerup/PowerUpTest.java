@@ -1,12 +1,7 @@
 package doob.model.powerup;
 
-import doob.model.powerup.PowerUp;
-import org.junit.Test;
-
 /**
- * Tests abstract class PowerUp
- *
- * Created by hidde on 9/10/15.
+ * Tests abstract class PowerUp.
  */
 public class PowerUpTest {
 

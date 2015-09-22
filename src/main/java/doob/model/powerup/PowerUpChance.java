@@ -6,13 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Chance that a powerup will drop
- * Created by hidde on 9/19/15.
+ * Chance that a power-up will drop.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface PowerUpChance {
 
-    public double chance() default 0;
+    /**
+     * The chance a power-up will drop, default 0.
+     */
+    double chance() default 0;
 
 }

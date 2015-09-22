@@ -10,38 +10,30 @@ import static org.mockito.Mockito.when;
 
 /**
  * Should extend TimePowerUp.
- *
- * Created by hidde on 9/10/15.
  */
 public class TimePowerUpTest {
 
     @Test
-    public void testGetEndtime() {
-
+    public void testGetEndTime() {
         TimePowerUp timePowerUp = new TimePowerUp();
         assertEquals(1, timePowerUp.getActiveTime(), 0.01);
-
     }
-
 
     @Test
     public void testGetTime() {
-
         TimePowerUp timePowerUp = new TimePowerUp();
         assertEquals(1, timePowerUp.getTime());
-
     }
 
     @Test
     public void testOnActivate() {
         Level level = mock(Level.class);
-        when(level.getCurrentTime()).thenReturn(500.0);
+        when(level.getCurrentTime()).thenReturn((double) TimePowerUp.CYCLES_TO_ADD);
 
         TimePowerUp timePowerUp = new TimePowerUp();
         timePowerUp.onActivate(level);
 
-        verify(level).setCurrentTime(1000.0);
-
+        verify(level).setCurrentTime(TimePowerUp.CYCLES_TO_ADD + PowerUp.DEFAULT_WAIT_CYCLES);
     }
 
     @Test
@@ -50,7 +42,6 @@ public class TimePowerUpTest {
 
         TimePowerUp timePowerUp = new TimePowerUp();
         timePowerUp.onDeactivate(level);
-
     }
 
     @Test

@@ -1,7 +1,6 @@
 package doob.model;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -274,7 +273,7 @@ public class Level {
         powerup.setLocationY(powerup.getLocationY()+2);
       }
       powerup.tickWait();
-      if (powerup.getWaitTime() <= 0) {
+      if (powerup.getCurrentWaitTime() <= 0) {
         toRemoveWait.add(powerup);
       }
     }
