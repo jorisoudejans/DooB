@@ -1,8 +1,10 @@
 package doob.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import doob.DLog;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -53,9 +55,10 @@ public class GameController {
 
   /**
    * Initialization of the game pane.
+   * @throws IOException it DooB.log can't be accessed.
    */
   @FXML
-  public void initialize() {
+  public void initialize() throws IOException {
     levelList = new ArrayList<String>();
     readLevels();
     levelLabel.setText((currentLevel + 1) + "");
@@ -65,6 +68,10 @@ public class GameController {
     gc = lives1.getGraphicsContext2D();
     createTimer();
     timer.start();
+
+    //Init log.
+    DLog.setFile("DooB.log");
+    DLog.i("Game started.", DLog.Type.STATE);
   }
 
   private GameState gameState;
@@ -141,6 +148,7 @@ public class GameController {
   public void checkLevelComplete() {
     if (level.getBalls().size() <= 0) {
       level.drawText(new Image("/image/levelcomplete.png"));
+      DLog.i("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
       createFreeze();
     }
   }
@@ -223,9 +231,12 @@ public class GameController {
         newLevel();
         timer.start();
       } else {
+        gameState = GameState.WON;
+        DLog.i("Game won!", DLog.Type.STATE);
         App.loadScene("/fxml/menu.fxml");
       }
     } else {
+      DLog.i("Lost a life", DLog.Type.STATE);
       level.crushed();
       newLevel();
       timer.start();
