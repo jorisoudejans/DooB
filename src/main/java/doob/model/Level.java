@@ -28,10 +28,12 @@ public class Level {
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
   private double currentTime = TIME;
-  public static final int SHOOTSPEED = 12;
+  public static final int PROJECTILE_START_SPEED = 12;
   public static final int STARTHEIGHT = 200;
   public static final int BALLSIZE = 96;
   public static final double TIME = 2000;
+
+  private static int projectileSpeed = PROJECTILE_START_SPEED;
 
   private Wall right;
   private Wall left;
@@ -89,9 +91,8 @@ public class Level {
    */
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
-      // TODO there can be a powerup for which there can be more than one projectile.
       projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
-          SHOOTSPEED));
+              PROJECTILE_START_SPEED));
       DLog.i("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }
@@ -417,6 +418,14 @@ public class Level {
 
   public void setPlayers(ArrayList<Player> players) {
     this.players = players;
+  }
+
+  public static int getProjectileSpeed() {
+    return projectileSpeed;
+  }
+
+  public static void setProjectileSpeed(int projectileSpeed) {
+    Level.projectileSpeed = projectileSpeed;
   }
 
   public int getScore(int player) {

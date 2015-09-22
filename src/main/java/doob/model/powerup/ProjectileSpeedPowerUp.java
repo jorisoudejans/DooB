@@ -7,8 +7,8 @@ import doob.model.Player;
 /**
  * Power-up that freezes all balls for a short period of time.
  */
-@PowerUpChance(chance = PowerUp.CHANCE_PLAYER_SPEED)
-public class PlayerSpeedPowerUp extends PowerUp {
+@PowerUpChance(chance = PowerUp.CHANCE_PROJECTILE_SPEED)
+public class ProjectileSpeedPowerUp extends PowerUp {
 
     public static final int DURATION = 500;
     public static final int SPEED_FACTOR = 2;
@@ -21,7 +21,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        player.setMoveSpeed(Player.START_SPEED * SPEED_FACTOR);
+        Level.setProjectileSpeed(Level.PROJECTILE_START_SPEED * SPEED_FACTOR);
     }
 
     /**
@@ -30,7 +30,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-        getPlayer().setMoveSpeed(Player.START_SPEED);
+        Level.setProjectileSpeed(Level.PROJECTILE_START_SPEED);
     }
 
     /**
@@ -48,7 +48,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
      */
     @Override
     public String spritePath() {
-        return "/image/powerup/fast-right.png";
+        return "/image/powerup/fast-up.png";
     }
 
     @Override
