@@ -11,18 +11,26 @@ public abstract class Projectile implements Drawable, Collidable {
 	private Image img;
 	private double x;
 	private double y;
-	private double shootSpeed;
-	
+
+	private State state;
+
+	/**
+	 * Possible states of a projectile.
+	 */
+	public enum State {
+		NORMAL,
+		FROZEN
+	}
+
 	/**
 	 * Abstract projectile.
 	 * @param x the x-location of the projectile.
 	 * @param y the y-location of the projectile.
-	 * @param shootSpeed the speed at which the y-location of the projectile changes.
 	 */
-	public Projectile(double x, double y, double shootSpeed) {
+	public Projectile(double x, double y) {
 		this.x = x;
 		this.y = y;
-		this.shootSpeed = shootSpeed;
+		this.state = State.NORMAL;
 	}
 
     /**
@@ -48,14 +56,6 @@ public abstract class Projectile implements Drawable, Collidable {
 		}
         return false;
     }
-	
-	public double getShootSpeed() {
-		return shootSpeed;
-	}
-
-	public void setShootSpeed(double shootSpeed) {
-		this.shootSpeed = shootSpeed;
-	}
 
 	public Image getImg() {
 		return img;
@@ -80,19 +80,20 @@ public abstract class Projectile implements Drawable, Collidable {
 	public void setY(double y) {
 		this.y = y;
 	}
-	
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
 	/**
 	 * Moves the projectile in y direction (up and down).
 	 */
 	public void move() {
-		this.y = y - shootSpeed;
+		this.y = y - Level.getProjectileSpeed();
 	}
 
-	@Override
-	public String toString() {
-		return "Projectile{"
-				+ "x=" + x
-				+ ", y=" + y
-				+ ", shootSpeed=" + shootSpeed + '}';
-	}
 }
