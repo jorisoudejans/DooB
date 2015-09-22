@@ -24,6 +24,16 @@ public class Player implements Collidable, Drawable {
   private Image imageLeft;
   private Image imageRight;
 
+  private State state;
+
+  /**
+   * Possible player states.
+   */
+  public enum State {
+    NORMAL,
+    INVULNERABLE
+  }
+
   /**
    * Constructor for a player with initial location x.
    * 
@@ -48,8 +58,9 @@ public class Player implements Collidable, Drawable {
     this.x = x;
     this.y = y;
     this.speed = 0;
-    this.score = score;
+    this.score = 0;
     this.lives = LIVES;
+    this.state = State.NORMAL;
 
     imageStand = imageS;
     imageLeft = imageL;
@@ -145,6 +156,14 @@ public class Player implements Collidable, Drawable {
 
   public void setScore(int score) {
     this.score = score;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
   @Override

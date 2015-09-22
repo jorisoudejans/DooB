@@ -31,11 +31,11 @@ public class TimePowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getTime method for TimePowerUp, should be 0.
+     * Tests getDuration method for TimePowerUp, should be 0.
      */
     @Test
     public void testGetTime() {
-        assertEquals(0, timePowerUp.getTime());
+        assertEquals(0, timePowerUp.getDuration());
     }
 
     /**

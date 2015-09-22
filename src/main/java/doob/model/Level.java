@@ -371,6 +371,10 @@ public class Level {
     this.right = right;
   }
 
+  public ArrayList<PowerUp> getActivePowerups() {
+    return activePowerups;
+  }
+
   public Wall getLeft() {
     return left;
   }

@@ -17,7 +17,7 @@ public class TimePowerUp extends PowerUp {
      * @return duration
      */
     @Override
-    public int getTime() {
+    public int getDuration() {
         return 0;
     }
 

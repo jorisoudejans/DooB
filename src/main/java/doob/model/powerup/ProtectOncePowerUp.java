@@ -5,10 +5,12 @@ import doob.model.Level;
 import doob.model.Player;
 
 /**
- * Power-up that adds a life to the player.
+ * Power-up that protects the player for one hit.
  */
-@PowerUpChance(chance = PowerUp.CHANCE_LIFE)
-public class LifePowerUp extends PowerUp {
+@PowerUpChance(chance = PowerUp.CHANCE_PROTECT_ONCE)
+public class ProtectOncePowerUp extends PowerUp {
+
+    public static final int DURATION = 500;
 
     /**
      * Adds one life to player.
@@ -18,7 +20,7 @@ public class LifePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        player.setLives(player.getLives() + 1);
+        getPlayer().setState(Player.State.INVULNERABLE);
     }
 
     /**
@@ -27,7 +29,7 @@ public class LifePowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-
+        getPlayer().setState(Player.State.NORMAL);
     }
 
     /**
@@ -36,7 +38,7 @@ public class LifePowerUp extends PowerUp {
      */
     @Override
     public int getDuration() {
-        return 0;
+        return DURATION;
     }
 
     /**
@@ -45,7 +47,7 @@ public class LifePowerUp extends PowerUp {
      */
     @Override
     public String spritePath() {
-        return "/image/powerup/life.png";
+        return "/image/powerup/shield-one.png";
     }
 
     @Override

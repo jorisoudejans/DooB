@@ -37,7 +37,7 @@ public class PointsPowerUp extends PowerUp {
      * @return 0
      */
     @Override
-    public int getTime() {
+    public int getDuration() {
         return 0;
     }
 

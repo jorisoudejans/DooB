@@ -14,6 +14,7 @@ public abstract class PowerUp implements Collidable {
 	public static final float CHANCE_TIME = 0.1f;
 	public static final float CHANCE_LIFE = 0.1f;
 	public static final float CHANCE_POINTS = 0.1f;
+	public static final float CHANCE_PROTECT_ONCE = 0.1f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 
@@ -29,7 +30,7 @@ public abstract class PowerUp implements Collidable {
 	 * Construct power-up with current game time. Calculates the disappear time.
 	 */
 	public PowerUp() {
-		this.activeTime = this.getTime();
+		this.activeTime = this.getDuration();
 		this.currentWaitTime = DEFAULT_WAIT_CYCLES;
 	}
 
@@ -52,7 +53,7 @@ public abstract class PowerUp implements Collidable {
 	 * Gives the time the power-up is working.
 	 * @return time the power-up is working.
 	 */
-	public abstract int getTime();
+	public abstract int getDuration();
 
 	/**
 	 * Path to the visual.

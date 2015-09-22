@@ -31,11 +31,11 @@ public class LifePowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getTime method for LifePowerUp, should be 0.
+     * Tests getDuration method for LifePowerUp, should be 0.
      */
     @Test
     public void testGetTime() {
-        assertEquals(0, lifePowerUp.getTime());
+        assertEquals(0, lifePowerUp.getDuration());
     }
 
     /**
@@ -55,8 +55,7 @@ public class LifePowerUpTest extends PowerUpTest {
      */
     @Test
     public void testOnDeactivate() {
-        TimePowerUp timePowerUp = new TimePowerUp();
-        timePowerUp.onDeactivate(getLevel());
+        lifePowerUp.onDeactivate(getLevel());
 
         verifyNoMoreInteractions(getLevel());
         verifyNoMoreInteractions(getPlayer());
