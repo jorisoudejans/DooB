@@ -18,6 +18,7 @@ public abstract class PowerUp implements Collidable {
 	public static final float CHANCE_FREEZE_BALLS = 0.1f;
 	public static final float CHANCE_PLAYER_SPEED = 0.1f;
 	public static final float CHANCE_PROJECTILE_SPEED = 0.1f;
+	public static final float CHANCE_PROJECTILE_FREEZE = 0.1f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 

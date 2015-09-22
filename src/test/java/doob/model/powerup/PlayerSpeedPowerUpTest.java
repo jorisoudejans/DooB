@@ -14,7 +14,7 @@ public class PlayerSpeedPowerUpTest extends PowerUpTest {
     private PlayerSpeedPowerUp playerSpeedPowerUp;
 
     /**
-     * Initialize ProtectOncePowerUp.
+     * Initialize PlayerSpeedPowerUpTest.
      */
     @Override
     public void initInstance() {
@@ -22,7 +22,7 @@ public class PlayerSpeedPowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getEndTime method for ProtectOncePowerUp.
+     * Tests getEndTime method for PlayerSpeedPowerUpTest.
      */
     @Test
     public void testGetEndTime() {
@@ -30,7 +30,7 @@ public class PlayerSpeedPowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getDuration method for ProtectOncePowerUp.
+     * Tests getDuration method for PlayerSpeedPowerUpTest.
      */
     @Test
     public void testGetTime() {

@@ -53,7 +53,8 @@ public class Level {
    */
   public enum State {
     NORMAL,
-    BALLS_FREEZE
+    BALLS_FREEZE,
+    PROJECTILES_FREEZE
   }
 
   /**
@@ -117,8 +118,13 @@ public class Level {
         projHitIndex = i;
       }
     }
-    if (projHitIndex != -1)
-      projectiles.remove(projHitIndex);
+    if (projHitIndex != -1) {
+      if (state != State.PROJECTILES_FREEZE) {
+        projectiles.remove(projHitIndex);
+      } else {
+        projectiles.get(projHitIndex).setState(Projectile.State.FROZEN);
+      }
+    }
   }
 
   /**
@@ -267,9 +273,17 @@ public class Level {
    * Timer for animation.
    */
   public void update() {
-    for (Drawable drawable : projectiles) {
-      drawable.move();
-      drawable.draw(gc);
+    for (Projectile projectile : projectiles) {
+      if (
+              !(
+                      projectile.getState()
+                      == Projectile.State.FROZEN
+                      && state
+                      == State.PROJECTILES_FREEZE
+              )) {
+        projectile.move();
+      }
+      projectile.draw(gc);
     }
     // endlessLevel();
     detectCollisions();

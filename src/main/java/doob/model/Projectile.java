@@ -12,6 +12,16 @@ public abstract class Projectile implements Drawable, Collidable {
 	private double x;
 	private double y;
 
+	private State state;
+
+	/**
+	 * Possible states of a projectile.
+	 */
+	public enum State {
+		NORMAL,
+		FROZEN
+	}
+
 	/**
 	 * Abstract projectile.
 	 * @param x the x-location of the projectile.
@@ -20,6 +30,7 @@ public abstract class Projectile implements Drawable, Collidable {
 	public Projectile(double x, double y) {
 		this.x = x;
 		this.y = y;
+		this.state = State.NORMAL;
 	}
 
     /**
@@ -69,7 +80,15 @@ public abstract class Projectile implements Drawable, Collidable {
 	public void setY(double y) {
 		this.y = y;
 	}
-	
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
 	/**
 	 * Moves the projectile in y direction (up and down).
 	 */

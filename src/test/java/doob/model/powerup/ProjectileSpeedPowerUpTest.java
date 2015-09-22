@@ -16,7 +16,7 @@ public class ProjectileSpeedPowerUpTest extends PowerUpTest {
     private ProjectileSpeedPowerUp projectileSpeedPowerUp;
 
     /**
-     * Initialize ProtectOncePowerUp.
+     * Initialize ProjectileSpeedPowerUp.
      */
     @Override
     public void initInstance() {
@@ -24,7 +24,7 @@ public class ProjectileSpeedPowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getEndTime method for ProtectOncePowerUp.
+     * Tests getEndTime method for ProjectileSpeedPowerUp.
      */
     @Test
     public void testGetEndTime() {
@@ -32,7 +32,7 @@ public class ProjectileSpeedPowerUpTest extends PowerUpTest {
     }
 
     /**
-     * Tests getDuration method for ProtectOncePowerUp.
+     * Tests getDuration method for ProjectileSpeedPowerUp.
      */
     @Test
     public void testGetTime() {

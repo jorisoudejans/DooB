@@ -35,7 +35,7 @@ public class ProjectileSpeedPowerUp extends PowerUp {
 
     /**
      * Has no duration.
-     * @return 0
+     * @return duration
      */
     @Override
     public int getDuration() {

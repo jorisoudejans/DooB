@@ -5,10 +5,10 @@ import doob.model.Level;
 import doob.model.Player;
 
 /**
- * Power-up that protects the player for one hit.
+ * Power-up that freezes all balls for a short period of time.
  */
-@PowerUpChance(chance = PowerUp.CHANCE_PROTECT_ONCE)
-public class ProtectOncePowerUp extends PowerUp {
+@PowerUpChance(chance = PowerUp.CHANCE_PROJECTILE_FREEZE)
+public class ProjectileFreezePowerUp extends PowerUp {
 
     public static final int DURATION = 500;
 
@@ -20,7 +20,7 @@ public class ProtectOncePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        getPlayer().setState(Player.State.INVULNERABLE);
+        level.setState(Level.State.PROJECTILES_FREEZE);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ProtectOncePowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-        getPlayer().setState(Player.State.NORMAL);
+        level.setState(Level.State.NORMAL);
     }
 
     /**
@@ -47,7 +47,7 @@ public class ProtectOncePowerUp extends PowerUp {
      */
     @Override
     public String spritePath() {
-        return "/image/powerup/shield-one.png";
+        return "/image/powerup/straight.png";
     }
 
     @Override
