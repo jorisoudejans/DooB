@@ -2,6 +2,7 @@ package doob.model.powerup;
 
 import doob.model.Collidable;
 import doob.model.Level;
+import doob.model.Player;
 import javafx.scene.image.Image;
 
 /**
@@ -11,6 +12,7 @@ public abstract class PowerUp implements Collidable {
 
 	// Chances
 	public static final float CHANCE_TIME = 0.5f;
+	public static final float CHANCE_LIFE = 0.5f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 
@@ -19,6 +21,8 @@ public abstract class PowerUp implements Collidable {
 	private double locationX;
 	private double locationY;
 	private Image spriteImage;
+
+	private Player player;
 
 	/**
 	 * Construct power-up with current game time. Calculates the disappear time.
@@ -31,8 +35,11 @@ public abstract class PowerUp implements Collidable {
 	/**
 	 * Method that is called when power-up is activated.
 	 * @param level the level the power-up is in.
+	 * @param player the player that picked up the power-up.
 	 */
-	public abstract void onActivate(Level level);
+	public void onActivate(Level level, Player player) {
+		this.player = player;
+	}
 
 	/**
 	 * Method that is called when power-up is deactivated.
@@ -86,6 +93,14 @@ public abstract class PowerUp implements Collidable {
 
 	public void setLocationY(double locationY) {
 		this.locationY = locationY;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public double getLocationX() {

@@ -199,7 +199,7 @@ public class Level {
       for (Player p : players) {
         if (p.collides(powerup)) {
           DLog.i(p.toString() + " is hit by a powerup", DLog.Type.COLLISION);
-          powerup.onActivate(this);
+          powerup.onActivate(this, p);
           toRemove = powerup;
           activePowerups.add(powerup);
         }
@@ -306,7 +306,7 @@ public class Level {
    */
   public void processPowerups(double locationX, double locationY) {
     Random random = new Random();
-    for(Class<?> powerup : availablePowerups) {
+    for (Class<?> powerup : availablePowerups) {
       double rand = random.nextDouble();
       PowerUpChance chanceAnnotation = powerup.getAnnotation(PowerUpChance.class);
       if (rand < chanceAnnotation.chance()) {

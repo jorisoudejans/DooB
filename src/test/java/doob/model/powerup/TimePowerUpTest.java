@@ -1,52 +1,73 @@
 package doob.model.powerup;
 
-import doob.model.Level;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
- * Should extend TimePowerUp.
+ * Test class for TimePowerUp.
  */
-public class TimePowerUpTest {
+public class TimePowerUpTest extends PowerUpTest {
 
+    private TimePowerUp timePowerUp;
+
+    /**
+     * Initialize TimePowerUp.
+     */
+    @Override
+    public void initInstance() {
+        timePowerUp = new TimePowerUp();
+    }
+
+    /**
+     * Tests getEndTime method for TimePowerUp, should be 0.
+     */
     @Test
     public void testGetEndTime() {
-        TimePowerUp timePowerUp = new TimePowerUp();
-        assertEquals(1, timePowerUp.getActiveTime(), 0.01);
+        assertEquals(0, timePowerUp.getActiveTime(), 0);
     }
 
+    /**
+     * Tests getTime method for TimePowerUp, should be 0.
+     */
     @Test
     public void testGetTime() {
-        TimePowerUp timePowerUp = new TimePowerUp();
-        assertEquals(1, timePowerUp.getTime());
+        assertEquals(0, timePowerUp.getTime());
     }
 
+    /**
+     * Tests onActivate method. Should add time to level.
+     */
     @Test
     public void testOnActivate() {
-        Level level = mock(Level.class);
-        when(level.getCurrentTime()).thenReturn((double) TimePowerUp.CYCLES_TO_ADD);
+        when(getLevel().getCurrentTime()).thenReturn((double) TimePowerUp.CYCLES_TO_ADD);
 
-        TimePowerUp timePowerUp = new TimePowerUp();
-        timePowerUp.onActivate(level);
+        timePowerUp.onActivate(getLevel(), getPlayer());
 
-        verify(level).setCurrentTime(TimePowerUp.CYCLES_TO_ADD + PowerUp.DEFAULT_WAIT_CYCLES);
+        verify(getLevel()).setCurrentTime(TimePowerUp.CYCLES_TO_ADD + PowerUp.DEFAULT_WAIT_CYCLES);
     }
 
+    /**
+     * Tests onDeactivate method. should do nothing...
+     */
     @Test
     public void testOnDeactivate() {
-        Level level = mock(Level.class);
+        timePowerUp.onDeactivate(getLevel());
 
-        TimePowerUp timePowerUp = new TimePowerUp();
-        timePowerUp.onDeactivate(level);
+        verifyNoMoreInteractions(getLevel());
+        verifyNoMoreInteractions(getPlayer());
     }
 
-    @Test
-    public void testSetEndTime() {
-        TimePowerUp timePowerUp = new TimePowerUp();
-        timePowerUp.setActiveTime(10);
+    /**
+     * Get PowerUp instance.
+     * @return instance of PowerUp.
+     */
+    @Override
+    public PowerUp getPowerUp() {
+        return timePowerUp;
     }
+
 }

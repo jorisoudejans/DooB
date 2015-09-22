@@ -2,6 +2,7 @@ package doob.model.powerup;
 
 import doob.model.Collidable;
 import doob.model.Level;
+import doob.model.Player;
 
 /**
  * Represents a powerup that adds extra time.
@@ -17,7 +18,7 @@ public class TimePowerUp extends PowerUp {
      */
     @Override
     public int getTime() {
-        return 1;
+        return 0;
     }
 
     @Override
@@ -28,9 +29,11 @@ public class TimePowerUp extends PowerUp {
     /**
      * Adds cycles to level.
      * @param level the level the powerup is in
+     * @param player the player that picked up the power-up
      */
     @Override
-    public void onActivate(Level level) {
+    public void onActivate(Level level, Player player) {
+        super.onActivate(level, player);
         level.setCurrentTime(Math.min(level.getCurrentTime() + CYCLES_TO_ADD, Level.TIME));
     }
 
