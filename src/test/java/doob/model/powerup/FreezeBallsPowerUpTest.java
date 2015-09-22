@@ -27,7 +27,7 @@ public class FreezeBallsPowerUpTest extends PowerUpTest {
      */
     @Test
     public void testGetEndTime() {
-        assertEquals(ProtectOncePowerUp.DURATION, freezeBallsPowerUp.getActiveTime(), 0);
+        assertEquals(FreezeBallsPowerUp.DURATION, freezeBallsPowerUp.getActiveTime(), 0);
     }
 
     /**
@@ -35,7 +35,7 @@ public class FreezeBallsPowerUpTest extends PowerUpTest {
      */
     @Test
     public void testGetTime() {
-        assertEquals(ProtectOncePowerUp.DURATION, freezeBallsPowerUp.getDuration());
+        assertEquals(FreezeBallsPowerUp.DURATION, freezeBallsPowerUp.getDuration());
     }
 
     /**

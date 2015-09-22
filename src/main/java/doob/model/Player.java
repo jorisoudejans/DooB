@@ -15,10 +15,12 @@ public class Player implements Collidable, Drawable {
   private int x;
   private int y;
   private int speed;
+  private int moveSpeed;
   private int lives;
   private int score;
   
   public static final int LIVES = 5;
+  public static final int START_SPEED = 4;
 
   private Image imageStand;
   private Image imageLeft;
@@ -58,6 +60,7 @@ public class Player implements Collidable, Drawable {
     this.x = x;
     this.y = y;
     this.speed = 0;
+    this.moveSpeed = START_SPEED;
     this.score = 0;
     this.lives = LIVES;
     this.state = State.NORMAL;
@@ -140,6 +143,14 @@ public class Player implements Collidable, Drawable {
 
   public int getSpeed() {
     return speed;
+  }
+
+  public int getMoveSpeed() {
+    return moveSpeed;
+  }
+
+  public void setMoveSpeed(int moveSpeed) {
+    this.moveSpeed = moveSpeed;
   }
 
   public int getLives() {

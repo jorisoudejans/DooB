@@ -28,11 +28,9 @@ public class Level {
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
   private double currentTime = TIME;
-  private int playerSpeed = PLAYERSPEED;
   public static final int SHOOTSPEED = 12;
   public static final int STARTHEIGHT = 200;
   public static final int BALLSIZE = 96;
-  public static final int PLAYERSPEED = 3;
   public static final double TIME = 2000;
 
   private Wall right;
@@ -421,10 +419,6 @@ public class Level {
     this.players = players;
   }
 
-  public void setPlayerSpeed(int playerSpeed) {
-    this.playerSpeed = playerSpeed;
-  }
-
   public int getScore(int player) {
     return players.get(player).getScore();
   }
@@ -453,14 +447,14 @@ public class Level {
     public void handle(KeyEvent key) {
       switch (key.getCode()) {
       case RIGHT:
-        players.get(0).setSpeed(playerSpeed);
+        players.get(0).setSpeed(players.get(0).getMoveSpeed());
         if (last != KeyCode.RIGHT) {
           DLog.i("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.RIGHT;
         }
         break;
       case LEFT:
-        players.get(0).setSpeed(-playerSpeed);
+        players.get(0).setSpeed(-players.get(0).getMoveSpeed());
         if (last != KeyCode.LEFT) {
           DLog.i("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.LEFT;
@@ -500,7 +494,6 @@ public class Level {
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
-    private int playerSpeed = PLAYERSPEED;
 
     /**
      * Constructor.
@@ -534,16 +527,6 @@ public class Level {
     }
 
     /**
-     * Playerspeed Setter.
-     * @param playerSpeed playerspeed
-     * @return builder
-     */
-    public Builder setPlayerSpeed(int playerSpeed) {
-      this.playerSpeed = playerSpeed;
-      return this;
-    }
-
-    /**
      * Builds the level.
      * @return level
      */
@@ -561,7 +544,6 @@ public class Level {
 
       level.setBalls(balls);
       level.setPlayers(players);
-      level.setPlayerSpeed(playerSpeed);
       return level;
     }
 
