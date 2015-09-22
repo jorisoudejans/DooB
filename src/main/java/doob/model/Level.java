@@ -46,6 +46,16 @@ public class Level {
   private ArrayList<PowerUp> powerupsOnScreen;
   private ArrayList<PowerUp> activePowerups;
 
+  private State state;
+
+  /**
+   * Possible level states.
+   */
+  public enum State {
+    NORMAL,
+    BALLS_FREEZE
+  }
+
   /**
    * Initialize javaFx.
    * 
@@ -55,6 +65,7 @@ public class Level {
   public Level(Canvas canvas) {
     this.endlessLevel = true;
     this.canvas = canvas;
+    this.state = State.NORMAL;
     gc = canvas.getGraphicsContext2D();
     canvas.setFocusTraversable(true);
     canvas.setOnKeyPressed(new KeyPressHandler());
@@ -226,6 +237,9 @@ public class Level {
    * Handle the movement of balls.
    */
   public void moveBalls() {
+    if (state == State.BALLS_FREEZE) {
+      return;
+    }
     for (Ball b : balls) {
       b.move();
     }
@@ -468,6 +482,14 @@ public class Level {
 
   public void setEndlessLevel(boolean endlessLevel) {
     this.endlessLevel = endlessLevel;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
   /**
