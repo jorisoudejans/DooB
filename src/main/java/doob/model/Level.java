@@ -235,6 +235,9 @@ public class Level {
     for (Ball b : balls) {
       b.draw(gc);
     }
+    for (Wall w : walls) {
+    	w.draw(gc);
+    }
   }
 
   /**
