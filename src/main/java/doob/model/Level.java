@@ -89,8 +89,8 @@ public class Level {
   }
 
   /**
-	 * 
-	 */
+   * Function that checks a collision between a projectile and a ceiling.
+   */
   public void projectileCeilingCollision() {
     int projHitIndex = -1;
     for (int i = 0; i < projectiles.size(); i++) {
@@ -154,10 +154,19 @@ public class Level {
         // System.out.println("Het the right wall");
         b.setSpeedX(-b.getSpeedX());
       }
+      for (Wall w : walls) {
+    	  if (b.collides(w)) {
+    		  double speedX = b.getSpeedX();
+    		  b.setSpeedX(-1 * speedX);
+    	  }
+      }
       // TODO Balls can collide with the ceiling, and a special bonus has to be added.
     }
   }
 
+  /**
+   * Function that detects collisions between players and walls.
+   */
   public void playerWallCollision() {
     for (Player p : players) {
       if (p.getX() <= left.getX()) {
@@ -166,6 +175,14 @@ public class Level {
       } else if (p.getX() + p.getWidth() >= right.getX()) {
         // Player wants to pass the right wall
         p.setX((int) canvas.getWidth() - p.getWidth());
+      }
+      if (walls.size() > 0) {
+	      for (Wall w : walls) {
+	    	  if (p.collides(w)) {
+	    		  double xPos = p.getX();
+	    		  p.setX((int) xPos - 2);
+	    	  }
+	      }
       }
     }
   }
@@ -369,7 +386,7 @@ public class Level {
   }
 
   /**
-   * Builder class.
+   * Class that assists in building level.
    */
   public static class Builder {
 

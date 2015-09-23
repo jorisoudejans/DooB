@@ -66,6 +66,10 @@ public class Player implements Collidable, Drawable {
       Ball b = (Ball) other;
       return b.getBounds().intersects(x, y, width, height);
     }
+    if (other instanceof Wall) {
+    	Wall w = (Wall) other;
+    	return w.getBounds().intersects(x, y, width, height);
+    }
     return false;
   }
 

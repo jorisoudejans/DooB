@@ -18,7 +18,7 @@
 	  <property name="allowMissingPropertyJavadoc" value="true" />
       <property name="scope" value="package"/>
       <property name="suppressLoadErrors" value="true"/>
-    </module>
+    </module>	
     <module name="JavadocType"/>
     <module name="JavadocVariable">
       <property name="severity" value="ignore"/>
@@ -46,7 +46,9 @@
     <module name="MethodLength">
       <property name="max" value="30"/>
     </module>
-    <module name="ParameterNumber"/>
+    <module name="ParameterNumber">
+		<property name="max" value="10"/>
+	</module>
     <module name="EmptyForIteratorPad"/>
     <module name="MethodParamPad"/>
     <module name="NoWhitespaceAfter">
