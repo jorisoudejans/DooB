@@ -30,7 +30,7 @@
             <y>0</y>
             <width>80</width>
             <height>800</height>
-            <movable>0</movable>
+            <moveable>0</moveable>
         </wall>
     </wallList>
 

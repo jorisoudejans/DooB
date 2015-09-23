@@ -31,6 +31,7 @@ public class LevelFactory {
         this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
+        this.wallList = new ArrayList<Wall>();
 
         playerImages = new Image[1];
     }
@@ -151,7 +152,7 @@ public class LevelFactory {
                 }else{
                     Wall wall = new Wall(x, y, width, height);
                     wallList.add(wall);
-                };
+                }
             }
         }
     }

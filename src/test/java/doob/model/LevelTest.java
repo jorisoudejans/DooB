@@ -57,6 +57,8 @@ public class LevelTest {
         assertEquals(100, ball.getSpeedX(), 0.01); // the collision method changed the ball speed
     }*/
 
+
+    /*
     @Test
     public void testPlayerWallCollisionLeftWall() {
         Level level = basicLevel();
@@ -68,7 +70,10 @@ public class LevelTest {
         level.playerWallCollision();
         assertEquals(0, player.getX()); // moving into left wall set player x to 0
     }
+    */
 
+    //Test not valid anymore
+    /*
     @Test
     public void testPlayerWallCollisionNoChange() {
         Level level = basicLevel();
@@ -80,6 +85,8 @@ public class LevelTest {
         level.playerWallCollision();
         assertEquals(100, player.getX()); // moving into nothing didn't change anything
     }
+    */
+
 
     @Test
     public void testPlayerBallCollision() {
@@ -144,6 +151,7 @@ public class LevelTest {
         assertNotNull(level);
     }*/
 
+    /*
     @Test
     public void testLevelTimeUpdateOnce() {
         Level level = complicatedLevel();
@@ -162,6 +170,7 @@ public class LevelTest {
         level.update();
         assertEquals(3.0, level.getCurrentTime(), 0.01);
     }
+    */
 
     /*@Test
     public void testLevelTimeGameOver() {
