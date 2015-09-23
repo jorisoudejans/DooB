@@ -168,6 +168,10 @@ public class Player implements Collidable, Drawable {
   public void setScore(int score) {
     this.score = score;
   }
+  
+  public void incrScore(int scoreIncr) {
+	  score = score + scoreIncr;
+  }
 
   public State getState() {
     return state;

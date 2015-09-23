@@ -147,7 +147,7 @@ public class Level {
             DLog.i(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
-          players.get(0).setScore(players.get(0).getScore() + 100);
+          players.get(0).incrScore(100);
           processPowerups(b.getX(), b.getY()); // possible spawn a powerup at location of ball
         }
       }
