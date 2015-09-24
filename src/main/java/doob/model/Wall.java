@@ -91,7 +91,7 @@ public class Wall implements Collidable, Drawable {
 	 */
 	@Override
 	public void move() {
-		if (duration >= 0) {
+		if (duration > 0) {
 			if (x < endx) {
 				x = x + speed;
 			} else {
@@ -152,6 +152,48 @@ public class Wall implements Collidable, Drawable {
 
 	public void setMoveable(boolean moveable) {
 		this.moveable = moveable;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Wall other = (Wall) obj;
+		if (speed != other.speed)
+			return false;
+		if (width != other.width)
+			return false;
+		if (x != other.x)
+			return false;
+		if (y != other.y)
+			return false;
+		if (moveable != other.moveable)
+			return false;
+		if (!moveable)
+			return true;
+		if (!condition.equals(other.condition))
+			return false;
+		if (duration != other.duration)
+			return false;
+		if (endx != other.endx)
+			return false;
+		if (endy != other.endy)
+			return false;
+		if (height != other.height)
+			return false;
+		return true;
 	}
 	
 }
