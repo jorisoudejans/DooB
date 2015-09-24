@@ -1,8 +1,11 @@
 package doob.model;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -146,8 +149,9 @@ public class LevelFactory {
                     int endx = parseInt("endx", eElement);
                     int endy = parseInt("endy", eElement);
                     int duration = parseInt("duration", eElement);
+                    int speed = parseInt("speed", eElement);
                     String condition = eElement.getElementsByTagName("condition").item(0).getTextContent();
-                    Wall wall = new Wall(x, y, width, height, endx, endy, duration, condition);
+                    Wall wall = new Wall(x, y, width, height, endx, endy, duration, speed, condition);
                     wallList.add(wall);
                 }else{
                     Wall wall = new Wall(x, y, width, height);

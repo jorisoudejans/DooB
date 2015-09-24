@@ -13,6 +13,7 @@ public class Wall implements Collidable, Drawable {
 	private boolean moveable;
 	private int endx, endy;
 	private int duration;
+	private int speed;
 	private String condition;	//TODO Use an ENUM for this
 	private Rectangle r;
 	
@@ -44,7 +45,7 @@ public class Wall implements Collidable, Drawable {
 	 * @param condition When does the wall have to move
 	 */
 	public Wall(int x, int y, int width, int height, int endx, int endy, 
-			int duration, String condition) {
+			int duration, int speed, String condition) {
 		this.moveable = true;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
@@ -54,11 +55,16 @@ public class Wall implements Collidable, Drawable {
 		this.endx = endx;
 		this.endy = endy;
 		this.duration = duration;
+		this.speed = speed;
 		this.condition = condition;
 	}
 	
+	/**
+	 * Return the bounds of the wall.
+	 * @return rectangle with bounds.
+	 */
 	public Rectangle getBounds() {
-		return this.r;
+		return new Rectangle(x, y, width, height);
 	}
 	
 	/**
@@ -80,11 +86,26 @@ public class Wall implements Collidable, Drawable {
     }
 
 
+	/**
+	 * Move the wall in the right direction.
+	 */
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-		
+		if (duration >= 0) {
+			if (x < endx) {
+				x = x + speed;
+			} else {
+				x = x - speed;
+			}
+			if (y < endy) {
+				y = y + speed;
+			} else {
+				y = y - speed;
+			}
+			duration--;
+		}
 	}
+	
 	public int getX() {
 		return x;
 	}

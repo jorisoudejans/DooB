@@ -208,7 +208,7 @@ public class Level {
 			  Wall w = walls.get(i);
 			  for (int j = i; j < walls.size(); j++) {
 				  Wall w2 = walls.get(j);
-				  if (spaceEmpty(w, w2)) {
+				  if (spaceEmpty(w, w2) && !w.isMoveable() && !w2.isMoveable()) {
 					  walls.remove(w2);
 				  }
 			  }
@@ -236,7 +236,7 @@ public class Level {
   }
   
   /**
-   * Function that detects if a player is hit by a wall.
+   * Function that detects if a player is hit by a ball.
    * @return boolean if the player is hit.
    */
   public boolean ballPlayerCollision() {
@@ -251,6 +251,23 @@ public class Level {
     }
     return res;
   }
+  
+  /**
+   * Function that detects if a player is hit by the ceiling.
+   * @return boolean if the player is hit.
+   */
+  public boolean playerCeilingCollision() {
+	    boolean res = false;
+	    for (Wall w : walls) {
+	      for (Player p : players) {
+	        if (p.collides(w) && w.isMoveable()) {
+	          res = true;
+	          DLog.i(p.toString() + " is hit by the ceiling", DLog.Type.COLLISION);
+	        }
+	      }
+	    }
+	    return res;
+	  }
 
   /**
    * Loops through every object in the game to detect collisions.
@@ -269,6 +286,17 @@ public class Level {
     for (Ball b : balls) {
       b.move();
     }
+  }
+  
+  /**
+   * Handle the movements of walls.
+   */
+  public void moveWalls() {
+	  for (Wall w : walls) {
+		  if (w.isMoveable()) {
+			  w.move();
+		  }
+	  }
   }
 
   /**
@@ -302,6 +330,7 @@ public class Level {
     detectCollisions();
     ballWallCheck();
     moveBalls();
+    moveWalls();
     paint();
     currentTime -= 1;
     for (Player player : players) {
@@ -326,6 +355,10 @@ public class Level {
     App.loadScene("/fxml/menu.fxml");
   }
 
+  /**
+   * Draw a textimage on the canvas.
+   * @param i image to draw
+   */
   public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
             canvas.getHeight() / 2 - i.getHeight());
@@ -519,10 +552,10 @@ public class Level {
       level.setRight(right);
       level.setCeiling(ceiling);
       level.setFloor(floor);
-      
+
       walls.add(right);
       walls.add(left);
-
+      
       level.setBalls(balls);
       level.setPlayers(players);
       level.setPlayerSpeed(playerSpeed);

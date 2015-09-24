@@ -46,7 +46,19 @@
 			<width>80</width>
 			<height>800</height>
 			<moveable>0</moveable>
-		</wall>			
+		</wall>	
+		<wall id="3">
+			<x>0</x>
+			<y>0</y>
+			<width>1000</width>
+			<height>50</height>
+			<moveable>1</moveable>
+			<endx>0</endx>
+			<endy>800</endy>
+			<duration>1000</duration>
+			<speed>1</speed>
+			<condition> </condition>
+		</wall>		
     </wallList>
 
 </level>

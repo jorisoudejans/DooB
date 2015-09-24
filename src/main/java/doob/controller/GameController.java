@@ -128,11 +128,12 @@ public class GameController {
   }
 
   /**
-   * Checks if a player collides with a ball. If so the game freezes and shows a text depending on
+   * Checks if a player collides with a ball or the ceiling. 
+   * If so the game freezes and shows a text depending on
    * how many lives the player has left.
    */
   public void checkCollisions() {
-    if (level.ballPlayerCollision()) {
+    if (level.ballPlayerCollision() || level.playerCeilingCollision()) {
       if (level.getPlayers().get(0).getLives() == 1) {
         level.drawText(new Image("/image/gameover.png"));
       } else {
