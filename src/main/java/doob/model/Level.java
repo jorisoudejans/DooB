@@ -1,6 +1,8 @@
 package doob.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import doob.DLog;
 import javafx.event.EventHandler;
@@ -554,8 +556,15 @@ public class Level {
       level.setCeiling(ceiling);
       level.setFloor(floor);
 
+      Collections.sort(walls, new Comparator<Wall>() {
+        @Override
+        public int compare(Wall w1, Wall w2) {
+          return  Integer.compare(w1.getX(), w2.getX());
+        }
+      });
+
       walls.add(right);
-      walls.add(left);
+      walls.add(0, left);
       
       level.setBalls(balls);
       level.setPlayers(players);
