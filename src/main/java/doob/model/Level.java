@@ -210,6 +210,7 @@ public class Level {
 				  Wall w2 = walls.get(j);
 				  if (spaceEmpty(w, w2) && !w.isMoveable() && !w2.isMoveable()) {
 					  walls.remove(w2);
+					  DLog.i("Wall opened", DLog.Type.PLAYER_INTERACTION);
 				  }
 			  }
 		  }
