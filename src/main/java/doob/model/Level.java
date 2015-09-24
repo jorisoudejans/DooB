@@ -147,13 +147,13 @@ public class Level {
       if (b.collides(floor)) {
         // System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
-      } else if (b.collides(left)) {
+      } /*else if (b.collides(left)) {
         // System.out.println("Hit the left wall");
         b.setSpeedX(-b.getSpeedX());
       } else if (b.collides(right)) {
         // System.out.println("Het the right wall");
         b.setSpeedX(-b.getSpeedX());
-      }
+      }*/
       for (Wall w : walls) {
     	  if (b.collides(w)) {
     		  double speedX = b.getSpeedX();
@@ -168,25 +168,77 @@ public class Level {
    * Function that detects collisions between players and walls.
    */
   public void playerWallCollision() {
-    for (Player p : players) {
-      if (p.getX() <= left.getX()) {
-        // Player wants to pass the left wall
-        p.setX(0);
-      } else if (p.getX() + p.getWidth() >= right.getX()) {
-        // Player wants to pass the right wall
-        p.setX((int) canvas.getWidth() - p.getWidth());
-      }
-      if (walls.size() > 0) {
-	      for (Wall w : walls) {
-	    	  if (p.collides(w)) {
-	    		  double xPos = p.getX();
-	    		  p.setX((int) xPos - 2);
-	    	  }
+	  for (Player p : players) {
+	      if (p.getX() <= left.getX()) {
+	        // Player wants to pass the left wall
+	        p.setX(0);
+	      } else if (p.getX() + p.getWidth() >= right.getX()) {
+	        // Player wants to pass the right wall
+	        p.setX((int) canvas.getWidth() - p.getWidth());
 	      }
-      }
-    }
+	      for (Wall w : walls) {
+		   	  if (p.collides(w)) {
+		   		  int xSpeed = p.getSpeed();
+		   		  if (xSpeed > 0) {
+			   		  if (p.getX() + p.getWidth() >= w.getX()) {
+			   			p.setX(w.getX() - 10 - p.getWidth());
+			   		  }
+		   		  } else if (xSpeed < 0) {
+		   			if (p.getX() <= w.getX() + w.getWidth()) {
+			   			p.setX(w.getX() + w.getWidth() + 10);
+			   		}
+		   		  } else {
+		   			  if (p.getX() == w.getX() + w.getWidth()) {
+		   				  p.setX(p.getX() + 1);
+		   			  } else { 
+		   				  p.setX(p.getX() - 1); }
+		   		  }
+		   	  }
+	      }      
+	  }
   }
-
+  
+  /**
+   * Function that checks if all balls in a compartment are gone.
+   * Compartment should open.
+   */
+  public void ballWallCheck() {
+	  if (walls.size() > 2) {
+		  for (int i = 0; i < walls.size(); i++) {
+			  Wall w = walls.get(i);
+			  for (int j = i; j < walls.size(); j++) {
+				  Wall w2 = walls.get(j);
+				  if (spaceEmpty(w, w2)) {
+					  walls.remove(w2);
+				  }
+			  }
+		  }
+	  }
+  }
+  
+  /**
+   * Function that returns true if there are no balls between two walls.
+   * @param w1 Wall one
+   * @param w2 Wall two
+   * @return boolean if the space is empty
+   */
+  public boolean spaceEmpty(Wall w1, Wall w2) {
+	  int w1x = w1.getX();
+	  int w2x = w2.getX();
+	  for (Ball b : balls) {
+		  if (b.getX() < w1x && b.getX() > w2x) {
+			  return false;
+		  } else if (b.getX() > w1x && b.getX() < w2x) {
+			  return false;
+		  }
+	  }
+	  return true;
+  }
+  
+  /**
+   * Function that detects if a player is hit by a wall.
+   * @return boolean if the player is hit.
+   */
   public boolean ballPlayerCollision() {
     boolean res = false;
     for (Ball b : balls) {
@@ -199,8 +251,6 @@ public class Level {
     }
     return res;
   }
-
-  // TODO Collisionfunctions should be moved
 
   /**
    * Loops through every object in the game to detect collisions.
@@ -250,6 +300,7 @@ public class Level {
     }
     // endlessLevel();
     detectCollisions();
+    ballWallCheck();
     moveBalls();
     paint();
     currentTime -= 1;
@@ -257,7 +308,10 @@ public class Level {
       player.move();
     }
   }
-
+  
+  /**
+   * Function which is triggered if the player is hit by a ball.
+   */
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
@@ -465,6 +519,9 @@ public class Level {
       level.setRight(right);
       level.setCeiling(ceiling);
       level.setFloor(floor);
+      
+      walls.add(right);
+      walls.add(left);
 
       level.setBalls(balls);
       level.setPlayers(players);
