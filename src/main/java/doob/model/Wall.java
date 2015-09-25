@@ -1,6 +1,7 @@
 package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -10,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 public class Wall implements Collidable, Drawable {
 	
 	private int x, y, width, height;
+	private boolean playerwalk;
 	private boolean moveable;
 	private int endx, endy;
 	private int duration;
@@ -25,6 +27,7 @@ public class Wall implements Collidable, Drawable {
 	 * @param height the height
 	 */
 	public Wall(int x, int y, int width, int height) {
+		this.playerwalk = false;
 		this.moveable = false;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
@@ -85,9 +88,14 @@ public class Wall implements Collidable, Drawable {
      * @param gc context to draw in.
      */
 	public void draw(GraphicsContext gc) {
-        gc.fillRect(x, y, width, height);
+        if (playerwalk) {
+        	gc.setFill(Color.GRAY);
+        	gc.fillRect(x, y, width, height - 250);
+        } else {
+        	gc.fillRect(x, y, width, height);
+        }        
+        gc.setFill(Color.BLACK);
     }
-
 
 	/**
 	 * Move the wall in the right direction.
@@ -165,38 +173,45 @@ public class Wall implements Collidable, Drawable {
 		this.duration = duration;
 	}
 
+	public boolean isPlayerwalk() {
+		return playerwalk;
+	}
+
+	public void setPlayerwalk(boolean playerwalk) {
+		this.playerwalk = playerwalk;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) { 
+			return true; }
+		if (obj == null) {
+			return false; }
+		if (getClass() != obj.getClass()) {
+			return false; }
 		Wall other = (Wall) obj;
-		if (speed != other.speed)
-			return false;
-		if (width != other.width)
-			return false;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		if (moveable != other.moveable)
-			return false;
-		if (!moveable)
-			return true;
-		if (!condition.equals(other.condition))
-			return false;
-		if (duration != other.duration)
-			return false;
-		if (endx != other.endx)
-			return false;
-		if (endy != other.endy)
-			return false;
-		if (height != other.height)
-			return false;
+		if (speed != other.speed) {
+			return false; }
+		if (width != other.width) {
+			return false; }
+		if (x != other.x) {
+			return false; }
+		if (y != other.y) {
+			return false; }
+		if (moveable != other.moveable) {
+			return false; }
+		if (!moveable) {
+			return true; }
+		if (!condition.equals(other.condition)) {
+			return false; }
+		if (duration != other.duration) {
+			return false; }
+		if (endx != other.endx) {
+			return false; }
+		if (endy != other.endy) {
+			return false; }
+		if (height != other.height) {
+			return false; }
 		return true;
-	}
-	
+	}	
 }

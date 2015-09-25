@@ -275,15 +275,16 @@ public class Level {
 			  Wall left = walls.get(i);
 			  Wall right = walls.get(i + 1);
 			  if (spaceEmpty(left, right)) {
-				  /*if (walls.size() > 2) {
-					  right.setHeight(right.getHeight() - 250);
+				  if (walls.size() > 2) {
+					  right.setPlayerwalk(true);
+					  //right.setHeight(right.getHeight() - 250);
 					  checkedWalls.add(right);
 					  walls.remove(right);
 					  DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
-				  } else {*/
+				  } else {
 					  walls.remove(right);
 					  DLog.info("Wall removed", DLog.Type.PLAYER_INTERACTION);
-				  //}
+				  }
 			  }	
 		  }
 	  }
