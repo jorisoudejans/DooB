@@ -91,10 +91,9 @@ public class Player implements Collidable, Drawable {
     if (other instanceof Wall) {
     	// a player collides with a wall
     	Wall w = (Wall) other;
-    	/*
-    	if (this.x < w.getX() + w.getWidth() && this.x > w.getX()) {
+    	if (w.isPlayerwalk()) {
     		return false;
-    	}*/
+    	}
     	return w.getBounds().intersects(x, y, width, height);
     }
     return false;

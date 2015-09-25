@@ -19,7 +19,7 @@ import javafx.scene.input.KeyEvent;
 import doob.App;
 
 /**
- * Level class, created from TODO LevelFactory.
+ * Level class, created from LevelFactory.
  */
 public class Level {
 
@@ -53,6 +53,7 @@ public class Level {
   private ArrayList<Class<?>> availablePowerups;
   private ArrayList<PowerUp> powerupsOnScreen;
   private ArrayList<PowerUp> activePowerups;
+  private ArrayList<Wall> checkedWalls;
 
   private State state;
 
@@ -72,6 +73,7 @@ public class Level {
    *          the canvas to be drawn upon.
    */
   public Level(Canvas canvas) {
+	this.checkedWalls = new ArrayList<Wall>();
     this.endlessLevel = true;
     this.canvas = canvas;
     this.state = State.NORMAL;
@@ -186,16 +188,20 @@ public class Level {
     for (int i = 0; i < balls.size(); i++) {
     	Ball b = balls.get(i);
       if (b.collides(floor)) {
-        // System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
-      } /*else if (b.collides(left)) {
-        // System.out.println("Hit the left wall");
-        b.setSpeedX(-b.getSpeedX());
-      } else if (b.collides(right)) {
-        // System.out.println("Het the right wall");
-        b.setSpeedX(-b.getSpeedX());
-      }*/
+      }
       for (Wall w : walls) {
+    	  if (b.collides(w)) {
+    		  if (w.isMoveable()) {
+    			  ballHitIndex = i;
+    			  // TODO add points
+    		  } else {
+    			  double speedX = b.getSpeedX();
+    			  b.setSpeedX(-1 * speedX);
+    		  }
+    	  }
+      }
+      for (Wall w : checkedWalls) {
     	  if (b.collides(w)) {
     		  if (w.isMoveable()) {
     			  ballHitIndex = i;
@@ -225,26 +231,37 @@ public class Level {
 	        // Player wants to pass the right wall
 	        p.setX((int) canvas.getWidth() - p.getWidth());
 	      }
-	      for (Wall w : walls) {
-		   	  if (p.collides(w)) {
-		   		  int xSpeed = p.getSpeed();
-		   		  if (xSpeed > 0) {
-			   		  if (p.getX() + p.getWidth() >= w.getX()) {
-			   			p.setX(w.getX() - 10 - p.getWidth());
-			   		  }
-		   		  } else if (xSpeed < 0) {
-		   			if (p.getX() <= w.getX() + w.getWidth()) {
-			   			p.setX(w.getX() + w.getWidth() + 10);
-			   		}
-		   		  } else {
-		   			  if (p.getX() == w.getX() + w.getWidth()) {
-		   				  p.setX(p.getX() + 1);
-		   			  } else { 
-		   				  p.setX(p.getX() - 1); }
-		   		  }
-		   	  }
-	      }      
+	      playerWallHelper(walls, p);
+	      playerWallHelper(checkedWalls, p);
+	           
 	  }
+  }
+  
+  /**
+   * Helper function for playerwallcollision
+   * @param walls to check
+   * @param p the player
+   */
+  public void playerWallHelper(ArrayList<Wall> walls, Player p) {
+	  for (Wall w : walls) {
+	   	  if (p.collides(w)) {
+	   		  int xSpeed = p.getSpeed();
+	   		  if (xSpeed > 0) {
+		   		  if (p.getX() + p.getWidth() >= w.getX()) {
+		   			p.setX(w.getX() - 10 - p.getWidth());
+		   		  }
+	   		  } else if (xSpeed < 0) {
+	   			if (p.getX() <= w.getX() + w.getWidth()) {
+		   			p.setX(w.getX() + w.getWidth() + 10);
+		   		}
+	   		  } else {
+	   			  if (p.getX() == w.getX() + w.getWidth()) {
+	   				  p.setX(p.getX() + 1);
+	   			  } else { 
+	   				  p.setX(p.getX() - 1); }
+	   		  }
+	   	  }
+      } 
   }
   
   /**
@@ -258,8 +275,16 @@ public class Level {
 			  Wall left = walls.get(i);
 			  Wall right = walls.get(i + 1);
 			  if (spaceEmpty(left, right)) {
-				  walls.remove(right);
-				  DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
+				  if (walls.size() > 2) {
+					  right.setPlayerwalk(true);
+					  //right.setHeight(right.getHeight() - 250);
+					  checkedWalls.add(right);
+					  walls.remove(right);
+					  DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
+				  } else {
+					  walls.remove(right);
+					  DLog.info("Wall removed", DLog.Type.PLAYER_INTERACTION);
+				  }
 			  }	
 		  }
 	  }
@@ -324,7 +349,9 @@ public class Level {
 	    }
 	    return res;
 	  }
-
+  /**
+   * Checks for collisions between powerups and players.
+   */
   public void powerupPlayerCollision() {
     PowerUp toRemove = null;
     for (PowerUp powerup : powerupsOnScreen) {
@@ -341,8 +368,6 @@ public class Level {
       powerupsOnScreen.remove(toRemove);
     }
   }
-
-  // TODO Collisionfunctions should be moved
 
   /**
    * Loops through every object in the game to detect collisions.
@@ -395,6 +420,9 @@ public class Level {
     for (Wall w : walls) {
     	w.draw(gc);
     }
+    for (Wall w : checkedWalls) {
+    	w.draw(gc);
+    }
     for (PowerUp powerup : powerupsOnScreen) {
       gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());
     }
@@ -428,8 +456,8 @@ public class Level {
     }
     ArrayList<PowerUp> toRemoveWait = new ArrayList<PowerUp>();
     for (PowerUp powerup : powerupsOnScreen) { // move powerups down
-      if (powerup.getLocationY() < floor.getY()-30) {
-        powerup.setLocationY(powerup.getLocationY()+2);
+      if (powerup.getLocationY() < floor.getY() - 30) {
+        powerup.setLocationY(powerup.getLocationY() + 2);
       }
       powerup.tickWait();
       if (powerup.getCurrentWaitTime() <= 0) {
@@ -462,7 +490,7 @@ public class Level {
   }
 
   /**
-   * Determines whether a powerup will fall down
+   * Determines whether a powerup will fall down.
    * @param locationX x where powerup should spawn
    * @param locationY y where powerup should spawn
    */
@@ -474,7 +502,7 @@ public class Level {
       if (rand < chanceAnnotation.chance()) {
         // drop powerup
         try {
-          PowerUp p = (PowerUp)powerup.newInstance();
+          PowerUp p = (PowerUp) powerup.newInstance();
           Image sprite = new Image(p.spritePath());
           p.setSpriteImage(sprite);
           p.setLocationX(locationX);
@@ -490,7 +518,7 @@ public class Level {
   }
 
   /**
-   * Looks up all available powerups
+   * Looks up all available powerups.
    */
   public void initPowerups() {
     availablePowerups = new ArrayList<Class<?>>();
@@ -581,7 +609,12 @@ public class Level {
   public static void setProjectileSpeed(int projectileSpeed) {
     Level.projectileSpeed = projectileSpeed;
   }
-
+  
+  /**
+   * Returns the score of a player.
+   * @param player to get the score of
+   * @return int score
+   */
   public int getScore(int player) {
     return players.get(player).getScore();
   }
@@ -770,10 +803,8 @@ public void setPlayerSpeed(int playerSpeed) {
       level.setWalls(walls);
       level.setTime(time);
       level.setCurrentTime(time);
-
       return level;
     }
-
   }
 
 }
