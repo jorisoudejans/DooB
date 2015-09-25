@@ -59,20 +59,6 @@ public class LevelFactory {
     }
 
     /**
-     * parses a boolean out of an xml line.
-     *
-     * @param s The XML-tag to parse from
-     * @param eElement The XML-Element to parse from
-     * @return The parsed boolean
-     */
-    public boolean parseBoolean(String s, Element eElement) {
-        if(eElement.getElementsByTagName(s)
-                .item(0)
-                .getTextContent() == "true") return true;
-        return false;
-    }
-
-    /**
      * Parses and adds players in the XML to the playerList.
      *
      * @param doc Document build from the XML

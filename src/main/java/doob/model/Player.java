@@ -1,7 +1,9 @@
 package doob.model;
 
+import doob.model.powerup.PowerUp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Player class, acts as both model and view.
@@ -13,13 +15,26 @@ public class Player implements Collidable, Drawable {
   private int x;
   private int y;
   private int speed;
+  private int moveSpeed;
   private int lives;
+  private int score;
   
   public static final int LIVES = 5;
+  public static final int START_SPEED = 4;
 
   private Image imageStand;
   private Image imageLeft;
   private Image imageRight;
+
+  private State state;
+
+  /**
+   * Possible player states.
+   */
+  public enum State {
+    NORMAL,
+    INVULNERABLE
+  }
 
   /**
    * Constructor for a player with initial location x.
@@ -45,7 +60,10 @@ public class Player implements Collidable, Drawable {
     this.x = x;
     this.y = y;
     this.speed = 0;
+    this.moveSpeed = START_SPEED;
+    this.score = 0;
     this.lives = LIVES;
+    this.state = State.NORMAL;
 
     imageStand = imageS;
     imageLeft = imageL;
@@ -65,6 +83,10 @@ public class Player implements Collidable, Drawable {
       // a player collides with a ball
       Ball b = (Ball) other;
       return b.getBounds().intersects(x, y, width, height);
+    } else if (other instanceof PowerUp) {
+      PowerUp p = (PowerUp) other;
+      Rectangle rect = new Rectangle(p.getLocationX(), p.getLocationY(), 30, 30);
+      return rect.intersects(x, y, width, height);
     }
     if (other instanceof Wall) {
     	// a player collides with a wall
@@ -132,12 +154,40 @@ public class Player implements Collidable, Drawable {
     return speed;
   }
 
+  public int getMoveSpeed() {
+    return moveSpeed;
+  }
+
+  public void setMoveSpeed(int moveSpeed) {
+    this.moveSpeed = moveSpeed;
+  }
+
   public int getLives() {
     return lives;
   }
 
   public void setLives(int lives) {
     this.lives = lives;
+  }
+
+  public int getScore() {
+    return score;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
+  }
+  
+  public void incrScore(int scoreIncr) {
+	  score = score + scoreIncr;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
   @Override

@@ -1,10 +1,15 @@
 package doob.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
+import com.google.common.reflect.ClassPath;
 import doob.DLog;
+import doob.model.powerup.PowerUp;
+import doob.model.powerup.PowerUpChance;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,6 +38,9 @@ public class Level {
   public static final int STARTHEIGHT = 200;
   public static final int BALLSIZE = 96;
   public static final int PLAYERSPEED = 3;
+  public static final int PROJECTILE_START_SPEED = 12;
+
+  private static int projectileSpeed = PROJECTILE_START_SPEED;
 
   private Wall right;
   private Wall left;
@@ -41,6 +49,21 @@ public class Level {
 
   private boolean endlessLevel;
   private int flag = 0;
+
+  private ArrayList<Class<?>> availablePowerups;
+  private ArrayList<PowerUp> powerupsOnScreen;
+  private ArrayList<PowerUp> activePowerups;
+
+  private State state;
+
+  /**
+   * Possible level states.
+   */
+  public enum State {
+    NORMAL,
+    BALLS_FREEZE,
+    PROJECTILES_FREEZE
+  }
 
   /**
    * Initialize javaFx.
@@ -51,6 +74,7 @@ public class Level {
   public Level(Canvas canvas) {
     this.endlessLevel = true;
     this.canvas = canvas;
+    this.state = State.NORMAL;
     gc = canvas.getGraphicsContext2D();
     canvas.setFocusTraversable(true);
     canvas.setOnKeyPressed(new KeyPressHandler());
@@ -65,6 +89,7 @@ public class Level {
 
     canvas.requestFocus();
     projectiles = new ArrayList<Projectile>();
+    initPowerups();
   }
 
   /**
@@ -75,9 +100,8 @@ public class Level {
    */
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
-      // TODO there can be a powerup for which there can be more than one projectile.
       projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
-          SHOOTSPEED));
+              PROJECTILE_START_SPEED));
       DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }
@@ -108,8 +132,13 @@ public class Level {
     	  }
       }
     }
-    if (projHitIndex != -1)
-      projectiles.remove(projHitIndex);
+    if (projHitIndex != -1) {
+      if (state != State.PROJECTILES_FREEZE) {
+        projectiles.remove(projHitIndex);
+      } else {
+        projectiles.get(projHitIndex).setState(Projectile.State.FROZEN);
+      }
+    }
   }
 
   /**
@@ -132,7 +161,8 @@ public class Level {
             DLog.info(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
-          score += 100;
+          players.get(0).incrScore(100);
+          processPowerups(b.getX(), b.getY()); // possible spawn a powerup at location of ball
         }
       }
     }
@@ -295,6 +325,25 @@ public class Level {
 	    return res;
 	  }
 
+  public void powerupPlayerCollision() {
+    PowerUp toRemove = null;
+    for (PowerUp powerup : powerupsOnScreen) {
+      for (Player p : players) {
+        if (p.collides(powerup)) {
+          DLog.info(p.toString() + " is hit by a powerup", DLog.Type.COLLISION);
+          powerup.onActivate(this, p);
+          toRemove = powerup;
+          activePowerups.add(powerup);
+        }
+      }
+    }
+    if (toRemove != null) {
+      powerupsOnScreen.remove(toRemove);
+    }
+  }
+
+  // TODO Collisionfunctions should be moved
+
   /**
    * Loops through every object in the game to detect collisions.
    */
@@ -303,12 +352,16 @@ public class Level {
     ballProjectileCollision();
     playerWallCollision();
     ballWallCollision();
+    powerupPlayerCollision();
   }
 
   /**
    * Handle the movement of balls.
    */
   public void moveBalls() {
+    if (state == State.BALLS_FREEZE) {
+      return;
+    }
     for (Ball b : balls) {
       b.move();
     }
@@ -342,15 +395,26 @@ public class Level {
     for (Wall w : walls) {
     	w.draw(gc);
     }
+    for (PowerUp powerup : powerupsOnScreen) {
+      gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());
+    }
   }
 
   /**
    * Timer for animation.
    */
   public void update() {
-    for (Drawable drawable : projectiles) {
-      drawable.move();
-      drawable.draw(gc);
+    for (Projectile projectile : projectiles) {
+      if (
+              !(
+                      projectile.getState()
+                      == Projectile.State.FROZEN
+                      && state
+                      == State.PROJECTILES_FREEZE
+              )) {
+        projectile.move();
+      }
+      projectile.draw(gc);
     }
     // endlessLevel();
     detectCollisions();
@@ -362,6 +426,30 @@ public class Level {
     for (Player player : players) {
       player.move();
     }
+    ArrayList<PowerUp> toRemoveWait = new ArrayList<PowerUp>();
+    for (PowerUp powerup : powerupsOnScreen) { // move powerups down
+      if (powerup.getLocationY() < floor.getY()-30) {
+        powerup.setLocationY(powerup.getLocationY()+2);
+      }
+      powerup.tickWait();
+      if (powerup.getCurrentWaitTime() <= 0) {
+        toRemoveWait.add(powerup);
+      }
+    }
+    for (PowerUp p : toRemoveWait) {
+      powerupsOnScreen.remove(p);
+    }
+    ArrayList<PowerUp> toRemove = new ArrayList<PowerUp>();
+    for (PowerUp powerUp : activePowerups) { // deactivate active powerups, if needed
+      powerUp.tickActive();
+      if (powerUp.getActiveTime() <= 0) {
+        powerUp.onDeactivate(this);
+        toRemove.add(powerUp);
+      }
+    }
+    for (PowerUp p : toRemove) {
+      activePowerups.remove(p);
+    }
   }
   
   /**
@@ -371,6 +459,58 @@ public class Level {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
     currentTime = time;
+  }
+
+  /**
+   * Determines whether a powerup will fall down
+   * @param locationX x where powerup should spawn
+   * @param locationY y where powerup should spawn
+   */
+  public void processPowerups(double locationX, double locationY) {
+    Random random = new Random();
+    for (Class<?> powerup : availablePowerups) {
+      double rand = random.nextDouble();
+      PowerUpChance chanceAnnotation = powerup.getAnnotation(PowerUpChance.class);
+      if (rand < chanceAnnotation.chance()) {
+        // drop powerup
+        try {
+          PowerUp p = (PowerUp)powerup.newInstance();
+          Image sprite = new Image(p.spritePath());
+          p.setSpriteImage(sprite);
+          p.setLocationX(locationX);
+          p.setLocationY(locationY);
+          powerupsOnScreen.add(p);
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  /**
+   * Looks up all available powerups
+   */
+  public void initPowerups() {
+    availablePowerups = new ArrayList<Class<?>>();
+    powerupsOnScreen = new ArrayList<PowerUp>();
+    activePowerups = new ArrayList<PowerUp>();
+    final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+    try {
+      for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
+        if (info.getName().startsWith("doob.model.powerup")) {
+          final Class<?> clazz = info.load();
+          if (clazz.getSuperclass() != null && clazz.getSuperclass().equals(PowerUp.class)) {
+            availablePowerups.add(clazz);
+          }
+          // do something with your clazz
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -387,7 +527,7 @@ public class Level {
    */
   public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
-            canvas.getHeight() / 2 - i.getHeight());
+        canvas.getHeight() / 2 - i.getHeight());
   }
 
   public Wall getRight() {
@@ -396,6 +536,10 @@ public class Level {
 
   public void setRight(Wall right) {
     this.right = right;
+  }
+
+  public ArrayList<PowerUp> getActivePowerups() {
+    return activePowerups;
   }
 
   public Wall getLeft() {
@@ -426,24 +570,20 @@ public class Level {
     this.balls = balls;
   }
 
-  public void setWalls(ArrayList<Wall> walls) {
-    this.walls = walls;
-  }
-
   public void setPlayers(ArrayList<Player> players) {
     this.players = players;
   }
 
-  public void setPlayerSpeed(int playerSpeed) {
-    this.playerSpeed = playerSpeed;
+  public static int getProjectileSpeed() {
+    return projectileSpeed;
   }
 
-  public int getScore() {
-    return score;
+  public static void setProjectileSpeed(int projectileSpeed) {
+    Level.projectileSpeed = projectileSpeed;
   }
 
-  public void setScore(int score) {
-    this.score = score;
+  public int getScore(int player) {
+    return players.get(player).getScore();
   }
 
   public double getCurrentTime() {
@@ -470,7 +610,23 @@ public void setCurrentTime(double currentTime) {
     return balls;
   }
 
-  /**
+  public ArrayList<Wall> getWalls() {
+	return walls;
+}
+
+public void setWalls(ArrayList<Wall> walls) {
+	this.walls = walls;
+}
+
+public int getPlayerSpeed() {
+	return playerSpeed;
+}
+
+public void setPlayerSpeed(int playerSpeed) {
+	this.playerSpeed = playerSpeed;
+}
+
+/**
    * Handler for key presses.
    */
   private class KeyPressHandler implements EventHandler<KeyEvent> {
@@ -478,14 +634,14 @@ public void setCurrentTime(double currentTime) {
     public void handle(KeyEvent key) {
       switch (key.getCode()) {
       case RIGHT:
-        players.get(0).setSpeed(playerSpeed);
+        players.get(0).setSpeed(players.get(0).getMoveSpeed());
         if (last != KeyCode.RIGHT) {
           DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.RIGHT;
         }
         break;
       case LEFT:
-        players.get(0).setSpeed(-playerSpeed);
+        players.get(0).setSpeed(-players.get(0).getMoveSpeed());
         if (last != KeyCode.LEFT) {
           DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.LEFT;
@@ -507,6 +663,14 @@ public void setCurrentTime(double currentTime) {
 
   public void setEndlessLevel(boolean endlessLevel) {
     this.endlessLevel = endlessLevel;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
   /**
@@ -545,33 +709,17 @@ public void setCurrentTime(double currentTime) {
       return this;
     }
 
-    /**
+	public void setWalls(ArrayList<Wall> walls) {
+		this.walls = walls;
+	}
+
+	/**
      * Player Setter.
      * @param players players
      * @return builder
      */
     public Builder setPlayers(ArrayList<Player> players) {
       this.players = players;
-      return this;
-    }
-
-    /**
-     * Walls Setter.
-     * @param walls walls
-     * @return builder
-     */
-    public Builder setWalls(ArrayList<Wall> walls) {
-      this.walls = walls;
-      return this;
-    }
-
-    /**
-     * Playerspeed Setter.
-     * @param playerSpeed playerspeed
-     * @return builder
-     */
-    public Builder setPlayerSpeed(int playerSpeed) {
-      this.playerSpeed = playerSpeed;
       return this;
     }
 
@@ -607,7 +755,7 @@ public void setCurrentTime(double currentTime) {
       level.setWalls(walls);
       level.setTime(time);
       level.setCurrentTime(time);
-      System.out.println("size: " + players.size());
+
       return level;
     }
 
