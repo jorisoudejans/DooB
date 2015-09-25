@@ -99,6 +99,12 @@ public class Level {
       Projectile p = projectiles.get(i);
       if (p.getY() <= 0) {
         projHitIndex = i;
+      } else {
+    	  for (Wall w : walls) {
+    		  if (w.collides(p)) {
+    			  projHitIndex = i; 
+    		  }
+    	  }
       }
     }
     if (projHitIndex != -1)

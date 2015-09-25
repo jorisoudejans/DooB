@@ -73,7 +73,10 @@ public class Wall implements Collidable, Drawable {
 	 * @return boolean if the collideables collide.
 	 */
 	public boolean collides(Collidable other) {
-		// TODO Auto-generated method stub
+		if (other instanceof Projectile) {
+			Projectile p = (Projectile) other;
+			return p.getBounds().intersects(x, y, width, height);
+		}
 		return false;
 	}
 	
