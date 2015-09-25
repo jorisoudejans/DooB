@@ -20,7 +20,7 @@ public class FreezeBallsPowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        level.setState(Level.State.BALLS_FREEZE);
+        level.setBallFreeze(true);
     }
 
     /**
@@ -29,7 +29,7 @@ public class FreezeBallsPowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-        level.setState(Level.State.NORMAL);
+        level.setBallFreeze(false);
     }
 
     /**

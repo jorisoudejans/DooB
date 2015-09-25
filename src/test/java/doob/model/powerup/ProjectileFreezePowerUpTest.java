@@ -45,7 +45,7 @@ public class ProjectileFreezePowerUpTest extends PowerUpTest {
     public void testOnActivate() {
         projectileFreezePowerUp.onActivate(getLevel(), getPlayer());
 
-        verify(getLevel()).setState(Level.State.PROJECTILES_FREEZE);
+        verify(getLevel()).setProjectileFreeze(true);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ProjectileFreezePowerUpTest extends PowerUpTest {
     public void testOnDeactivate() {
         projectileFreezePowerUp.onDeactivate(getLevel());
 
-        verify(getLevel()).setState(Level.State.NORMAL);
+        verify(getLevel()).setProjectileFreeze(false);
     }
 
     /**

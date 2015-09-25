@@ -18,17 +18,19 @@ import org.junit.runners.Parameterized.Parameters;
 
 import doob.DLog.Type;
 
+
 /**
  * Parameterized test class to test all types of logging.
+ *
  */
 @RunWith(Parameterized.class)
 public class DLogTypeTest {
 
 	private static String log = "Log this.";
-	private static String time = DateFormat.getTimeInstance()
-			.format(new Date());
+
 
 	/**
+	*
 	 * Types that are tested.
 	 * 
 	 * @return parameters
@@ -48,44 +50,39 @@ public class DLogTypeTest {
 	private Type type;
 	private String expected;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param input
-	 *            String
-	 * @param type
-	 *            Type
-	 * @param expected
-	 *            String
-	 */
-	public DLogTypeTest(String input, Type type, String expected) {
-		this.input = input;
-		this.type = type;
-		this.expected = expected;
-	}
+		  /**
+	   * Constructor.
+	   * @param input String
+	   * @param type Type
+	   * @param expected String
+	   */
+	
+	  public DLogTypeTest(String input, Type type, String expected) {
+	    this.input = input;
+	    this.type = type;
+	    this.expected = expected;
+	  }
 
-	/**
-	 * Tests the types.
-	 * 
-	 * @throws IOException
-	 *             exception
-	 */
-	@Test
-	public void statesTest() throws IOException {
-		DLog.setFile("DLogTest.log");
-		BufferedReader mReader = new BufferedReader(new InputStreamReader(
-				new FileInputStream("DLogTest.log")));
-		DLog.info(input, type);
-		String actual = null;
-		try {
-			// Skip init line.
-			mReader.readLine();
-			actual = mReader.readLine().split(":")[3];
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertEquals(expected, actual);
-		mReader.close();
-	}
-
+	  /**
+	   * Tests the types.
+	   * @throws IOException exception
+	   */
+	  @Test
+	  public void statesTest() throws IOException {
+		  DLog.setFile("DLogTest.log");
+		  BufferedReader mReader = new BufferedReader(new InputStreamReader(new FileInputStream(
+				  "DLogTest.log")));
+		  DLog.info(input, type);
+		  String actual = null;
+		  try {
+				// Skip init line.
+				mReader.readLine();
+				actual = mReader.readLine().split(":")[3];
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			assertEquals(expected, actual);
+			mReader.close();
+	  }
 }
+
