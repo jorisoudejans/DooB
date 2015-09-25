@@ -31,8 +31,8 @@ public class BallTest {
   @Test
   public void splitTest1() {
     Ball[] expected = new Ball[2];
-    expected[0] = new Ball(100, 200, 3, -4, 64);
-    expected[1] = new Ball(100, 200, -3, -4, 64);
+    expected[0] = new Ball(100, 200, 2, -4, 64);
+    expected[1] = new Ball(100, 200, -2, -4, 64);
     Ball input = new Ball(100, 200, 3, 0, 128);
     assertTrue(expected[0].equals(input.split()[0]));
     assertTrue(expected[1].equals(input.split()[1]));
@@ -41,8 +41,8 @@ public class BallTest {
   @Test
   public void splitTest2() {
     Ball[] expected = new Ball[2];
-    expected[0] = new Ball(300, 400, 3, -4, 32);
-    expected[1] = new Ball(300, 400, -3, -4, 32);
+    expected[0] = new Ball(300, 400, 2, -4, 32);
+    expected[1] = new Ball(300, 400, -2, -4, 32);
     Ball input = new Ball(300, 400, 3, 5, 64);
     assertTrue(expected[0].equals(input.split()[0]));
     assertTrue(expected[1].equals(input.split()[1]));
