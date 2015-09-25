@@ -18,6 +18,7 @@ public class LevelFactory {
 
     private File file;
     private Canvas canvas;
+    private int time;
     private ArrayList<Player> playerList;
     private ArrayList<Ball> ballList;
     private ArrayList<Wall> wallList;
@@ -160,6 +161,12 @@ public class LevelFactory {
             }
         }
     }
+    
+    public void parseLevel(Document doc) {
+    	NodeList nListBall = doc.getElementsByTagName("time");	
+        Node nNode = nListBall.item(0);
+        time = Integer.parseInt(nNode.getTextContent());
+    }
 
     /**
      * Parses the XML and adds all parsed objects to their respective lists.
@@ -171,7 +178,8 @@ public class LevelFactory {
 
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
-
+            
+            parseLevel(doc);
             parsePlayers(doc);
             parseBalls(doc);
             parseWalls(doc);
@@ -196,6 +204,7 @@ public class LevelFactory {
         builder.setCanvas(canvas);
         builder.setPlayers(playerList);
         builder.setWalls(wallList);
+        builder.setTime(time);
 
         return builder.build();
     }

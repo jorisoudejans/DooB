@@ -167,7 +167,7 @@ public class GameController {
    * restarts.
    */
   public void updateProgressBar() {
-    double progress = level.getCurrentTime() / Level.TIME;
+    double progress = level.getCurrentTime() / level.getTime();
     if (progress <= 0) {
       createFreeze();
       return;

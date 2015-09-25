@@ -26,13 +26,13 @@ public class Level {
   private ArrayList<Player> players;
   private ArrayList<Wall> walls;
   private int score = 0;
-  private double currentTime = TIME;
+  private double currentTime;
+  private int time;
   private int playerSpeed = PLAYERSPEED;
   public static final int SHOOTSPEED = 12;
   public static final int STARTHEIGHT = 200;
   public static final int BALLSIZE = 96;
   public static final int PLAYERSPEED = 3;
-  public static final double TIME = 2000;
 
   private Wall right;
   private Wall left;
@@ -363,7 +363,7 @@ public class Level {
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
-    currentTime = TIME;
+    currentTime = time;
   }
 
   /**
@@ -443,7 +443,15 @@ public class Level {
     return currentTime;
   }
 
-  public void setCurrentTime(double currentTime) {
+  public int getTime() {
+	return time;
+}
+
+public void setTime(int time) {
+	this.time = time;
+}
+
+public void setCurrentTime(double currentTime) {
     this.currentTime = currentTime;
   }
 
@@ -504,6 +512,7 @@ public class Level {
     private ArrayList<Player> players;
     private ArrayList<Wall> walls;
     private int playerSpeed = PLAYERSPEED;
+    private int time;
 
     /**
      * Constructor.
@@ -514,6 +523,9 @@ public class Level {
 
     public void setCanvas(Canvas canvas) {
       this.canvas = canvas;
+    }
+    public void setTime(int time) {
+    	this.time = time;
     }
 
     /**
@@ -586,6 +598,9 @@ public class Level {
       level.setPlayers(players);
       level.setPlayerSpeed(playerSpeed);
       level.setWalls(walls);
+      level.setTime(time);
+      level.setCurrentTime(time);
+      System.out.println("size: " + players.size());
       return level;
     }
 
