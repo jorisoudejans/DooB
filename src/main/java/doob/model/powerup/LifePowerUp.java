@@ -10,6 +10,8 @@ import doob.model.Player;
 @PowerUpChance(chance = PowerUp.CHANCE_LIFE)
 public class LifePowerUp extends PowerUp {
 
+	public static final int MAX_LIVES = 7;
+	
     /**
      * Adds one life to player.
      * @param level the level the power-up is in.
@@ -18,7 +20,9 @@ public class LifePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        player.setLives(player.getLives() + 1);
+        if (player.getLives() < MAX_LIVES) {
+        	player.setLives(player.getLives() + 1);
+        }
     }
 
     /**
