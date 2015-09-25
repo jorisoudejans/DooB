@@ -71,7 +71,7 @@ public class GameController {
 
     //Init log.
     DLog.setFile("DooB.log");
-    DLog.i("Game started.", DLog.Type.STATE);
+    DLog.info("Game started.", DLog.Type.STATE);
   }
 
   private GameState gameState;
@@ -149,7 +149,7 @@ public class GameController {
   public void checkLevelComplete() {
     if (level.getBalls().size() <= 0) {
       level.drawText(new Image("/image/levelcomplete.png"));
-      DLog.i("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
+      DLog.info("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
       createFreeze();
     }
   }
@@ -233,11 +233,11 @@ public class GameController {
         timer.start();
       } else {
         gameState = GameState.WON;
-        DLog.i("Game won!", DLog.Type.STATE);
+        DLog.info("Game won!", DLog.Type.STATE);
         App.loadScene("/fxml/menu.fxml");
       }
     } else {
-      DLog.i("Lost a life", DLog.Type.STATE);
+      DLog.info("Lost a life", DLog.Type.STATE);
       level.crushed();
       newLevel();
       timer.start();

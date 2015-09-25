@@ -78,7 +78,7 @@ public class Level {
       // TODO there can be a powerup for which there can be more than one projectile.
       projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
           SHOOTSPEED));
-      DLog.i("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
+      DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }
 
@@ -100,6 +100,12 @@ public class Level {
       Projectile p = projectiles.get(i);
       if (p.getY() <= 0) {
         projHitIndex = i;
+      } else {
+    	  for (Wall w : walls) {
+    		  if (w.collides(p)) {
+    			  projHitIndex = i; 
+    		  }
+    	  }
       }
     }
     if (projHitIndex != -1)
@@ -120,10 +126,10 @@ public class Level {
         if (p.collides(b)) {
           projHitIndex = j;
           if (b.getSize() >= 32) {
-            DLog.i(b.toString() + " splits", DLog.Type.COLLISION);
+            DLog.info(b.toString() + " splits", DLog.Type.COLLISION);
             res = b.split();
           } else {
-            DLog.i(b.toString() + " disappears", DLog.Type.COLLISION);
+            DLog.info(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
           score += 100;
@@ -146,7 +152,9 @@ public class Level {
    * Function which checks if balls collide with walls.
    */
   public void ballWallCollision() {
-    for (Ball b : balls) {
+	  int ballHitIndex = -1;
+    for (int i = 0; i < balls.size(); i++) {
+    	Ball b = balls.get(i);
       if (b.collides(floor)) {
         // System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
@@ -159,11 +167,19 @@ public class Level {
       }*/
       for (Wall w : walls) {
     	  if (b.collides(w)) {
-    		  double speedX = b.getSpeedX();
-    		  b.setSpeedX(-1 * speedX);
+    		  if (w.isMoveable()) {
+    			  ballHitIndex = i;
+    			  // TODO add points
+    		  } else {
+    			  double speedX = b.getSpeedX();
+    			  b.setSpeedX(-1 * speedX);
+    		  }
     	  }
       }
-      // TODO Balls can collide with the ceiling, and a special bonus has to be added.
+      if (ballHitIndex != -1) {
+    	  balls.remove(ballHitIndex);
+    	  ballHitIndex = -1;
+      }
     }
   }
 
@@ -213,7 +229,7 @@ public class Level {
 			  Wall right = walls.get(i + 1);
 			  if (spaceEmpty(left, right)) {
 				  walls.remove(right);
-				  DLog.i("Wall opened", DLog.Type.PLAYER_INTERACTION);
+				  DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
 			  }	
 		  }
 	  }
@@ -255,7 +271,7 @@ public class Level {
       for (Player p : players) {
         if (p.collides(b)) {
           res = true;
-          DLog.i(p.toString() + " is hit by a ball", DLog.Type.COLLISION);
+          DLog.info(p.toString() + " is hit by a ball", DLog.Type.COLLISION);
         }
       }
     }
@@ -272,7 +288,7 @@ public class Level {
 	      for (Player p : players) {
 	        if (p.collides(w) && w.isMoveable()) {
 	          res = true;
-	          DLog.i(p.toString() + " is hit by the ceiling", DLog.Type.COLLISION);
+	          DLog.info(p.toString() + " is hit by the ceiling", DLog.Type.COLLISION);
 	        }
 	      }
 	    }
@@ -361,7 +377,7 @@ public class Level {
    * Game lost, return to menu.
    */
   public void gameOver() {
-    DLog.i("Game over!", DLog.Type.STATE);
+    DLog.info("Game over!", DLog.Type.STATE);
     App.loadScene("/fxml/menu.fxml");
   }
 
@@ -456,14 +472,14 @@ public class Level {
       case RIGHT:
         players.get(0).setSpeed(playerSpeed);
         if (last != KeyCode.RIGHT) {
-          DLog.i("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+          DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.RIGHT;
         }
         break;
       case LEFT:
         players.get(0).setSpeed(-playerSpeed);
         if (last != KeyCode.LEFT) {
-          DLog.i("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+          DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.LEFT;
         }
         break;

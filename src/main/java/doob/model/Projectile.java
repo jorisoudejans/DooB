@@ -2,6 +2,7 @@ package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Abstract class all projectiles should extend.
@@ -47,6 +48,10 @@ public abstract class Projectile implements Drawable, Collidable {
 			return b.getBounds().intersects(x, y, 20, 20); // for testing
 		}
         return false;
+    }
+    
+    public Rectangle getBounds() {
+    	return new Rectangle(x, y, img.getWidth(), img.getHeight());
     }
 	
 	public double getShootSpeed() {
