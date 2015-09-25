@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <Levels>
+	<LevelName>Level0.xml</LevelName>
 	<LevelName>Level01.xml</LevelName>
 	<LevelName>Level02.xml</LevelName>
 	<LevelName>Level03.xml</LevelName>
+	<LevelName>Level04.xml</LevelName>
 </Levels>

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <level>
+	<time>4000</time>
     <playerList>
         <player id="1">
             <x>450</x>

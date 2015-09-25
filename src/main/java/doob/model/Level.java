@@ -2,6 +2,8 @@ package doob.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 import com.google.common.reflect.ClassPath;
@@ -27,11 +29,16 @@ public class Level {
   private ArrayList<Ball> balls;
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
-  private double currentTime = TIME;
-  public static final int PROJECTILE_START_SPEED = 12;
+  private ArrayList<Wall> walls;
+  private int score = 0;
+  private double currentTime;
+  private int time;
+  private int playerSpeed = PLAYERSPEED;
+  public static final int SHOOTSPEED = 12;
   public static final int STARTHEIGHT = 200;
   public static final int BALLSIZE = 96;
-  public static final double TIME = 2000;
+  public static final int PLAYERSPEED = 3;
+  public static final int PROJECTILE_START_SPEED = 12;
 
   private static int projectileSpeed = PROJECTILE_START_SPEED;
 
@@ -41,6 +48,7 @@ public class Level {
   private Wall floor;
 
   private boolean endlessLevel;
+  private int flag = 0;
 
   private ArrayList<Class<?>> availablePowerups;
   private ArrayList<PowerUp> powerupsOnScreen;
@@ -94,7 +102,7 @@ public class Level {
     if (projectiles.size() < 1) {
       projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
               PROJECTILE_START_SPEED));
-      DLog.i("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
+      DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }
 
@@ -108,14 +116,20 @@ public class Level {
   }
 
   /**
-	 * 
-	 */
+   * Function that checks a collision between a projectile and a ceiling.
+   */
   public void projectileCeilingCollision() {
     int projHitIndex = -1;
     for (int i = 0; i < projectiles.size(); i++) {
       Projectile p = projectiles.get(i);
       if (p.getY() <= 0) {
         projHitIndex = i;
+      } else {
+    	  for (Wall w : walls) {
+    		  if (w.collides(p)) {
+    			  projHitIndex = i; 
+    		  }
+    	  }
       }
     }
     if (projHitIndex != -1) {
@@ -141,10 +155,10 @@ public class Level {
         if (p.collides(b)) {
           projHitIndex = j;
           if (b.getSize() >= 32) {
-            DLog.i(b.toString() + " splits", DLog.Type.COLLISION);
+            DLog.info(b.toString() + " splits", DLog.Type.COLLISION);
             res = b.split();
           } else {
-            DLog.i(b.toString() + " disappears", DLog.Type.COLLISION);
+            DLog.info(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
           players.get(0).incrScore(100);
@@ -168,52 +182,155 @@ public class Level {
    * Function which checks if balls collide with walls.
    */
   public void ballWallCollision() {
-    for (Ball b : balls) {
+	  int ballHitIndex = -1;
+    for (int i = 0; i < balls.size(); i++) {
+    	Ball b = balls.get(i);
       if (b.collides(floor)) {
         // System.out.println("Hit the floor");
         b.setSpeedY(b.getBounceSpeed());
-      } else if (b.collides(left)) {
+      } /*else if (b.collides(left)) {
         // System.out.println("Hit the left wall");
         b.setSpeedX(-b.getSpeedX());
       } else if (b.collides(right)) {
         // System.out.println("Het the right wall");
         b.setSpeedX(-b.getSpeedX());
+      }*/
+      for (Wall w : walls) {
+    	  if (b.collides(w)) {
+    		  if (w.isMoveable()) {
+    			  ballHitIndex = i;
+    			  // TODO add points
+    		  } else {
+    			  double speedX = b.getSpeedX();
+    			  b.setSpeedX(-1 * speedX);
+    		  }
+    	  }
       }
-      // TODO Balls can collide with the ceiling, and a special bonus has to be added.
+      if (ballHitIndex != -1) {
+    	  balls.remove(ballHitIndex);
+    	  ballHitIndex = -1;
+      }
     }
   }
 
+  /**
+   * Function that detects collisions between players and walls.
+   */
   public void playerWallCollision() {
-    for (Player p : players) {
-      if (p.getX() <= left.getX()) {
-        // Player wants to pass the left wall
-        p.setX(0);
-      } else if (p.getX() + p.getWidth() >= right.getX()) {
-        // Player wants to pass the right wall
-        p.setX((int) canvas.getWidth() - p.getWidth());
-      }
-    }
+	  for (Player p : players) {
+	      if (p.getX() <= left.getX()) {
+	        // Player wants to pass the left wall
+	        p.setX(0);
+	      } else if (p.getX() + p.getWidth() >= right.getX()) {
+	        // Player wants to pass the right wall
+	        p.setX((int) canvas.getWidth() - p.getWidth());
+	      }
+	      for (Wall w : walls) {
+		   	  if (p.collides(w)) {
+		   		  int xSpeed = p.getSpeed();
+		   		  if (xSpeed > 0) {
+			   		  if (p.getX() + p.getWidth() >= w.getX()) {
+			   			p.setX(w.getX() - 10 - p.getWidth());
+			   		  }
+		   		  } else if (xSpeed < 0) {
+		   			if (p.getX() <= w.getX() + w.getWidth()) {
+			   			p.setX(w.getX() + w.getWidth() + 10);
+			   		}
+		   		  } else {
+		   			  if (p.getX() == w.getX() + w.getWidth()) {
+		   				  p.setX(p.getX() + 1);
+		   			  } else { 
+		   				  p.setX(p.getX() - 1); }
+		   		  }
+		   	  }
+	      }      
+	  }
   }
-
+  
+  /**
+   * Function that checks if all balls in a compartment are gone.
+   * Compartment should open.
+   */
+  public void ballWallCheck() {
+	  if (walls.size() > 2) {
+		  for (int i = 0; i < walls.size() - 1; i++) {
+			  //first wall is the left wall
+			  Wall left = walls.get(i);
+			  Wall right = walls.get(i + 1);
+			  if (spaceEmpty(left, right)) {
+				  walls.remove(right);
+				  DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
+			  }	
+		  }
+	  }
+  }
+  
+  /**
+   * Function that returns true if there are no balls between two walls.
+   * @param w1 Wall one
+   * @param w2 Wall two
+   * @return boolean if the space is empty
+   */
+  public boolean spaceEmpty(Wall w1, Wall w2) {	
+	  int w1x = w1.getX() + w1.getWidth();
+	  int w2x = w2.getX();
+	  if (balls.size() > 0) {
+		  for (Ball b : balls) {
+			  if (b.getX() + b.getSize() >= w1x && b.getX() <= w2x) {
+				  return false;
+			  }
+		  }
+		  this.flag++;
+		  if (this.flag > 1) {
+			  //this flag is because of the first second in the game, 
+			  //in which the balls are not yet correct or something like that.
+			  this.flag = 0;
+			  return true;	
+		  }
+	  }
+	  return false;
+  }
+  
+  /**
+   * Function that detects if a player is hit by a ball.
+   * @return boolean if the player is hit.
+   */
   public boolean ballPlayerCollision() {
     boolean res = false;
     for (Ball b : balls) {
       for (Player p : players) {
         if (p.collides(b)) {
           res = true;
-          DLog.i(p.toString() + " is hit by a ball", DLog.Type.COLLISION);
+          DLog.info(p.toString() + " is hit by a ball", DLog.Type.COLLISION);
         }
       }
     }
     return res;
   }
+  
+  /**
+   * Function that detects if a player is hit by the ceiling.
+   * @return boolean if the player is hit.
+   */
+  public boolean playerCeilingCollision() {
+	    boolean res = false;
+	    for (Wall w : walls) {
+	      for (Player p : players) {
+	        if (p.collides(w) && w.isMoveable()) {
+	          res = true;
+	          DLog.info(p.toString() + " is hit by the ceiling", DLog.Type.COLLISION);
+	        }
+	      }
+	    }
+	    return res;
+	  }
 
   public void powerupPlayerCollision() {
     PowerUp toRemove = null;
     for (PowerUp powerup : powerupsOnScreen) {
       for (Player p : players) {
         if (p.collides(powerup)) {
-          DLog.i(p.toString() + " is hit by a powerup", DLog.Type.COLLISION);
+          DLog.info(p.toString() + " is hit by a powerup", DLog.Type.COLLISION);
           powerup.onActivate(this, p);
           toRemove = powerup;
           activePowerups.add(powerup);
@@ -249,6 +366,17 @@ public class Level {
       b.move();
     }
   }
+  
+  /**
+   * Handle the movements of walls.
+   */
+  public void moveWalls() {
+	  for (Wall w : walls) {
+		  if (w.isMoveable()) {
+			  w.move();
+		  }
+	  }
+  }
 
   /**
    * Paint all views.
@@ -263,6 +391,9 @@ public class Level {
     }
     for (Ball b : balls) {
       b.draw(gc);
+    }
+    for (Wall w : walls) {
+    	w.draw(gc);
     }
     for (PowerUp powerup : powerupsOnScreen) {
       gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());
@@ -287,7 +418,9 @@ public class Level {
     }
     // endlessLevel();
     detectCollisions();
+    ballWallCheck();
     moveBalls();
+    moveWalls();
     paint();
     currentTime -= 1;
     for (Player player : players) {
@@ -318,11 +451,14 @@ public class Level {
       activePowerups.remove(p);
     }
   }
-
+  
+  /**
+   * Function which is triggered if the player is hit by a ball.
+   */
   public void crushed() {
     Player p = players.get(0);
     p.setLives(p.getLives() - 1);
-    currentTime = TIME;
+    currentTime = time;
   }
 
   /**
@@ -381,10 +517,14 @@ public class Level {
    * Game lost, return to menu.
    */
   public void gameOver() {
-    DLog.i("Game over!", DLog.Type.STATE);
+    DLog.info("Game over!", DLog.Type.STATE);
     App.loadScene("/fxml/menu.fxml");
   }
 
+  /**
+   * Draw a textimage on the canvas.
+   * @param i image to draw
+   */
   public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
         canvas.getHeight() / 2 - i.getHeight());
@@ -450,7 +590,15 @@ public class Level {
     return currentTime;
   }
 
-  public void setCurrentTime(double currentTime) {
+  public int getTime() {
+	return time;
+}
+
+public void setTime(int time) {
+	this.time = time;
+}
+
+public void setCurrentTime(double currentTime) {
     this.currentTime = currentTime;
   }
 
@@ -462,7 +610,23 @@ public class Level {
     return balls;
   }
 
-  /**
+  public ArrayList<Wall> getWalls() {
+	return walls;
+}
+
+public void setWalls(ArrayList<Wall> walls) {
+	this.walls = walls;
+}
+
+public int getPlayerSpeed() {
+	return playerSpeed;
+}
+
+public void setPlayerSpeed(int playerSpeed) {
+	this.playerSpeed = playerSpeed;
+}
+
+/**
    * Handler for key presses.
    */
   private class KeyPressHandler implements EventHandler<KeyEvent> {
@@ -472,14 +636,14 @@ public class Level {
       case RIGHT:
         players.get(0).setSpeed(players.get(0).getMoveSpeed());
         if (last != KeyCode.RIGHT) {
-          DLog.i("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+          DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.RIGHT;
         }
         break;
       case LEFT:
         players.get(0).setSpeed(-players.get(0).getMoveSpeed());
         if (last != KeyCode.LEFT) {
-          DLog.i("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+          DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
           last = KeyCode.LEFT;
         }
         break;
@@ -510,13 +674,16 @@ public class Level {
   }
 
   /**
-   * Builder class.
+   * Class that assists in building level.
    */
   public static class Builder {
 
     private Canvas canvas;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
+    private ArrayList<Wall> walls;
+    private int playerSpeed = PLAYERSPEED;
+    private int time;
 
     /**
      * Constructor.
@@ -527,6 +694,9 @@ public class Level {
 
     public void setCanvas(Canvas canvas) {
       this.canvas = canvas;
+    }
+    public void setTime(int time) {
+    	this.time = time;
     }
 
     /**
@@ -539,7 +709,11 @@ public class Level {
       return this;
     }
 
-    /**
+	public void setWalls(ArrayList<Wall> walls) {
+		this.walls = walls;
+	}
+
+	/**
      * Player Setter.
      * @param players players
      * @return builder
@@ -565,8 +739,23 @@ public class Level {
       level.setCeiling(ceiling);
       level.setFloor(floor);
 
+      Collections.sort(walls, new Comparator<Wall>() {
+        @Override
+        public int compare(Wall w1, Wall w2) {
+          return  Integer.compare(w1.getX(), w2.getX());
+        }
+      });
+
+      walls.add(right);
+      walls.add(0, left);
+      
       level.setBalls(balls);
       level.setPlayers(players);
+      level.setPlayerSpeed(playerSpeed);
+      level.setWalls(walls);
+      level.setTime(time);
+      level.setCurrentTime(time);
+
       return level;
     }
 

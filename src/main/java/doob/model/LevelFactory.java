@@ -1,8 +1,11 @@
 package doob.model;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -15,8 +18,10 @@ public class LevelFactory {
 
     private File file;
     private Canvas canvas;
+    private int time;
     private ArrayList<Player> playerList;
     private ArrayList<Ball> ballList;
+    private ArrayList<Wall> wallList;
     private Image[] playerImages;
 
     /**
@@ -30,6 +35,7 @@ public class LevelFactory {
         this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
+        this.wallList = new ArrayList<Wall>();
 
         playerImages = new Image[1];
     }
@@ -112,6 +118,43 @@ public class LevelFactory {
     }
 
     /**
+     * Parses and adds walls in the XML to the wallList.
+     *
+     * @param doc Document build from the XML
+     */
+    public void parseWalls(Document doc) {
+        NodeList nListBall = doc.getElementsByTagName("wall");
+        for (int i = 0; i < nListBall.getLength(); i++) {
+            Node nNode = nListBall.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                int x = parseInt("x", eElement);
+                int y = parseInt("y", eElement);
+                int width = parseInt("width", eElement);
+                int height = parseInt("height", eElement);
+                if(parseInt("moveable", eElement) == 1){
+                    int endx = parseInt("endx", eElement);
+                    int endy = parseInt("endy", eElement);
+                    int duration = parseInt("duration", eElement);
+                    int speed = parseInt("speed", eElement);
+                    String condition = eElement.getElementsByTagName("condition").item(0).getTextContent();
+                    Wall wall = new Wall(x, y, width, height, endx, endy, duration, speed, condition);
+                    wallList.add(wall);
+                }else{
+                    Wall wall = new Wall(x, y, width, height);
+                    wallList.add(wall);
+                }
+            }
+        }
+    }
+    
+    public void parseLevel(Document doc) {
+    	NodeList nListBall = doc.getElementsByTagName("time");	
+        Node nNode = nListBall.item(0);
+        time = Integer.parseInt(nNode.getTextContent());
+    }
+
+    /**
      * Parses the XML and adds all parsed objects to their respective lists.
      */
     public void parseXML() {
@@ -121,9 +164,11 @@ public class LevelFactory {
 
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
-
+            
+            parseLevel(doc);
             parsePlayers(doc);
             parseBalls(doc);
+            parseWalls(doc);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,6 +189,8 @@ public class LevelFactory {
         builder.setBalls(ballList);
         builder.setCanvas(canvas);
         builder.setPlayers(playerList);
+        builder.setWalls(wallList);
+        builder.setTime(time);
 
         return builder.build();
     }

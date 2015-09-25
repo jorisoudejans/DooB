@@ -75,7 +75,7 @@ public class DLogTypeTest {
 		DLog.setFile("DLogTest.log");
 		BufferedReader mReader = new BufferedReader(new InputStreamReader(
 				new FileInputStream("DLogTest.log")));
-		DLog.i(input, type);
+		DLog.info(input, type);
 		String actual = null;
 		try {
 			// Skip init line.

@@ -80,13 +80,22 @@ public class Player implements Collidable, Drawable {
    */
   public boolean collides(Collidable other) {
     if (other instanceof Ball) {
-      // a player only collides with a ball
+      // a player collides with a ball
       Ball b = (Ball) other;
       return b.getBounds().intersects(x, y, width, height);
     } else if (other instanceof PowerUp) {
       PowerUp p = (PowerUp) other;
       Rectangle rect = new Rectangle(p.getLocationX(), p.getLocationY(), 30, 30);
       return rect.intersects(x, y, width, height);
+    }
+    if (other instanceof Wall) {
+    	// a player collides with a wall
+    	Wall w = (Wall) other;
+    	/*
+    	if (this.x < w.getX() + w.getWidth() && this.x > w.getX()) {
+    		return false;
+    	}*/
+    	return w.getBounds().intersects(x, y, width, height);
     }
     return false;
   }

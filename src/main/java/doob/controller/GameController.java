@@ -78,10 +78,10 @@ public class GameController {
 		createTimer();
 		timer.start();
 
-		// Init log.
-		DLog.setFile("DooB.log");
-		DLog.i("Game started.", DLog.Type.STATE);
-	}
+    //Init log.
+    DLog.setFile("DooB.log");
+    DLog.info("Game started.", DLog.Type.STATE);
+  }
 
 	private GameState gameState;
 	private ArrayList<String> levelList;
@@ -180,7 +180,7 @@ public class GameController {
 	public void checkLevelComplete() {
 		if (level.getBalls().size() <= 0) {
 			level.drawText(new Image("/image/levelcomplete.png"));
-			DLog.i("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
+			DLog.info("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
 			emptyProgressBar();
 			createFreeze();
 		}
@@ -192,29 +192,27 @@ public class GameController {
 	public void updateScore() {
 		int score = level.getPlayers().get(0).getScore();
 		scoreTextView1.setText(score + "");
-
 	}
 
 	/**
-	 * Updates the timebar every gamestep. If there is no time left the game
-	 * freezes and the level restarts.
-	 */
-	public void updateProgressBar() {
-		progress = level.getCurrentTime() / Level.TIME;
-		if (progress <= 0) {
-			createFreeze();
-			return;
-		}
-		progressBar.setProgress(progress);
-	}
+   * Updates the timebar every gamestep. If there is no time left the game freezes and the level
+   * restarts.
+   */
+  public void updateProgressBar() {
+    double progress = level.getCurrentTime() / level.getTime();
+    if (progress <= 0) {
+      createFreeze();
+      return;
+    }
+    progressBar.setProgress(progress);
+  }
 
 	public void emptyProgressBar() {
-		progress = level.getCurrentTime() / Level.TIME;
+		progress = level.getCurrentTime() / level.getTime();
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				progress = progress - 0.01;
-				System.out.println("test: " + progress);
 				if (progress <= 0) {
 					this.stop();
 				} else {
@@ -239,6 +237,31 @@ public class GameController {
 		}
 	}
 
+  /**
+   * Defines what happens after the 2 seconds of freeze depending on amount of lives and balls.
+   */
+  public void afterFreeze() {
+    if (level.getPlayers().get(0).getLives() == 1) {
+      level.gameOver();
+    } else if (level.getBalls().size() == 0) {
+      if (currentLevel < levelList.size() - 1) {
+        currentLevel++;
+        levelLabel.setText((currentLevel + 1) + "");
+        newLevel();
+        timer.start();
+      } else {
+        gameState = GameState.WON;
+        DLog.info("Game won!", DLog.Type.STATE);
+        App.loadScene("/fxml/menu.fxml");
+      }
+    } else {
+      DLog.info("Lost a life", DLog.Type.STATE);
+      level.crushed();
+      newLevel();
+      timer.start();
+    }
+  }
+  
 	/**
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
 	 */
@@ -271,32 +294,6 @@ public class GameController {
 		});
 		new Thread(sleeper).start();
 		timer.stop();
-	}
-
-	/**
-	 * Defines what happens after the 2 seconds of freeze depending on amount of
-	 * lives and balls.
-	 */
-	public void afterFreeze() {
-		if (level.getPlayers().get(0).getLives() == 1) {
-			level.gameOver();
-		} else if (level.getBalls().size() == 0) {
-			if (currentLevel < levelList.size() - 1) {
-				currentLevel++;
-				levelLabel.setText((currentLevel + 1) + "");
-				newLevel();
-				timer.start();
-			} else {
-				gameState = GameState.WON;
-				DLog.i("Game won!", DLog.Type.STATE);
-				App.loadScene("/fxml/menu.fxml");
-			}
-		} else {
-			DLog.i("Lost a life", DLog.Type.STATE);
-			level.crushed();
-			newLevel();
-			timer.start();
-		}
 	}
 
 	public Level getLevel() {

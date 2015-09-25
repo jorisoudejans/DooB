@@ -34,7 +34,7 @@ public class TimePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        level.setCurrentTime(Math.min(level.getCurrentTime() + CYCLES_TO_ADD, Level.TIME));
+        level.setCurrentTime(Math.min(level.getCurrentTime() + CYCLES_TO_ADD, level.getTime()));
     }
 
     @Override

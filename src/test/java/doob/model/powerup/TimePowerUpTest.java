@@ -44,7 +44,7 @@ public class TimePowerUpTest extends PowerUpTest {
     @Test
     public void testOnActivate() {
         when(getLevel().getCurrentTime()).thenReturn((double) TimePowerUp.CYCLES_TO_ADD);
-
+        when(getLevel().getTime()).thenReturn(TimePowerUp.CYCLES_TO_ADD + PowerUp.DEFAULT_WAIT_CYCLES);
         timePowerUp.onActivate(getLevel(), getPlayer());
 
         verify(getLevel()).setCurrentTime(TimePowerUp.CYCLES_TO_ADD + PowerUp.DEFAULT_WAIT_CYCLES);

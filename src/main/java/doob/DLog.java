@@ -55,7 +55,7 @@ public final class DLog {
                             ENCODING
                     )
             );
-            i(LOG_CREATED_MESSAGE + path, Type.APPLICATION);
+            info(LOG_CREATED_MESSAGE + path, Type.APPLICATION);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -102,7 +102,7 @@ public final class DLog {
      * @param text string to log.
      * @param type Type of log message to be written.
      */
-    public static void i(String text, Type type) {
+    public static void info(String text, Type type) {
         if (!isEnabled(type)) {
             return;
         }
@@ -127,8 +127,8 @@ public final class DLog {
      * Prints information log to console and to file.
      * @param text string to log.
      */
-    public static void i(String text) {
-        i(text, Type.NONE);
+    public static void info(String text) {
+        info(text, Type.NONE);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class DLog {
      * @param text message with the error.
      */
     public static void e(String text) {
-        i(text, Type.ERROR);
+        info(text, Type.ERROR);
     }
 
     /**

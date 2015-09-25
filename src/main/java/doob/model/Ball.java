@@ -18,6 +18,7 @@ public class Ball implements Collidable, Drawable {
 
   public static final int SPLITBOUNCE = -4;
   public static final double VERTICALSPEEDFACTOR = 0.2;
+  public static final int START_SPEED_X = 2;
 
   /**
    * Constructor.
@@ -67,8 +68,8 @@ public class Ball implements Collidable, Drawable {
    * @return A list of new balls.
    */
   public Ball[] split() {
-    Ball ball1 = new Ball(this.x, this.y, speedX, splitBounce, this.size / 2);
-    Ball ball2 = new Ball(this.x, this.y, -speedX, splitBounce, this.size / 2);
+    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, splitBounce, this.size / 2);
+    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, splitBounce, this.size / 2);
     Ball[] res = new Ball[2];
     res[0] = ball1;
     res[1] = ball2;
