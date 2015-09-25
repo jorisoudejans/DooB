@@ -41,21 +41,12 @@ public class Level {
   private Wall floor;
 
   private boolean endlessLevel;
+  private boolean ballFreeze;
+  private boolean projectileFreeze;
 
   private ArrayList<Class<?>> availablePowerups;
   private ArrayList<PowerUp> powerupsOnScreen;
   private ArrayList<PowerUp> activePowerups;
-
-  private State state;
-
-  /**
-   * Possible level states.
-   */
-  public enum State {
-    NORMAL,
-    BALLS_FREEZE,
-    PROJECTILES_FREEZE
-  }
 
   /**
    * Initialize javaFx.
@@ -66,7 +57,8 @@ public class Level {
   public Level(Canvas canvas) {
     this.endlessLevel = true;
     this.canvas = canvas;
-    this.state = State.NORMAL;
+    ballFreeze = false;
+    projectileFreeze = false;
     gc = canvas.getGraphicsContext2D();
     canvas.setFocusTraversable(true);
     canvas.setOnKeyPressed(new KeyPressHandler());
@@ -119,10 +111,10 @@ public class Level {
       }
     }
     if (projHitIndex != -1) {
-      if (state != State.PROJECTILES_FREEZE) {
-        projectiles.remove(projHitIndex);
+      if (projectileFreeze) {
+    	  projectiles.get(projHitIndex).setState(Projectile.State.FROZEN);
       } else {
-        projectiles.get(projHitIndex).setState(Projectile.State.FROZEN);
+    	  projectiles.remove(projHitIndex);
       }
     }
   }
@@ -242,7 +234,7 @@ public class Level {
    * Handle the movement of balls.
    */
   public void moveBalls() {
-    if (state == State.BALLS_FREEZE) {
+    if (ballFreeze) {
       return;
     }
     for (Ball b : balls) {
@@ -274,13 +266,7 @@ public class Level {
    */
   public void update() {
     for (Projectile projectile : projectiles) {
-      if (
-              !(
-                      projectile.getState()
-                      == Projectile.State.FROZEN
-                      && state
-                      == State.PROJECTILES_FREEZE
-              )) {
+      if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
         projectile.move();
       }
       projectile.draw(gc);
@@ -462,7 +448,23 @@ public class Level {
     return balls;
   }
 
-  /**
+  public boolean isBallFreeze() {
+	return ballFreeze;
+}
+
+public void setBallFreeze(boolean ballFreeze) {
+	this.ballFreeze = ballFreeze;
+}
+
+public boolean isProjectileFreeze() {
+	return projectileFreeze;
+}
+
+public void setProjectileFreeze(boolean projectileFreeze) {
+	this.projectileFreeze = projectileFreeze;
+}
+
+/**
    * Handler for key presses.
    */
   private class KeyPressHandler implements EventHandler<KeyEvent> {
@@ -499,14 +501,6 @@ public class Level {
 
   public void setEndlessLevel(boolean endlessLevel) {
     this.endlessLevel = endlessLevel;
-  }
-
-  public State getState() {
-    return state;
-  }
-
-  public void setState(State state) {
-    this.state = state;
   }
 
   /**

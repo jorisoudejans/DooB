@@ -20,7 +20,7 @@ public class ProjectileFreezePowerUp extends PowerUp {
     @Override
     public void onActivate(Level level, Player player) {
         super.onActivate(level, player);
-        level.setState(Level.State.PROJECTILES_FREEZE);
+        level.setProjectileFreeze(true);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ProjectileFreezePowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-        level.setState(Level.State.NORMAL);
+        level.setProjectileFreeze(false);
     }
 
     /**

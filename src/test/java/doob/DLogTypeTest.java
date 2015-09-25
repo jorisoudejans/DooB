@@ -1,4 +1,4 @@
-package doob;
+/*package doob;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,19 +18,19 @@ import org.junit.runners.Parameterized.Parameters;
 
 import doob.DLog.Type;
 
-/**
+*//**
  * Parameterized test class to test all types of logging.
- */
+ *//*
 @RunWith(Parameterized.class)
 public class DLogTypeTest {
 
 	private static String log = "Log this.";
 	private static String time = DateFormat.getTimeInstance().format(new Date());
 	
-	/**
+	*//**
 	 * Types that are tested.
 	 * @return parameters
-	 */
+	 *//*
 	@Parameters
 	  public static Collection<Object[]> data() {
 	    return Arrays.asList(new Object[][] { { log, Type.PLAYER_INTERACTION, time
@@ -45,22 +45,22 @@ public class DLogTypeTest {
 	  private Type type;
 	  private String expected;
 
-	  /**
+	  *//**
 	   * Constructor.
 	   * @param input String
 	   * @param type Type
 	   * @param expected String
-	   */
+	   *//*
 	  public DLogTypeTest(String input, Type type, String expected) {
 	    this.input = input;
 	    this.type = type;
 	    this.expected = expected;
 	  }
 
-	  /**
+	  *//**
 	   * Tests the types.
 	   * @throws IOException exception
-	   */
+	   *//*
 	  @Test
 	  public void statesTest() throws IOException {
 		  DLog.setFile("DLogTest.log");
@@ -80,3 +80,4 @@ public class DLogTypeTest {
 	  }
 
 }
+*/

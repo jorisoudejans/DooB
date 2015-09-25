@@ -43,12 +43,11 @@ public class FreezeBallsPowerUpTest extends PowerUpTest {
      */
     @Test
     public void testOnActivate() {
-        when(getLevel().getState()).thenReturn(Level.State.NORMAL);
+        when(getLevel().isBallFreeze()).thenReturn(false);
 
         freezeBallsPowerUp.onActivate(getLevel(), getPlayer());
 
-        verify(getLevel())
-                .setState(Level.State.BALLS_FREEZE);
+        verify(getLevel()).setBallFreeze(true);
     }
 
     /**
@@ -56,13 +55,12 @@ public class FreezeBallsPowerUpTest extends PowerUpTest {
      */
     @Test
     public void testOnDeactivate() {
-        when(getLevel().getState()).thenReturn(Level.State.BALLS_FREEZE);
+        when(getLevel().isBallFreeze()).thenReturn(true);
 
         freezeBallsPowerUp.setPlayer(getPlayer());
         freezeBallsPowerUp.onDeactivate(getLevel());
 
-        verify(getLevel())
-                .setState(Level.State.NORMAL);
+        verify(getLevel()).setBallFreeze(false);
     }
 
     /**
