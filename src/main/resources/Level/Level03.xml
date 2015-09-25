@@ -53,5 +53,18 @@
             <size>16</size>
         </ball>
     </ballList>
-
+	<wallList>
+		<wall>
+			<x>0</x>
+            <y>0</y>
+            <width>960</width>
+            <height>50</height>
+            <moveable>1</moveable>
+            <endx>0</endx>
+            <endy>650</endy>
+            <duration>1000</duration>
+            <speed>1</speed>
+            <condition></condition>
+		</wall>
+	</wallList>
 </level>
