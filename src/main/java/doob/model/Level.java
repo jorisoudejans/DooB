@@ -527,7 +527,7 @@ public class Level {
    */
   public void drawText(Image i) {
     gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
-        canvas.getHeight() / 2 - i.getHeight());
+            canvas.getHeight() / 2 - i.getHeight());
   }
 
   public Wall getRight() {
@@ -625,6 +625,21 @@ public int getPlayerSpeed() {
 public void setPlayerSpeed(int playerSpeed) {
 	this.playerSpeed = playerSpeed;
 }
+
+  public void setFlag(int f){
+    this.flag = f;
+  }
+
+  public void setPowerupsOnScreen(ArrayList<PowerUp> l){
+    this.powerupsOnScreen = l;
+  }
+
+  public ArrayList<PowerUp> getPowerupsOnScreen(){return this.powerupsOnScreen; }
+
+
+  public void setActivePowerups(ArrayList<PowerUp> l){
+    this.activePowerups = l;
+  }
 
 /**
    * Handler for key presses.
