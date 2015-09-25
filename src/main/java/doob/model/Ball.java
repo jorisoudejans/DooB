@@ -1,6 +1,10 @@
 package doob.model;
 
+import java.util.Random;
+
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 /**
@@ -15,6 +19,7 @@ public class Ball implements Collidable, Drawable {
   private double speedY;
   private int size;
   private int splitBounce;
+  private Color color;
 
   public static final int SPLITBOUNCE = -4;
   public static final double VERTICALSPEEDFACTOR = 0.2;
@@ -41,6 +46,20 @@ public class Ball implements Collidable, Drawable {
     this.speedY = speedY;
     this.size = size;
     this.splitBounce = SPLITBOUNCE;
+    setColor();
+  }
+  
+  /**
+   * Sets the value of the color variable dependent of the size of the ball.
+   */
+  public void setColor() {
+	  switch(size) {
+	  case 128: color = Color.RED; break;
+	  case 64 : color = Color.GREEN; break;
+	  case 32 : color = Color.BLUE; break;
+	  case 16 : color = Color.PURPLE; break;
+	  default : color = Color.BLACK;
+	  }
   }
 
   /**
@@ -50,7 +69,9 @@ public class Ball implements Collidable, Drawable {
    *          graphicsContext
    */
   public void draw(GraphicsContext graphicsContext) {
+	graphicsContext.setFill(color);
     graphicsContext.fillOval(this.getX(), this.getY(), this.getSize(), this.getSize());
+    graphicsContext.setFill(Color.BLACK);
   }
 
   /**

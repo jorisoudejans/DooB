@@ -21,6 +21,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,7 +42,8 @@ public class GameController {
 
 	@FXML
 	private Canvas canvas;
-
+	@FXML
+	private Pane pane;
 	@FXML
 	private Canvas lives1;
 	@FXML
@@ -75,6 +77,11 @@ public class GameController {
 		level = new Level(canvas);
 		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
 		gc = lives1.getGraphicsContext2D();
+		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
+		GraphicsContext gc2 = background.getGraphicsContext2D();
+		gc2.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
+		pane.getChildren().add(background);
+		background.toBack();
 		createTimer();
 		timer.start();
 
