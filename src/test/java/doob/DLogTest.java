@@ -59,7 +59,7 @@ public class DLogTest {
 		String input = "Log this.";
 		String expected = DateFormat.getTimeInstance().format(new Date())
 				+ ": Log this.";
-		DLog.i(input);
+		DLog.info(input);
 		String actual = null;
 		try {
 			// Skip init line.
@@ -104,7 +104,7 @@ public class DLogTest {
 		printer.close();
 		DLog.invalidateProperties();
 		String input = "Log this.";
-		DLog.i(input);
+		DLog.info(input);
 		String actual = "";
 		try {
 			// Skip init line.
@@ -125,8 +125,8 @@ public class DLogTest {
 	 */
 	@Test
 	public void testEmptyFIle() {
-		DLog.i("hoi");
-		DLog.i("hoi 2");
+		DLog.info("hoi");
+		DLog.info("hoi 2");
 		try {
 			DLog.emptyFile();
 		} catch (IOException e) {
