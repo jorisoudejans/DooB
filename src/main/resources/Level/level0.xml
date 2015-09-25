@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <level>
-	<time>2000</time>
     <playerList>
         <player id="1">
-            <x>500</x>
+            <x>2</x>
             <y>575</y>
             <width>50</width>
             <height>72</height>
@@ -11,22 +10,22 @@
     </playerList>
     <ballList>
         <ball id="1">
-            <x>400</x>
-            <y>600</y>
+            <x>20</x>
+            <y>20</y>
             <speedX>-2</speedX>
             <speedY>0</speedY>
             <size>32</size>
         </ball>
         <ball id="2">
-            <x>600</x>
+            <x>500</x>
             <y>600</y>
             <speedX>2</speedX>
             <speedY>0</speedY>
             <size>32</size>
         </ball> 
 		<!--<ball id="3">
-            <x>0</x>
-            <y>0</y>
+            <x>675</x>
+            <y>600</y>
             <speedX>2</speedX>
             <speedY>0</speedY>
             <size>32</size>
@@ -34,14 +33,14 @@
     </ballList>
     <wallList>
         <wall id="1">
-            <x>800</x>
+            <x>200</x>
             <y>0</y>
             <width>80</width>
             <height>800</height>
             <moveable>0</moveable>
         </wall>
 		<wall id="2">
-			<x>200</x>
+			<x>600</x>
 			<y>0</y>
 			<width>80</width>
 			<height>800</height>
