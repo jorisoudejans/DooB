@@ -40,6 +40,7 @@ public class Level {
   private Wall floor;
 
   private boolean endlessLevel;
+  private int flag = 0;
 
   /**
    * Initialize javaFx.
@@ -206,15 +207,14 @@ public class Level {
    */
   public void ballWallCheck() {
 	  if (walls.size() > 2) {
-		  for (int i = 0; i < walls.size(); i++) {
-			  Wall w = walls.get(i);
-			  for (int j = i; j < walls.size(); j++) {
-				  Wall w2 = walls.get(j);
-				  if (spaceEmpty(w, w2) && !w.isMoveable() && !w2.isMoveable()) {
-					  walls.remove(w2);
-					  DLog.i("Wall opened", DLog.Type.PLAYER_INTERACTION);
-				  }
-			  }
+		  for (int i = 0; i < walls.size() - 1; i++) {
+			  //first wall is the left wall
+			  Wall left = walls.get(i);
+			  Wall right = walls.get(i + 1);
+			  if (spaceEmpty(left, right)) {
+				  walls.remove(right);
+				  DLog.i("Wall opened", DLog.Type.PLAYER_INTERACTION);
+			  }	
 		  }
 	  }
   }
@@ -225,17 +225,24 @@ public class Level {
    * @param w2 Wall two
    * @return boolean if the space is empty
    */
-  public boolean spaceEmpty(Wall w1, Wall w2) {
-	  int w1x = w1.getX();
+  public boolean spaceEmpty(Wall w1, Wall w2) {	
+	  int w1x = w1.getX() + w1.getWidth();
 	  int w2x = w2.getX();
-	  for (Ball b : balls) {
-		  if (b.getX() < w1x && b.getX() > w2x) {
-			  return false;
-		  } else if (b.getX() > w1x && b.getX() < w2x) {
-			  return false;
+	  if (balls.size() > 0) {
+		  for (Ball b : balls) {
+			  if (b.getX() + b.getSize() >= w1x && b.getX() <= w2x) {
+				  return false;
+			  }
+		  }
+		  this.flag++;
+		  if (this.flag > 1) {
+			  //this flag is because of the first second in the game, 
+			  //in which the balls are not yet correct or something like that.
+			  this.flag = 0;
+			  return true;	
 		  }
 	  }
-	  return true;
+	  return false;
   }
   
   /**
