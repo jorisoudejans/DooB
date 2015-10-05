@@ -4,6 +4,8 @@ import doob.model.Collidable;
 import doob.model.Level;
 import doob.model.Player;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /**
  * Abstract Power-up class to be extended by every possible power-up.
@@ -132,4 +134,8 @@ public abstract class PowerUp implements Collidable {
 		this.currentWaitTime--;
 	}
 
+	@Override
+	public Shape getBounds() {
+		return new Rectangle(locationX, locationY, 30, 30);
+	}
 }

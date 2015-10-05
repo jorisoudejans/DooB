@@ -1,4 +1,8 @@
-package doob.model;
+package doob.level;
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Wall;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -191,6 +195,7 @@ public class LevelFactory {
         builder.setPlayers(playerList);
         builder.setWalls(wallList);
         builder.setTime(time);
+
 
         return builder.build();
     }

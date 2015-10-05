@@ -1,15 +1,16 @@
 package doob.model;
 
+import javafx.scene.shape.Shape;
+
 /**
  * Created by hidde on 9/3/15.
  */
 public interface Collidable {
 
     /**
-     * Tells whether the collidable object is colliding with another
-     * @param other the other object
-     * @return whether it collides
+     * Returns JavaFX shape that corresponds to this entity
+     * @return javafx shape
      */
-    public boolean collides(Collidable other);
+    public Shape getBounds();
 
 }

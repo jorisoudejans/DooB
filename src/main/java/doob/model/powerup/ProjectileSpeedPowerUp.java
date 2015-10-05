@@ -51,8 +51,4 @@ public class ProjectileSpeedPowerUp extends PowerUp {
         return "/image/powerup/fast-up.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

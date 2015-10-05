@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
 
 import doob.App;
 import doob.model.Level;
-import doob.model.LevelFactory;
+import doob.level.LevelFactory;
 import doob.model.Player;
 
 /**
@@ -153,7 +153,7 @@ public class GameController {
 	public void checkCollisions() {
 		if (level.ballPlayerCollision()) {
 			if (level.getPlayers().get(0).getState() == Player.State.INVULNERABLE) {
-				for (final PowerUp powerUp : level.getActivePowerups()) {
+				/*for (final PowerUp powerUp : level.getActivePowerups()) {
 					if (powerUp instanceof ProtectOncePowerUp) {
 						if (powerUp.getPlayer().equals(
 								level.getPlayers().get(0))) {
@@ -168,7 +168,7 @@ public class GameController {
 							}, 500, TimeUnit.MILLISECONDS);
 						}
 					}
-				}
+				}*/
 				return;
 			}
 			if (level.getPlayers().get(0).getLives() == 1) {

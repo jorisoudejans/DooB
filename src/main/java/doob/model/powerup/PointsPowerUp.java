@@ -50,8 +50,4 @@ public class PointsPowerUp extends PowerUp {
         return "/image/powerup/star.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

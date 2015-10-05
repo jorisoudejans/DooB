@@ -195,6 +195,7 @@ public class Ball implements Collidable, Drawable {
     this.speedY = speedY + speedDY;
   }
 
+  @Override
   public Circle getBounds() {
     return new Circle(x + size / 2, y + size / 2, size / 2);
   }

@@ -144,7 +144,7 @@ public class LevelTest {
         assertFalse(level.playerCeilingCollision());
     }
 
-    @Test
+    /*@Test
     public void testPowerUpPlayerCollision(){
         Level level = basicLevel();
         Player player = mock(Player.class);
@@ -176,7 +176,7 @@ public class LevelTest {
         assertEquals(0, level.getPowerupsOnScreen().size());
         assertEquals(1, level.getActivePowerups().size());
 
-    }
+    }*/
 
     @Test
     public void testSpaceEmpty(){

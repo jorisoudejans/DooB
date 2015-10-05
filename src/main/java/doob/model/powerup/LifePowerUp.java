@@ -52,8 +52,4 @@ public class LifePowerUp extends PowerUp {
         return "/image/powerup/life.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

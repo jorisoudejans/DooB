@@ -66,6 +66,7 @@ public class Wall implements Collidable, Drawable {
 	 * Return the bounds of the wall.
 	 * @return rectangle with bounds.
 	 */
+	@Override
 	public Rectangle getBounds() {
 		return new Rectangle(x, y, width, height);
 	}

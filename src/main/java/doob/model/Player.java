@@ -4,6 +4,7 @@ import doob.model.powerup.PowerUp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /**
  * Player class, acts as both model and view.
@@ -27,6 +28,11 @@ public class Player implements Collidable, Drawable {
   private Image imageRight;
 
   private State state;
+
+  @Override
+  public Shape getBounds() {
+    return new Rectangle(x, y, width, height);
+  }
 
   /**
    * Possible player states.
