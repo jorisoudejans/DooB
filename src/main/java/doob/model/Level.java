@@ -36,6 +36,7 @@ public class Level {
   private int playerSpeed = PLAYERSPEED;
   public static final int SHOOTSPEED = 12;
   public static final int STARTHEIGHT = 200;
+  public static final int STARTSPEEDX = 200;
   public static final int BALLSIZE = 96;
   public static final int PLAYERSPEED = 3;
   public static final int PROJECTILE_START_SPEED = 12;
@@ -47,7 +48,6 @@ public class Level {
   private Wall ceiling;
   private Wall floor;
 
-  private boolean endlessLevel;
   private int flag = 0;
   private boolean ballFreeze;
   private boolean projectileFreeze;
@@ -65,7 +65,6 @@ public class Level {
    */
   public Level(Canvas canvas) {
 	this.checkedWalls = new ArrayList<Wall>();
-    this.endlessLevel = true;
     this.canvas = canvas;
     ballFreeze = false;
     projectileFreeze = false;
@@ -94,18 +93,10 @@ public class Level {
    */
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
-      projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
-              PROJECTILE_START_SPEED));
+    	Image im = new Image("/image/Spike.png");
+      projectiles.add(new Spike(player.getX() + (player.getWidth() / 2) - (im.getWidth() / 2),
+    		  canvas.getHeight(), PROJECTILE_START_SPEED, im));
       DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
-    }
-  }
-
-  /**
-   * For testing purposes, an endless level.
-   */
-  public void endlessLevel() {
-    if (endlessLevel && balls.size() == 0) {
-      balls.add(new Ball(0, STARTHEIGHT, 3, 0, BALLSIZE));
     }
   }
 
@@ -436,7 +427,6 @@ public class Level {
       }
       projectile.draw(gc);
     }
-    // endlessLevel();
     detectCollisions();
     ballWallCheck();
     moveBalls();
@@ -711,14 +701,6 @@ public void setProjectileFreeze(boolean projectileFreeze) {
         break;
       }
     }
-  }
-
-  public boolean isEndlessLevel() {
-    return endlessLevel;
-  }
-
-  public void setEndlessLevel(boolean endlessLevel) {
-    this.endlessLevel = endlessLevel;
   }
 
   /**
