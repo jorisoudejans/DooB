@@ -17,7 +17,7 @@ import java.util.Random;
  *
  * Created by hidde on 10/5/15.
  */
-public class PowerUpManager implements LevelManager {
+public class PowerUpManager {
 
     private ArrayList<Class<?>> availablePowerups;
     private ArrayList<PowerUp> powerupsOnScreen;
@@ -35,7 +35,6 @@ public class PowerUpManager implements LevelManager {
         this.level = level;
     }
 
-    @Override
     public void onInit() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
@@ -54,7 +53,6 @@ public class PowerUpManager implements LevelManager {
         }
     }
 
-    @Override
     public void onCollide(Object collider, Object collidee) {
         if (collider instanceof Projectile && collidee instanceof Ball) {
             Ball ball = (Ball)collidee;
@@ -85,7 +83,6 @@ public class PowerUpManager implements LevelManager {
         }
     }
 
-    @Override
     public void handleCollision(Collidable collider, Collidable collidee) {
         PowerUp powerup = (PowerUp)collider;
         Player player = (Player)collidee;
@@ -95,13 +92,11 @@ public class PowerUpManager implements LevelManager {
         powerupsOnScreenToRemove.add(powerup);
     }
 
-    @Override
     public boolean itemsCanCollideWith(Collidable collider) {
         return collider instanceof Player;
     }
 
-    @Override
-    public ArrayList<? extends Collidable> getCollidables() {
+    public ArrayList<PowerUp> getCollidables() {
         return powerupsOnScreen;
     }
 
@@ -109,7 +104,6 @@ public class PowerUpManager implements LevelManager {
         return powerupsOnScreen;
     }
 
-    @Override
     public void onUpdate(double time) {
         for (PowerUp p : powerupsOnScreenToRemove) {
             powerupsOnScreen.remove(p);
@@ -141,7 +135,6 @@ public class PowerUpManager implements LevelManager {
         }
     }
 
-    @Override
     public void onDraw(GraphicsContext gc) {
         for (PowerUp powerup : powerupsOnScreen) {
             gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());

@@ -1,6 +1,7 @@
 package doob.level;
 
 import doob.model.*;
+import doob.model.powerup.PowerUp;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
@@ -28,6 +29,11 @@ public class CollisionManager {
             for (Wall w : level.getWalls()) { // playerVersusWall
                 if (collides(player, w)) {
                     collisionResolver.playerVersusWall(player, w);
+                }
+            }
+            for (PowerUp powerUp : level.getCollidablePowerups()) {
+                if (collides(player, powerUp)) {
+                    collisionResolver.playerVersusPowerUp(player, powerUp);
                 }
             }
         }

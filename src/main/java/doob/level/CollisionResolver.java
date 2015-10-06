@@ -1,6 +1,7 @@
 package doob.level;
 
 import doob.model.*;
+import doob.model.powerup.PowerUp;
 
 /**
  * Class to handle collision resolving.
@@ -16,6 +17,10 @@ public class CollisionResolver {
     }
 
     public void playerVersusWall(Player player, Wall wall) {
+
+    }
+
+    public void playerVersusPowerUp(Player player, PowerUp wall) {
 
     }
 

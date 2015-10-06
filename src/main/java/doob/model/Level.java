@@ -9,6 +9,7 @@ import java.util.Random;
 import com.google.common.reflect.ClassPath;
 import com.sun.javafx.geom.Area;
 import doob.DLog;
+import doob.level.CollisionManager;
 import doob.level.LevelManager;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
@@ -56,7 +57,8 @@ public class Level {
     private boolean ballFreeze;
     private boolean projectileFreeze;
 
-    private ArrayList<LevelManager> levelManagers;
+    private PowerUpManager powerUpManager;
+    private CollisionManager collisionManager;
 
     private ArrayList<Wall> checkedWalls;
 
@@ -160,9 +162,7 @@ public class Level {
                     players.get(0).incrScore(100);
 
                     // Temporarily
-                    for (LevelManager manager : levelManagers) {
-                        manager.onCollide(p, b);
-                    }
+                    powerUpManager.onCollide(p, b);
                 }
             }
         }
@@ -353,21 +353,21 @@ public class Level {
      */
     public void detectCollisions() {
 
-        for (LevelManager manager : levelManagers) {
-            for (Player p : getPlayers()) {
-                if (manager.itemsCanCollideWith(p)) {
-                    for (Collidable c : manager.getCollidables()) {
+        collisionManager.detectCollisions();
+
+        /*    for (Player p : getPlayers()) {
+                if (powerUpManager.itemsCanCollideWith(p)) {
+                    for (Collidable c : powerUpManager.getCollidables()) {
                         if (c.getBounds().getBoundsInParent().intersects(p.getBounds().getBoundsInParent())) {
-                            manager.handleCollision(c, p);
+                            powerUpManager.handleCollision(c, p);
                         }
                     }
                 }
             }
-        }
         projectileCeilingCollision();
         ballProjectileCollision();
         playerWallCollision();
-        ballWallCollision();
+        ballWallCollision();*/
     }
 
     /**
@@ -413,9 +413,7 @@ public class Level {
         for (Wall w : checkedWalls) {
             w.draw(gc);
         }
-        for (LevelManager manager : levelManagers) {
-            manager.onDraw(gc);
-        }
+        powerUpManager.onDraw(gc);
     }
 
     /**
@@ -438,9 +436,7 @@ public class Level {
         for (Player player : players) {
             player.move();
         }
-        for (LevelManager manager : levelManagers) { // push update to managers
-            manager.onUpdate(currentTime);
-        }
+        powerUpManager.onUpdate(currentTime);
     }
 
     /**
@@ -468,10 +464,6 @@ public class Level {
     public void drawText(Image i) {
         gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
                 canvas.getHeight() / 2 - i.getHeight());
-    }
-
-    public void setLevelManagers(ArrayList<LevelManager> levelManagers) {
-        this.levelManagers = levelManagers;
     }
 
     public Wall getRight() {
@@ -595,6 +587,18 @@ public class Level {
         return projectiles;
     }
 
+    public ArrayList<PowerUp> getCollidablePowerups() {
+        return powerUpManager.getCollidables();
+    }
+
+    public void setPowerUpManager(PowerUpManager powerUpManager) {
+        this.powerUpManager = powerUpManager;
+    }
+
+    public void setCollisionManager(CollisionManager collisionManager) {
+        this.collisionManager = collisionManager;
+    }
+
     /**
      * Handler for key presses.
      */
@@ -710,16 +714,9 @@ public class Level {
             walls.add(right);
             walls.add(0, left);
 
-            PowerUpManager powerUpManager = new PowerUpManager(level);
 
-            ArrayList<LevelManager> managers = new ArrayList<LevelManager>();
-            managers.add(powerUpManager);
-
-            for (LevelManager manager : managers) {
-                manager.onInit();
-            }
-
-            level.setLevelManagers(managers);
+            level.setCollisionManager(new CollisionManager(level));
+            level.setPowerUpManager(new PowerUpManager(level));
             level.setBalls(balls);
             level.setPlayers(players);
             level.setPlayerSpeed(playerSpeed);
