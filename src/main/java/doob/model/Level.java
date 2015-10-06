@@ -591,6 +591,10 @@ public class Level {
         this.projectileFreeze = projectileFreeze;
     }
 
+    public ArrayList<Projectile> getProjectiles() {
+        return projectiles;
+    }
+
     /**
      * Handler for key presses.
      */
