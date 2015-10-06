@@ -184,7 +184,7 @@ public class Level {
       }
       for (Wall w : walls) {
     	  if (b.collides(w)) {
-    		  if (w.isMoveable()) {
+    		  if (w.hasSpikes()) {
     			  ballHitIndex = i;
     			  // TODO add points
     		  } else {
@@ -195,7 +195,7 @@ public class Level {
       }
       for (Wall w : checkedWalls) {
     	  if (b.collides(w)) {
-    		  if (w.isMoveable()) {
+    		  if (w.hasSpikes()) {
     			  ballHitIndex = i;
     			  // TODO add points
     		  } else {
@@ -269,6 +269,7 @@ public class Level {
 			  if (spaceEmpty(left, right)) {
 				  if (walls.size() > 2) {
 					  right.setPlayerwalk(true);
+					  right.makeMoveable();
 					  //right.setHeight(right.getHeight() - 250);
 					  checkedWalls.add(right);
 					  walls.remove(right);
@@ -389,6 +390,11 @@ public class Level {
    */
   public void moveWalls() {
 	  for (Wall w : walls) {
+		  if (w.isMoveable()) {
+			  w.move();
+		  }
+	  }
+	  for (Wall w : checkedWalls) {
 		  if (w.isMoveable()) {
 			  w.move();
 		  }

@@ -1,6 +1,7 @@
 package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -13,6 +14,7 @@ public class Wall implements Collidable, Drawable {
 	private int x, y, width, height;
 	private boolean playerwalk;
 	private boolean moveable;
+	private boolean spikes;
 	private int endx, endy;
 	private int duration;
 	private int speed;
@@ -29,6 +31,7 @@ public class Wall implements Collidable, Drawable {
 	public Wall(int x, int y, int width, int height) {
 		this.playerwalk = false;
 		this.moveable = false;
+		this.spikes = false;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -50,6 +53,7 @@ public class Wall implements Collidable, Drawable {
 	public Wall(int x, int y, int width, int height, int endx, int endy, 
 			int duration, int speed, String condition) {
 		this.moveable = true;
+		this.spikes = true;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -88,14 +92,27 @@ public class Wall implements Collidable, Drawable {
      * @param gc context to draw in.
      */
 	public void draw(GraphicsContext gc) {
-        if (playerwalk) {
-        	gc.setFill(Color.GRAY);
-        	gc.fillRect(x, y, width, height - 250);
-        } else {
-        	gc.fillRect(x, y, width, height);
-        }        
-        gc.setFill(Color.BLACK);
+		if (spikes) {
+			gc.fillRect(x, y, width, height);
+			//gc.drawImage(new Image("/image/ceilingspikes.png"), x, y + height, width, 10);
+		}
+		if (playerwalk) {
+			if (endy > y - 100) {
+				endy = endy - speed;
+			} 
+			gc.fillRect(x, endy, width, height);
+		} else {
+			gc.fillRect(x, y, width, height);
+		}
     }
+	
+	public void makeMoveable() {
+    	endx = x;
+    	endy = y;
+    	speed = 3;
+    	duration = 250;
+    	condition = "";
+	}
 
 	/**
 	 * Move the wall in the right direction.
@@ -105,12 +122,12 @@ public class Wall implements Collidable, Drawable {
 		if (duration > 0) {
 			if (x < endx) {
 				x = x + speed;
-			} else {
+			} else if (x > endx){
 				x = x - speed;
 			}
 			if (y < endy) {
 				y = y + speed;
-			} else {
+			} else if (y > endy){
 				y = y - speed;
 			}
 			duration--;
@@ -163,6 +180,14 @@ public class Wall implements Collidable, Drawable {
 
 	public void setMoveable(boolean moveable) {
 		this.moveable = moveable;
+	}
+
+	public boolean hasSpikes() {
+		return spikes;
+	}
+
+	public void setSpikes(boolean spikes) {
+		this.spikes = spikes;
 	}
 
 	public int getDuration() {
