@@ -10,6 +10,7 @@ import com.google.common.reflect.ClassPath;
 import com.sun.javafx.geom.Area;
 import doob.DLog;
 import doob.level.CollisionManager;
+import doob.level.CollisionResolver;
 import doob.level.LevelManager;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
@@ -715,7 +716,7 @@ public class Level {
             walls.add(0, left);
 
 
-            level.setCollisionManager(new CollisionManager(level));
+            level.setCollisionManager(new CollisionManager(level, new CollisionResolver(level)));
             level.setPowerUpManager(new PowerUpManager(level));
             level.setBalls(balls);
             level.setPlayers(players);
