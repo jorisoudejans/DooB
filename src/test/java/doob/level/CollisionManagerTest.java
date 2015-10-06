@@ -1,7 +1,6 @@
 package doob.level;
 
 import doob.model.*;
-
 import doob.model.powerup.LifePowerUp;
 import doob.model.powerup.PowerUp;
 import org.junit.Before;
@@ -10,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
@@ -150,8 +148,9 @@ public class CollisionManagerTest {
      */
     @Test
     public void testBallVersusProjectile() {
+        Player player = mock(Player.class);
         Ball ball = new Ball(0, 0, 0, 0, 50);
-        Projectile projectile = new Spike(10, 10, -1);
+        Projectile projectile = new Spike(player, 10, 10, -1);
 
         when(level.getBalls()).thenReturn(asList(ball));
         when(level.getProjectiles()).thenReturn(asList(projectile));
@@ -165,8 +164,9 @@ public class CollisionManagerTest {
      */
     @Test
     public void testBallVersusProjectileNoCollision() {
+        Player player = mock(Player.class);
         Ball ball = new Ball(0, 0, 0, 0, 50);
-        Projectile projectile = new Spike(100, 10, -1);
+        Projectile projectile = new Spike(player, 100, 10, -1);
 
         when(level.getBalls()).thenReturn(asList(ball));
         when(level.getProjectiles()).thenReturn(asList(projectile));
@@ -180,7 +180,8 @@ public class CollisionManagerTest {
      */
     @Test
     public void testProjectileVersusCeiling() {
-        Projectile projectile = new Spike(0, -10, -1);
+        Player player = mock(Player.class);
+        Projectile projectile = new Spike(player, 0, -10, -1);
 
         when(level.getProjectiles()).thenReturn(asList(projectile));
 
@@ -193,7 +194,8 @@ public class CollisionManagerTest {
      */
     @Test
     public void testProjectileVersusCeilingNoHit() {
-        Projectile projectile = new Spike(0, 10, -1);
+        Player player = mock(Player.class);
+        Projectile projectile = new Spike(player, 0, 10, -1);
 
         when(level.getProjectiles()).thenReturn(asList(projectile));
 
