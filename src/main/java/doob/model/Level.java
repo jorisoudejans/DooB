@@ -30,10 +30,14 @@ public class Level {
   private ArrayList<Projectile> projectiles;
   private ArrayList<Player> players;
   private ArrayList<Wall> walls;
-  private int score = 0;
   private double currentTime;
   private int time;
   private int playerSpeed = PLAYERSPEED;
+
+
+  public static final int BOUNCEBACKDISTANCE = 10;
+  public static final int MINBALLSIZE = 32;
+  public static final int SCOREINCREASE = 12;
   public static final int SHOOTSPEED = 12;
   public static final int STARTHEIGHT = 200;
   public static final int STARTSPEEDX = 200;
@@ -139,14 +143,14 @@ public class Level {
         Projectile p = projectiles.get(j);
         if (p.collides(b)) {
           projHitIndex = j;
-          if (b.getSize() >= 32) {
+          if (b.getSize() >= MINBALLSIZE) {
             DLog.info(b.toString() + " splits", DLog.Type.COLLISION);
             res = b.split();
           } else {
             DLog.info(b.toString() + " disappears", DLog.Type.COLLISION);
           }
           ballHitIndex = i;
-          players.get(0).incrScore(100);
+          players.get(0).incrScore(SCOREINCREASE);
           processPowerups(b.getX(), b.getY()); // possible spawn a powerup at location of ball
         }
       }
@@ -221,7 +225,7 @@ public class Level {
   }
   
   /**
-   * Helper function for playerwallcollision
+   * Helper function for playerwallcollision.
    * @param walls to check
    * @param p the player
    */
@@ -231,11 +235,11 @@ public class Level {
 	   		  int xSpeed = p.getSpeed();
 	   		  if (xSpeed > 0) {
 		   		  if (p.getX() + p.getWidth() >= w.getX()) {
-		   			p.setX(w.getX() - 10 - p.getWidth());
+		   			p.setX(w.getX() - p.getWidth() - BOUNCEBACKDISTANCE);
 		   		  }
 	   		  } else if (xSpeed < 0) {
 	   			if (p.getX() <= w.getX() + w.getWidth()) {
-		   			p.setX(w.getX() + w.getWidth() + 10);
+		   			p.setX(w.getX() + w.getWidth() + BOUNCEBACKDISTANCE);
 		   		}
 	   		  } else {
 	   			  if (p.getX() == w.getX() + w.getWidth()) {
@@ -641,18 +645,19 @@ public void setPlayerSpeed(int playerSpeed) {
 	this.playerSpeed = playerSpeed;
 }
 
-  public void setFlag(int f){
+  public void setFlag(int f) {
     this.flag = f;
   }
 
-  public void setPowerupsOnScreen(ArrayList<PowerUp> l){
+  public void setPowerupsOnScreen(ArrayList<PowerUp> l) {
     this.powerupsOnScreen = l;
   }
 
-  public ArrayList<PowerUp> getPowerupsOnScreen(){return this.powerupsOnScreen; }
+  public ArrayList<PowerUp> getPowerupsOnScreen() {
+	  return this.powerupsOnScreen; }
 
 
-  public void setActivePowerups(ArrayList<PowerUp> l){
+  public void setActivePowerups(ArrayList<PowerUp> l) {
     this.activePowerups = l;
   }
 
