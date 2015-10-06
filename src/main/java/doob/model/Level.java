@@ -4,6 +4,8 @@ import doob.App;
 import doob.DLog;
 import doob.level.CollisionManager;
 import doob.level.LevelObserver;
+import doob.level.CollisionResolver;
+import doob.level.LevelManager;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
 import javafx.animation.AnimationTimer;
@@ -779,7 +781,7 @@ public class Level {
             walls.add(0, left);
 
 
-            level.setCollisionManager(new CollisionManager(level));
+            level.setCollisionManager(new CollisionManager(level, new CollisionResolver(level)));
             level.setPowerUpManager(new PowerUpManager(level));
             level.setBalls(balls);
             level.setPlayers(players);

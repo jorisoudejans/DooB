@@ -24,6 +24,8 @@ public abstract class PowerUp implements Collidable {
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 
+	public static final int POWERUP_COLLISION_SIZE = 30;
+
 	private int currentWaitTime;
 	private int activeTime;
 	private double locationX;
@@ -134,8 +136,12 @@ public abstract class PowerUp implements Collidable {
 		this.currentWaitTime--;
 	}
 
+	/**
+	 * Returns bounds.
+	 * @return shape with bounds
+	 */
 	@Override
 	public Shape getBounds() {
-		return new Rectangle(locationX, locationY, 30, 30);
+		return new Rectangle(locationX, locationY, POWERUP_COLLISION_SIZE, POWERUP_COLLISION_SIZE);
 	}
 }

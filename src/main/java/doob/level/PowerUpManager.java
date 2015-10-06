@@ -83,15 +83,6 @@ public class PowerUpManager {
         }
     }
 
-    public void handleCollision(Collidable collider, Collidable collidee) {
-        PowerUp powerup = (PowerUp)collider;
-        Player player = (Player)collidee;
-        DLog.info(player.toString() + " is hit by a powerup", DLog.Type.COLLISION);
-        powerup.onActivate(level, player);
-        activePowerups.add(powerup);
-        powerupsOnScreenToRemove.add(powerup);
-    }
-
     public boolean itemsCanCollideWith(Collidable collider) {
         return collider instanceof Player;
     }
