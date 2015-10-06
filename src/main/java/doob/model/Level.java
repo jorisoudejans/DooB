@@ -1,27 +1,25 @@
 package doob.model;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
-
-import com.google.common.reflect.ClassPath;
-import com.sun.javafx.geom.Area;
+import doob.App;
 import doob.DLog;
 import doob.level.CollisionManager;
-import doob.level.LevelManager;
+import doob.level.LevelObserver;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
-import doob.model.powerup.PowerUpChance;
+import javafx.animation.AnimationTimer;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import doob.App;
-import javafx.scene.shape.Shape;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Level class, created from LevelFactory.
@@ -35,15 +33,14 @@ public class Level {
     private ArrayList<Projectile> projectiles;
     private ArrayList<Player> players;
     private ArrayList<Wall> walls;
-    private int score = 0;
     private double currentTime;
     private int time;
     private int playerSpeed = PLAYERSPEED;
-    public static final int SHOOTSPEED = 12;
-    public static final int STARTHEIGHT = 200;
-    public static final int BALLSIZE = 96;
     public static final int PLAYERSPEED = 3;
     public static final int PROJECTILE_START_SPEED = 12;
+    public static final long FREEZE_TIME = 2000;
+
+    private AnimationTimer timer;
 
     private static int projectileSpeed = PROJECTILE_START_SPEED;
 
@@ -60,7 +57,17 @@ public class Level {
     private PowerUpManager powerUpManager;
     private CollisionManager collisionManager;
 
-    private ArrayList<Wall> checkedWalls;
+    private List<LevelObserver> observers;
+
+    /**
+     * States the Level can have.
+     */
+    public enum State {
+        ZERO_LIVES,
+        LOST_LIFE,
+        NO_TIME_LEFT,
+        ALL_BALLS_GONE,
+    }
 
     /**
      * Initialize javaFx.
@@ -69,14 +76,17 @@ public class Level {
      *          the canvas to be drawn upon.
      */
     public Level(Canvas canvas) {
-        this.checkedWalls = new ArrayList<Wall>();
+        //this.checkedWalls = new ArrayList<Wall>();
         this.endlessLevel = true;
         this.canvas = canvas;
+        createTimer();
         ballFreeze = false;
         projectileFreeze = false;
         gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
         canvas.setOnKeyPressed(new KeyPressHandler());
+
+        observers = new ArrayList<LevelObserver>();
 
         canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent key) {
@@ -90,6 +100,16 @@ public class Level {
         projectiles = new ArrayList<Projectile>();
     }
 
+    private void createTimer() {
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            }
+        };
+        timer.start();
+    }
+
     /**
      * Create a new projectile and move it.
      *
@@ -98,18 +118,9 @@ public class Level {
      */
     public void shoot(Player player) {
         if (projectiles.size() < 1) {
-            projectiles.add(new Spike(player.getX() + player.getWidth() / 2, canvas.getHeight(),
+            projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2, canvas.getHeight(),
                     PROJECTILE_START_SPEED));
             DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
-        }
-    }
-
-    /**
-     * For testing purposes, an endless level.
-     */
-    public void endlessLevel() {
-        if (endlessLevel && balls.size() == 0) {
-            balls.add(new Ball(0, STARTHEIGHT, 3, 0, BALLSIZE));
         }
     }
 
@@ -199,7 +210,7 @@ public class Level {
                     }
                 }
             }
-            for (Wall w : checkedWalls) {
+            /*for (Wall w : checkedWalls) {
                 if (b.collides(w)) {
                     if (w.isMoveable()) {
                         ballHitIndex = i;
@@ -209,12 +220,33 @@ public class Level {
                         b.setSpeedX(-1 * speedX);
                     }
                 }
-            }
+            }*/
             if (ballHitIndex != -1) {
                 balls.remove(ballHitIndex);
                 ballHitIndex = -1;
             }
         }
+    }
+
+    /**
+     * Create a freeze of 2 seconds when a level fails or is completed.
+     * @param afterFreeze handler for what to do after the freeze.
+     */
+    public void freeze(EventHandler<WorkerStateEvent> afterFreeze) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(FREEZE_TIME);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        sleeper.setOnSucceeded(afterFreeze);
+        new Thread(sleeper).start();
+        timer.stop();
     }
 
     /**
@@ -230,33 +262,32 @@ public class Level {
                 p.setX((int) canvas.getWidth() - p.getWidth());
             }
             playerWallHelper(walls, p);
-            playerWallHelper(checkedWalls, p);
-
+            //playerWallHelper(checkedWalls, p);
         }
     }
 
     /**
-     * Helper function for playerwallcollision
+     * Helper function for playerwallcollision.
      * @param walls to check
-     * @param p the player
+     * @param player the player
      */
-    public void playerWallHelper(ArrayList<Wall> walls, Player p) {
-        for (Wall w : walls) {
-            if (p.collides(w)) {
-                int xSpeed = p.getSpeed();
+    public void playerWallHelper(ArrayList<Wall> walls, Player player) {
+        for (Wall wall : walls) {
+            if (player.collides(wall)) {
+                int xSpeed = player.getSpeed();
                 if (xSpeed > 0) {
-                    if (p.getX() + p.getWidth() >= w.getX()) {
-                        p.setX(w.getX() - 10 - p.getWidth());
+                    if (player.getX() + player.getWidth() >= wall.getX()) {
+                        player.setX(wall.getX() - 10 - player.getWidth());
                     }
                 } else if (xSpeed < 0) {
-                    if (p.getX() <= w.getX() + w.getWidth()) {
-                        p.setX(w.getX() + w.getWidth() + 10);
+                    if (player.getX() <= wall.getX() + wall.getWidth()) {
+                        player.setX(wall.getX() + wall.getWidth() + 10);
                     }
                 } else {
-                    if (p.getX() == w.getX() + w.getWidth()) {
-                        p.setX(p.getX() + 1);
+                    if (player.getX() == wall.getX() + wall.getWidth()) {
+                        player.setX(player.getX() + 1);
                     } else {
-                        p.setX(p.getX() - 1); }
+                        player.setX(player.getX() - 1); }
                 }
             }
         }
@@ -274,10 +305,9 @@ public class Level {
                 Wall right = walls.get(i + 1);
                 if (spaceEmpty(left, right)) {
                     if (walls.size() > 2) {
-                        right.setPlayerwalk(true);
-                        //right.setHeight(right.getHeight() - 250);
-                        checkedWalls.add(right);
-                        walls.remove(right);
+                        right.setOpen(true);
+                        //checkedWalls.add(right);
+                        //walls.remove(right);
                         DLog.info("Wall opened", DLog.Type.PLAYER_INTERACTION);
                     } else {
                         walls.remove(right);
@@ -410,9 +440,9 @@ public class Level {
         for (Wall w : walls) {
             w.draw(gc);
         }
-        for (Wall w : checkedWalls) {
+        /*for (Wall w : checkedWalls) {
             w.draw(gc);
-        }
+        }*/
         powerUpManager.onDraw(gc);
     }
 
@@ -464,6 +494,40 @@ public class Level {
     public void drawText(Image i) {
         gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
                 canvas.getHeight() / 2 - i.getHeight());
+    }
+
+    public void removeProjectile(Projectile projectile) {
+        projectiles.remove(projectile);
+    }
+
+    public void removeBall(Ball ball) {
+        balls.remove(ball);
+    }
+
+    public void addBall(Ball ball) {
+        balls.add(ball);
+    }
+
+    public void addObserver(LevelObserver observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Notify all observers of a state change.
+     * @param state state level changed to.
+     */
+    public void notifyObservers(State state) {
+        for (LevelObserver observer : observers) {
+            observer.onLevelStateChange(state);
+        }
+    }
+
+    public void startTimer() {
+        timer.start();
+    }
+
+    public PowerUpManager getPowerUpManager() {
+        return powerUpManager;
     }
 
     public Wall getRight() {

@@ -22,17 +22,13 @@ public class Player implements Collidable, Drawable {
   
   public static final int LIVES = 5;
   public static final int START_SPEED = 4;
+  public static final int BOUNCE_BACK_DISTANCE = 10;
 
   private Image imageStand;
   private Image imageLeft;
   private Image imageRight;
 
   private State state;
-
-  @Override
-  public Shape getBounds() {
-    return new Rectangle(x, y, width, height);
-  }
 
   /**
    * Possible player states.
@@ -44,7 +40,6 @@ public class Player implements Collidable, Drawable {
 
   /**
    * Constructor for a player with initial location x.
-   * 
    * @param x
    *          initial x location.
    * @param y
@@ -74,7 +69,11 @@ public class Player implements Collidable, Drawable {
     imageStand = imageS;
     imageLeft = imageL;
     imageRight = imageR;
+  }
 
+  @Override
+  public Shape getBounds() {
+    return new Rectangle(x, y, width, height);
   }
 
   /**
@@ -95,12 +94,9 @@ public class Player implements Collidable, Drawable {
       return rect.intersects(x, y, width, height);
     }
     if (other instanceof Wall) {
-    	// a player collides with a wall
-    	Wall w = (Wall) other;
-    	if (w.isPlayerwalk()) {
-    		return false;
-    	}
-    	return w.getBounds().intersects(x, y, width, height);
+      // a player collides with a wall
+      Wall w = (Wall) other;
+      return !w.isOpen() && w.getBounds().intersects(x, y, width, height);
     }
     return false;
   }
@@ -108,7 +104,7 @@ public class Player implements Collidable, Drawable {
   /**
    * Draws the player sprites. There is a standing png image for standing still and two moving gif
    * images for moving left and right.
-   * @param g 
+   * @param g graphicsContext to draw on.
    */
   public void draw(GraphicsContext g) {
     if (g == null) {

@@ -11,11 +11,12 @@ import javafx.scene.shape.Rectangle;
 public class Wall implements Collidable, Drawable {
 	
 	private int x, y, width, height;
-	private boolean playerwalk;
 	private boolean moveable;
 	private int endx, endy;
 	private int duration;
 	private int speed;
+
+	private boolean open;
 	private String condition;	//TODO Use an ENUM for this
 	private Rectangle r;
 	
@@ -27,7 +28,7 @@ public class Wall implements Collidable, Drawable {
 	 * @param height the height
 	 */
 	public Wall(int x, int y, int width, int height) {
-		this.playerwalk = false;
+		this.open = false;
 		this.moveable = false;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
@@ -89,7 +90,7 @@ public class Wall implements Collidable, Drawable {
      * @param gc context to draw in.
      */
 	public void draw(GraphicsContext gc) {
-        if (playerwalk) {
+        if (open) {
         	gc.setFill(Color.GRAY);
         	gc.fillRect(x, y, width, height - 250);
         } else {
@@ -134,6 +135,14 @@ public class Wall implements Collidable, Drawable {
 		this.y = y;
 	}
 
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -172,14 +181,6 @@ public class Wall implements Collidable, Drawable {
 
 	public void setDuration(int duration) {
 		this.duration = duration;
-	}
-
-	public boolean isPlayerwalk() {
-		return playerwalk;
-	}
-
-	public void setPlayerwalk(boolean playerwalk) {
-		this.playerwalk = playerwalk;
 	}
 
 	@Override

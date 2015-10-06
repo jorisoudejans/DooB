@@ -1,10 +1,7 @@
 package doob.model;
 
-import java.util.Random;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 /**
@@ -21,9 +18,11 @@ public class Ball implements Collidable, Drawable {
   private int splitBounce;
   private Color color;
 
-  public static final int SPLITBOUNCE = -4;
-  public static final double VERTICALSPEEDFACTOR = 0.2;
+  public static final int SPLIT_BOUNCE = -4;
+  public static final double VERTICAL_SPEED_FACTOR = 0.2;
   public static final int START_SPEED_X = 2;
+  public static final int MIN_SIZE = 32;
+  public static final int SCORE = 100;
 
   /**
    * Constructor.
@@ -45,7 +44,7 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
-    this.splitBounce = SPLITBOUNCE;
+    this.splitBounce = SPLIT_BOUNCE;
     setColor();
   }
   
@@ -80,7 +79,7 @@ public class Ball implements Collidable, Drawable {
   public void move() {
     moveHorizontally();
     moveVertically();
-    incrSpeedY(VERTICALSPEEDFACTOR);
+    incrSpeedY(VERTICAL_SPEED_FACTOR);
   }
 
   /**

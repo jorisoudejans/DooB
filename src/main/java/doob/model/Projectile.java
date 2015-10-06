@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 public abstract class Projectile implements Drawable, Collidable {
 
 	private Image img;
+	private Player player;
 	private double x;
 	private double y;
 
@@ -25,10 +26,12 @@ public abstract class Projectile implements Drawable, Collidable {
 
 	/**
 	 * Abstract projectile.
+	 * @param player the player that shot the projectile.
 	 * @param x the x-location of the projectile.
 	 * @param y the y-location of the projectile.
 	 */
-	public Projectile(double x, double y) {
+	public Projectile(Player player, double x, double y) {
+		this.player = player;
 		this.x = x;
 		this.y = y;
 		this.state = State.NORMAL;
@@ -93,6 +96,14 @@ public abstract class Projectile implements Drawable, Collidable {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**

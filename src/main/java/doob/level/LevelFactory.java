@@ -1,16 +1,19 @@
 package doob.level;
+
 import doob.model.Ball;
 import doob.model.Level;
 import doob.model.Player;
 import doob.model.Wall;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import org.w3c.dom.*;
-
-import javax.xml.parsers.*;
-
-import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -136,7 +139,7 @@ public class LevelFactory {
                 int y = parseInt("y", eElement);
                 int width = parseInt("width", eElement);
                 int height = parseInt("height", eElement);
-                if(parseInt("moveable", eElement) == 1){
+                if (parseInt("moveable", eElement) == 1) {
                     int endx = parseInt("endx", eElement);
                     int endy = parseInt("endy", eElement);
                     int duration = parseInt("duration", eElement);
@@ -144,14 +147,14 @@ public class LevelFactory {
                     String condition = eElement.getElementsByTagName("condition").item(0).getTextContent();
                     Wall wall = new Wall(x, y, width, height, endx, endy, duration, speed, condition);
                     wallList.add(wall);
-                }else{
+                } else {
                     Wall wall = new Wall(x, y, width, height);
                     wallList.add(wall);
                 }
             }
         }
     }
-    
+
     public void parseLevel(Document doc) {
     	NodeList nListBall = doc.getElementsByTagName("time");	
         Node nNode = nListBall.item(0);
@@ -195,7 +198,6 @@ public class LevelFactory {
         builder.setPlayers(playerList);
         builder.setWalls(wallList);
         builder.setTime(time);
-
 
         return builder.build();
     }
