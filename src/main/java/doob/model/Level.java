@@ -36,6 +36,7 @@ public class Level {
 
 
   public static final int BOUNCEBACKDISTANCE = 10;
+  public static final int SPIKE_WIDTH = 14;
   public static final int MINBALLSIZE = 32;
   public static final int SCOREINCREASE = 12;
   public static final int SHOOTSPEED = 12;
@@ -97,9 +98,8 @@ public class Level {
    */
   public void shoot(Player player) {
     if (projectiles.size() < 1) {
-    	Image im = new Image("/image/Spike.png");
-      projectiles.add(new Spike(player.getX() + (player.getWidth() / 2) - (im.getWidth() / 2),
-    		  canvas.getHeight(), PROJECTILE_START_SPEED, im));
+      projectiles.add(new Spike(player.getX() + (player.getWidth() / 2) - (SPIKE_WIDTH / 2),
+    		  canvas.getHeight(), PROJECTILE_START_SPEED));
       DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
     }
   }

@@ -33,8 +33,7 @@ public class ProjectileTest {
 	
 	@Before
 	public void setup() {
-		Image im = new Image("/image/Spike.png");
-		p1 = new Spike(d1, d2, d3, im);
+		p1 = new Spike(d1, d2, d3);
 		b1 = new Ball(220, 200, 30, 30, 30);
 	}
 	
