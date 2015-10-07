@@ -57,6 +57,8 @@ public class GameController {
 	private ProgressBar progressBar;
 	@FXML
 	private Label levelLabel;
+	@FXML
+	private Button playPauseButton;
 
 	/*
 	 * public GameController(Canvas canvas) { this.canvas = canvas;
@@ -85,6 +87,7 @@ public class GameController {
 		background.toBack();
 		createTimer();
 		timer.start();
+		running = true;
 
     //Init log.
     DLog.setFile("DooB.log");
@@ -99,6 +102,21 @@ public class GameController {
 		App.loadScene("/FXML/Menu.fxml");
 	}
 	
+	/**
+	 * Continues or pauses the game dependent on wheter it is running or not.
+	 */
+	@FXML
+	public void pausePlay() {
+		if (running) {
+			timer.stop();
+			running = false;
+			playPauseButton.setText("Play");
+		} else {
+			timer.start();
+			running = true;
+			playPauseButton.setText("Pause");
+		}
+	}
 
 	private GameState gameState;
 	private ArrayList<String> levelList;
@@ -107,6 +125,7 @@ public class GameController {
 	private AnimationTimer timer;
 	private GraphicsContext gc;
 	private double progress;
+	private boolean running;
 	public static final long FREEZE_TIME = 2000;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;

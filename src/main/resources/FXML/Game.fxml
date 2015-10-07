@@ -54,5 +54,6 @@
          </font>
       </Label>
       <Button focusTraversable="false" layoutX="333.0" layoutY="710.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="125.0" text="Back to Menu" />
+      <Button fx:id="playPauseButton" focusTraversable="false" layoutX="333.0" layoutY="769.0" mnemonicParsing="false" onAction="#pausePlay" prefHeight="50.0" prefWidth="125.0" text="Pause" />
    </children>
 </AnchorPane>
