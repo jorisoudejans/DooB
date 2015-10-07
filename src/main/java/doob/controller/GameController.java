@@ -8,9 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import doob.DLog;
-import doob.model.powerup.PowerUp;
-import doob.model.powerup.ProtectOncePowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -18,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -31,10 +29,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import doob.App;
+import doob.DLog;
 import doob.model.Level;
 import doob.model.LevelFactory;
 import doob.model.Player;
-import doob.model.Score;
+import doob.model.powerup.PowerUp;
+import doob.model.powerup.ProtectOncePowerUp;
 
 /**
  * Controller for games.
@@ -90,6 +90,15 @@ public class GameController {
     DLog.setFile("DooB.log");
     DLog.info("Game started.", DLog.Type.STATE);
   }
+	
+	/**
+	 * Navigate back to the menu.
+	 */
+	@FXML
+	public void backToMenu() {
+		App.loadScene("/FXML/Menu.fxml");
+	}
+	
 
 	private GameState gameState;
 	private ArrayList<String> levelList;
