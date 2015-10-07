@@ -73,5 +73,12 @@ public class HighScoreControllerTest {
 		hsc.read();
 		assertEquals(-1, hsc.highScoreIndex(1));
 	}
+	
+	@Test
+	public void highScoreIndexTest5() {
+		HighscoreController hsc = new HighscoreController(
+				"src/test/resources/Highscore/highscorestest2.xml");
+		assertEquals(0, hsc.highScoreIndex(1));
+	}
 
 }

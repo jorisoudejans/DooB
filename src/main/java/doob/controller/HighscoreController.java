@@ -148,15 +148,13 @@ public class HighscoreController {
 	 * @return index of the score.
 	 */
 	public int highScoreIndex(int score) {
-		if (score <= highscores.get(highscores.size() - 1).getScore()) {
-			return -1;
-		}
-		for (int i = 0; i < highscores.size(); i++) {
-			if (score > highscores.get(i).getScore()) {
+		for (int i = 0; i < MAX_SIZE; i++) {
+			if (i > highscores.size() - 1) {
+				return i;
+			} else if (score > highscores.get(i).getScore()) {
 				return i;
 			}
-		}
-		return highscores.size() - 1;
+		} return -1;
 	}
 
 	/**
@@ -169,10 +167,10 @@ public class HighscoreController {
 	 *            the index where to add the score.
 	 */
 	public void addScore(Score score, int index) {
-		if (index >= 0 && index < highscores.size()) {
+		if (index >= 0 && index <= highscores.size()) {
 			highscores.add(index, score);
 			if (highscores.size() > MAX_SIZE) {
-				highscores.remove(0);
+				highscores.remove(highscores.size() - 1);
 			}
 		}
 	}

@@ -34,6 +34,7 @@ import doob.App;
 import doob.model.Level;
 import doob.model.LevelFactory;
 import doob.model.Player;
+import doob.model.Score;
 
 /**
  * Controller for games.
@@ -249,7 +250,8 @@ public class GameController {
    */
   public void afterFreeze() {
     if (level.getPlayers().get(0).getLives() == 1) {
-      level.gameOver();
+    	DLog.info("Game over!", DLog.Type.STATE);
+    	App.loadHighscoreScene(level.getPlayers().get(0).getScore());
     } else if (level.getBalls().size() == 0) {
       if (currentLevel < levelList.size() - 1) {
         currentLevel++;
@@ -257,9 +259,9 @@ public class GameController {
         newLevel();
         timer.start();
       } else {
-        gameState = GameState.WON;
+        //gameState = GameState.WON;
         DLog.info("Game won!", DLog.Type.STATE);
-        App.loadScene("/fxml/menu.fxml");
+        App.loadHighscoreScene(level.getPlayers().get(0).getScore());
       }
     } else {
       DLog.info("Lost a life", DLog.Type.STATE);
