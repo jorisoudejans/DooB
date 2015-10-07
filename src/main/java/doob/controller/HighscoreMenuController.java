@@ -65,6 +65,9 @@ public class HighscoreMenuController {
 	 * @param score The score to be inserted.
 	 */
 	public void insertScore(final int score) {
+		if (hsc.highScoreIndex(score) == -1) {
+			return;
+		}
 		final Stage dialog = new Stage();
 		dialog.initOwner(App.getStage());
 		
