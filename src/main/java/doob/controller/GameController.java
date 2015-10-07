@@ -58,11 +58,6 @@ public class GameController implements LevelObserver {
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
-	/*
-	 * public GameController(Canvas canvas) { this.canvas = canvas;
-	 * initialize(); }
-	 */
-
 	/**
 	 * Initialization of the game pane.
 	 * 
@@ -76,8 +71,7 @@ public class GameController implements LevelObserver {
 		levelLabel.setText((currentLevel + 1) + "");
 		gameState = GameState.RUNNING;
 		createTimer();
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.addObserver(this);
+		newLevel();
 		gc = lives1.getGraphicsContext2D();
 		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
 		GraphicsContext gc2 = background.getGraphicsContext2D();
@@ -85,7 +79,6 @@ public class GameController implements LevelObserver {
 		pane.getChildren().add(background);
 		background.toBack();
 
-    //Init log.
     DLog.setFile("DooB.log");
     DLog.info("Game started.", DLog.Type.STATE);
   }
@@ -101,7 +94,6 @@ public class GameController implements LevelObserver {
 				updateScore();
 				updateProgressBar();
 				updateLives();
-				checkCollisions();
 			}
 		};
 		timer.start();
@@ -135,39 +127,6 @@ public class GameController implements LevelObserver {
 	}
 
 	/**
-	 * Checks if a player collides with a ball. If so the game freezes and shows
-	 * a text depending on how many lives the player has left.
-	 */
-	public void checkCollisions() {
-		if (level.ballPlayerCollision()) {
-			if (level.getPlayers().get(0).getState() == Player.State.INVULNERABLE) {
-				/*for (final PowerUp powerUp : level.getActivePowerups()) {
-					if (powerUp instanceof ProtectOncePowerUp) {
-						if (powerUp.getPlayer().equals(
-								level.getPlayers().get(0))) {
-							final ScheduledExecutorService executorService = Executors
-									.newSingleThreadScheduledExecutor();
-							executorService.schedule(new Callable<Void>() {
-								@Override
-								public Void call() throws Exception {
-									powerUp.onDeactivate(level);
-									return null;
-								}
-							}, 500, TimeUnit.MILLISECONDS);
-						}
-					}
-				}*/
-				return;
-			}
-			if (level.getPlayers().get(0).getLives() == 1) {
-				level.drawText(new Image("/image/gameover.png"));
-			} else {
-				level.drawText(new Image("/image/crushed.png"));
-			}
-		}
-	}
-
-	/**
 	 * Updates the score every gamestep.
 	 */
 	public void updateScore() {
@@ -182,7 +141,10 @@ public class GameController implements LevelObserver {
   public void updateProgressBar() {
     double progress = level.getCurrentTime() / level.getTime();
     if (progress <= 0) {
-		onLevelStateChange(Level.State.NO_TIME_LEFT);
+		for (Player player : level.getPlayers()) {
+			player.die();
+		}
+		onLevelStateChange(Level.Event.LOST_LIFE);
       	return;
     }
     progressBar.setProgress(progress);
@@ -222,46 +184,41 @@ public class GameController implements LevelObserver {
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
 	 */
 	public void newLevel() {
-		int lives = level.getPlayers().get(0).getLives();
-		int score = level.getPlayers().get(0).getScore();
+		Player currentPlayer = null;
+		if (level != null) {
+			currentPlayer = level.getPlayers().get(0);
+			level.stopTimer();
+		}
+
 		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.getPlayers().get(0).setLives(lives);
-		level.getPlayers().get(0).setScore(score);
+		level.addObserver(this);
+		if (currentPlayer != null) {
+			int lives = currentPlayer.getLives();
+			int score = currentPlayer.getScore();
+			level.getPlayers().get(0).setLives(lives);
+			level.getPlayers().get(0).setScore(score);
+		}
 	}
 
 	public Level getLevel() {
 		return level;
 	}
 
-	public GameState getGameState() {
-		return gameState;
-	}
-
 	@Override
-	public void onLevelStateChange(Level.State state) {
-		switch (state) {
+	public void onLevelStateChange(Level.Event event) {
+		switch (event) {
 			case ZERO_LIVES:
-
+				App.loadScene("/FXML/menu.fxml");
 				break;
 			case ALL_BALLS_GONE:
 				onAllBallsGone();
 				break;
 			case LOST_LIFE:
-				break;
-			case NO_TIME_LEFT:
-				onNoTimeLeft();
+				newLevel();
 				break;
 			default:
 				break;
 		}
-		newLevel();
-	}
-
-	/**
-	 * Handle gameStateChange no time left.
-	 */
-	public void onNoTimeLeft() {
-		newLevel();
 	}
 
 	/**
@@ -269,8 +226,8 @@ public class GameController implements LevelObserver {
 	 */
 	public void onAllBallsGone() {
 		emptyProgressBar();
-		level.drawText(new Image("/image/levelcomplete.png"));
-		DLog.info("Level " + currentLevel + 1 + " completed!", DLog.Type.STATE);
+		DLog.info("Level " + (currentLevel + 1) + " completed!", DLog.Type.STATE);
+		timer.stop();
 		level.freeze(new EventHandler<WorkerStateEvent>() {
 			@Override
 			public void handle(WorkerStateEvent event) {

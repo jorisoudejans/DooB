@@ -1,6 +1,5 @@
 package doob.model;
 
-import doob.model.powerup.PowerUp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -74,31 +73,6 @@ public class Player implements Collidable, Drawable {
   @Override
   public Shape getBounds() {
     return new Rectangle(x, y, width, height);
-  }
-
-  /**
-   * Whether a player collides with another object.
-   * 
-   * @param other
-   *          the other object.
-   * @return whether it collides.
-   */
-  public boolean collides(Collidable other) {
-    if (other instanceof Ball) {
-      // a player collides with a ball
-      Ball b = (Ball) other;
-      return b.getBounds().intersects(x, y, width, height);
-    } else if (other instanceof PowerUp) {
-      PowerUp p = (PowerUp) other;
-      Rectangle rect = new Rectangle(p.getLocationX(), p.getLocationY(), 30, 30);
-      return rect.intersects(x, y, width, height);
-    }
-    if (other instanceof Wall) {
-      // a player collides with a wall
-      Wall w = (Wall) other;
-      return !w.isOpen() && w.getBounds().intersects(x, y, width, height);
-    }
-    return false;
   }
 
   /**
@@ -189,6 +163,13 @@ public class Player implements Collidable, Drawable {
 
   public void setState(State state) {
     this.state = state;
+  }
+
+  /**
+   * Decreases lives by one.
+   */
+  public void die() {
+    lives--;
   }
 
   @Override

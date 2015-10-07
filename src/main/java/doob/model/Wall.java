@@ -73,19 +73,6 @@ public class Wall implements Collidable, Drawable {
 	}
 	
 	/**
-	 * Collision detection.
-	 * @param other other collideable.
-	 * @return boolean if the collideables collide.
-	 */
-	public boolean collides(Collidable other) {
-		if (other instanceof Projectile) {
-			Projectile p = (Projectile) other;
-			return p.getBounds().intersects(x, y, width, height);
-		}
-		return false;
-	}
-	
-	/**
      * Draw wall on canvas.
      * @param gc context to draw in.
      */
@@ -159,20 +146,8 @@ public class Wall implements Collidable, Drawable {
 		this.height = height;
 	}
 
-	public Rectangle getR() {
-		return r;
-	}
-
-	public void setR(Rectangle r) {
-		this.r = r;
-	}
-
 	public boolean isMoveable() {
 		return moveable;
-	}
-
-	public void setMoveable(boolean moveable) {
-		this.moveable = moveable;
 	}
 
 	public int getDuration() {

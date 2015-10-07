@@ -2,7 +2,9 @@ package doob.level;
 
 import com.google.common.reflect.ClassPath;
 import doob.DLog;
-import doob.model.*;
+import doob.model.Collidable;
+import doob.model.Level;
+import doob.model.Player;
 import doob.model.powerup.PowerUp;
 import doob.model.powerup.PowerUpChance;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,6 +28,10 @@ public class PowerUpManager {
 
     private Level level;
 
+    /**
+     * New instance of PowerUpManager.
+     * @param level corresponding level
+     */
     public PowerUpManager(Level level) {
         availablePowerups = new ArrayList<Class<?>>();
         powerupsOnScreen = new ArrayList<PowerUp>();
@@ -33,9 +39,14 @@ public class PowerUpManager {
         activePowerups = new ArrayList<PowerUp>();
 
         this.level = level;
+
+        initialize();
     }
 
-    public void onInit() {
+    /**
+     * Loads the available powerups.
+     */
+    public void initialize() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         try {
@@ -53,13 +64,11 @@ public class PowerUpManager {
         }
     }
 
-    public void onCollide(Object collider, Object collidee) {
-        if (collider instanceof Projectile && collidee instanceof Ball) {
-            Ball ball = (Ball)collidee;
-            spawnPowerups(ball.getX(), ball.getY());
-        }
-    }
-
+    /**
+     * Spawns powerup at location.
+     * @param locationX x
+     * @param locationY y
+     */
     public void spawnPowerups(double locationX, double locationY) {
         Random random = new Random();
         for (Class<?> powerup : availablePowerups) {
@@ -81,6 +90,13 @@ public class PowerUpManager {
                 }
             }
         }
+    }
+
+    public void handleCollision(PowerUp powerup, Player player) {
+        DLog.info(player.toString() + " is hit by a powerup", DLog.Type.COLLISION);
+        powerup.onActivate(level, player);
+        activePowerups.add(powerup);
+        powerupsOnScreenToRemove.add(powerup);
     }
 
     public boolean itemsCanCollideWith(Collidable collider) {
@@ -126,6 +142,10 @@ public class PowerUpManager {
         }
     }
 
+    /**
+     * Draws powerups.
+     * @param gc current GraphicsContext
+     */
     public void onDraw(GraphicsContext gc) {
         for (PowerUp powerup : powerupsOnScreen) {
             gc.drawImage(powerup.getSpriteImage(), powerup.getLocationX(), powerup.getLocationY());

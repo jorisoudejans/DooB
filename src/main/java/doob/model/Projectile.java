@@ -45,22 +45,6 @@ public abstract class Projectile implements Drawable, Collidable {
         gc.drawImage(img, x, y);
     }
 
-    /**
-     * Checks if projectile collides with other object.
-     * @param other object to be compared to.
-     * @return true if the two objects collide.
-     */
-    public boolean collides(Collidable other) {
-        if (other instanceof Ball) {
-            Ball b = (Ball) other;
-			if (img != null) {
-				return b.getBounds().intersects(x, y, img.getWidth(), img.getHeight());
-			}
-			return b.getBounds().intersects(x, y, 20, 20); // for testing
-		}
-        return false;
-    }
-
 	@Override
     public Rectangle getBounds() {
     	return new Rectangle(x, y, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);

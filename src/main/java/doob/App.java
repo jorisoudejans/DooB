@@ -1,12 +1,12 @@
 package doob;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * Hello world!
@@ -29,12 +29,10 @@ public class App extends Application {
      */
     public static void loadScene(String path) {
         try {
-            // Load the anchor pane
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource(path));
             pane = loader.load();
 
-            // Set the pane onto the scene
             Scene scene = new Scene(pane);
             stage.setScene(scene);
             stage.setResizable(true);
@@ -44,10 +42,6 @@ public class App extends Application {
             e.printStackTrace();
             System.out.println("Something went wrong while loading the fxml file");
         }
-    }
-
-    public static Stage getStage() {
-        return stage;
     }
 
     /**

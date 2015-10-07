@@ -8,9 +8,9 @@ import doob.model.Level;
 public interface LevelObserver {
 
     /**
-     * What to do when a state changes should be handled in this method.
-     * @param state state level changed to.
+     * What to do when a event changes should be handled in this method.
+     * @param event event level changed to.
      */
-    void onLevelStateChange(Level.State state);
+    void onLevelStateChange(Level.Event event);
 
 }

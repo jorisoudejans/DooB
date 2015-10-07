@@ -1,12 +1,10 @@
 package doob.level;
 
-import doob.model.Ball;
-import doob.model.Level;
-import doob.model.Player;
-import doob.model.Wall;
-import doob.model.Projectile;
-import doob.model.Collidable;
+import doob.model.*;
 import doob.model.powerup.PowerUp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles collisions.
@@ -17,6 +15,8 @@ public class CollisionManager {
 
     private Level level;
     private CollisionResolver collisionResolver;
+
+    private List<CollisionCallback> callbacks;
 
     /**
      * Constructs a manager for current level.
@@ -31,16 +31,25 @@ public class CollisionManager {
      * Detects collision in the level.
      */
     public void detectCollisions() {
+        this.callbacks = new ArrayList<CollisionCallback>();
         for (Player player : level.getPlayers()) {
             detectCollision(player);
         }
         for (Ball ball : level.getBalls()) {
             detectCollision(ball);
         }
-        for (Projectile p : level.getProjectiles()) {
+        for (final Projectile p : level.getProjectiles()) {
             if (p.getY() <= 0) {
-                collisionResolver.projectileVersusCeiling(p);
+                callbacks.add(new CollisionCallback() {
+                    @Override
+                    public void perform() {
+                        collisionResolver.projectileVersusCeiling(p);
+                    }
+                });
             }
+        }
+        for (CollisionCallback callback : callbacks) {
+            callback.perform();
         }
     }
 
@@ -59,26 +68,51 @@ public class CollisionManager {
                 collisionResolver.playerVersusPowerUp(player, powerUp);
             }
         }
+        for (Ball ball : level.getBalls()) {
+            if (collides(player, ball)) {
+                collisionResolver.playerVersusBall(player, ball);
+            }
+        }
     }
 
     /**
      * Detects collisions for the current ball.
      * @param ball current ball to be checked for collisions
      */
-    private void detectCollision(Ball ball) {
-        for (Wall w : level.getWalls()) { // ballVersusWall
+    private void detectCollision(final Ball ball) {
+        for (final Wall w : level.getWalls()) { // ballVersusWall
             if (collides(ball, w)) {
-                collisionResolver.ballVersusWall(ball, w);
+                callbacks.add(new CollisionCallback() {
+                    @Override
+                    public void perform() {
+                        collisionResolver.ballVersusWall(ball, w);
+                    }
+                });
             }
         }
-        for (Projectile p : level.getProjectiles()) {
+        for (final Projectile p : level.getProjectiles()) {
             if (collides(ball, p)) {
-                collisionResolver.ballVersusProjectile(ball, p);
+                callbacks.add(new CollisionCallback() {
+                    @Override
+                    public void perform() {
+                        collisionResolver.ballVersusProjectile(ball, p);
+                    }
+                });
             }
         }
     }
 
     private boolean collides(Collidable c1, Collidable c2) {
         return c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
+    }
+
+    /**
+     * Interface to provide a callback.
+     */
+    private interface CollisionCallback {
+        /**
+         * Perform the action.
+         */
+        void perform();
     }
 }
