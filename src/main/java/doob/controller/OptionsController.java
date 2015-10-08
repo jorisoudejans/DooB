@@ -102,7 +102,7 @@ public class OptionsController {
 		doc.appendChild(rootElement);
 
 		Element sound = doc.createElement("sound");
-		sound.appendChild(doc.createTextNode(sound.toString()));
+		sound.appendChild(doc.createTextNode(Integer.toString(this.sound)));
 		rootElement.appendChild(sound);
 
 
@@ -173,4 +173,19 @@ public class OptionsController {
 		return sound;
 	}
 
+	public void setLeft(KeyCode left) {
+		this.left = left;
+	}
+
+	public void setRight(KeyCode right) {
+		this.right = right;
+	}
+
+	public void setShoot(KeyCode shoot) {
+		this.shoot = shoot;
+	}
+
+	public void setSound(int sound) {
+		this.sound = sound;
+	}
 }

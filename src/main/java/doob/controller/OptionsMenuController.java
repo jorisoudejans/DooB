@@ -2,15 +2,27 @@ package doob.controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import doob.App;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * Controller class for the options menu.
  */
 public class OptionsMenuController {
-		
+
+	@FXML
+	private AnchorPane anchorPane;
+
 	private Key key;
+
+	private KeyCode leftKey;
+	private KeyCode rightKey;
+	private KeyCode shootKey;
+
+	private OptionsController oc;
 
 	/**
 	 * Initialize.
@@ -18,8 +30,10 @@ public class OptionsMenuController {
 	@FXML
 	public void initialize() {
 		key = Key.NONE;
-		App.getStage().getScene().getOnKeyPressed();
-		//TODO
+		anchorPane.setOnKeyPressed(new ControlAdapter());
+
+		oc = new OptionsController("src/main/resources/Options/Options.xml");
+		oc.read();
 	}
 	
 	/**
@@ -27,6 +41,7 @@ public class OptionsMenuController {
 	 */
 	@FXML
 	public void backToMenu() {
+		write();
 		App.loadScene("/FXML/Menu.fxml");
 	}
 	
@@ -72,13 +87,39 @@ public class OptionsMenuController {
 		@Override
 		public void handle(KeyEvent event) {
 				switch (key) {
-					case LEFT: //TODO set event.getCode to be the leftkey
-					case RIGHT: //TODO set event.getCode to be the rightkey
-					case SHOOT: //TODO set event.getCode to be the shootkey
+					case LEFT:
+						if(rightKey != event.getCode() && shootKey != event.getCode()){
+							leftKey = event.getCode();
+						}
+					case RIGHT:
+						if(leftKey != event.getCode() && shootKey != event.getCode()){
+							rightKey = event.getCode();
+						}
+					case SHOOT:
+						if(rightKey != event.getCode() && leftKey != event.getCode()){
+							shootKey = event.getCode();
+						}
 					case NONE: break;
 					default: break;
 				}
 			}
+	}
+
+	public void write(){
+		if(leftKey == null &&
+				rightKey == null &&
+				shootKey == null) return;
+		if(leftKey != null){
+			oc.setLeft(leftKey);
+		}
+		if(rightKey != null){
+			oc.setRight(rightKey);
+		}
+		if(shootKey != null){
+			oc.setShoot(shootKey);
+		}
+		oc.write();
+
 	}
 	
 }
