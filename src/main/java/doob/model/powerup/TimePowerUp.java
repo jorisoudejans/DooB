@@ -42,8 +42,4 @@ public class TimePowerUp extends PowerUp {
         // empty
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

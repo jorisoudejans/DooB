@@ -1,12 +1,6 @@
 package doob;
 
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -24,7 +18,7 @@ public final class DLog {
 
     private static final String TAG_PLAYER_INTERACTION = "-Player interaction- ";
     private static final String TAG_COLLISION = "-Collision- ";
-    private static final String TAG_STATE = "-State- ";
+    private static final String TAG_STATE = "-Event- ";
     private static final String TAG_APPLICATION = "-App- ";
     private static final String TAG_ERROR = "-ERROR- ";
 

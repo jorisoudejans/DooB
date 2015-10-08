@@ -4,6 +4,8 @@ import doob.model.Collidable;
 import doob.model.Level;
 import doob.model.Player;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /**
  * Abstract Power-up class to be extended by every possible power-up.
@@ -21,6 +23,8 @@ public abstract class PowerUp implements Collidable {
 	public static final float CHANCE_PROJECTILE_FREEZE = 0.1f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
+
+	public static final int POWERUP_COLLISION_SIZE = 30;
 
 	private int currentWaitTime;
 	private int activeTime;
@@ -132,4 +136,12 @@ public abstract class PowerUp implements Collidable {
 		this.currentWaitTime--;
 	}
 
+	/**
+	 * Returns bounds.
+	 * @return shape with bounds
+	 */
+	@Override
+	public Shape getBounds() {
+		return new Rectangle(locationX, locationY, POWERUP_COLLISION_SIZE, POWERUP_COLLISION_SIZE);
+	}
 }

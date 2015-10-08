@@ -1,10 +1,10 @@
 package doob.model;
 
+import doob.level.LevelFactory;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 

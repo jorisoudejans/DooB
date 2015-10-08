@@ -1,28 +1,18 @@
 package doob.model;
 
-import static org.junit.Assert.*;
-import javafx.scene.image.Image;
-
-import org.mockito.*;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectileTest {
-	
+
+	private Player player;
 	private Projectile p1;
 	@Mock
 	private Wall w1;
@@ -33,13 +23,9 @@ public class ProjectileTest {
 	
 	@Before
 	public void setup() {
-		p1 = new Spike(d1, d2, d3);
+		player = mock(Player.class);
+		p1 = new Spike(player, d1, d2, d3);
 		b1 = new Ball(220, 200, 30, 30, 30);
-	}
-	
-	@Test
-	public void ProjectileBallCollisiontest() {
-		assertTrue(p1.collides(b1));
 	}
 	
 	@Test
@@ -50,11 +36,6 @@ public class ProjectileTest {
 		assertEquals(p1.getX(), 20, 0.01);
 		p1.setY(40);
 		assertEquals(p1.getY(), 40, 0.01);
-	}
-	
-	@Test
-	public void ProjectileWallCollisionTest() {
-		assertFalse(p1.collides(w1));
 	}
 
 	// TODO fix this test.
