@@ -1,13 +1,13 @@
 package doob;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import doob.controller.HighscoreMenuController;
+
+import java.io.IOException;
 
 /**
  * Hello world!

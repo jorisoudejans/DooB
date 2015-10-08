@@ -1,7 +1,6 @@
 package doob.model;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -12,12 +11,12 @@ import javafx.scene.shape.Rectangle;
 public class Wall implements Collidable, Drawable {
 	
 	private int x, y, width, height;
-	private boolean playerwalk;
 	private boolean moveable;
-	private boolean spikes;
 	private int endx, endy;
 	private int duration;
 	private int speed;
+
+	private boolean open;
 	private String condition;	//TODO Use an ENUM for this
 	private Rectangle r;
 	
@@ -29,9 +28,8 @@ public class Wall implements Collidable, Drawable {
 	 * @param height the height
 	 */
 	public Wall(int x, int y, int width, int height) {
-		this.playerwalk = false;
+		this.open = false;
 		this.moveable = false;
-		this.spikes = false;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -53,7 +51,6 @@ public class Wall implements Collidable, Drawable {
 	public Wall(int x, int y, int width, int height, int endx, int endy, 
 			int duration, int speed, String condition) {
 		this.moveable = true;
-		this.spikes = true;
 		r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
@@ -70,21 +67,9 @@ public class Wall implements Collidable, Drawable {
 	 * Return the bounds of the wall.
 	 * @return rectangle with bounds.
 	 */
+	@Override
 	public Rectangle getBounds() {
 		return new Rectangle(x, y, width, height);
-	}
-	
-	/**
-	 * Collision detection.
-	 * @param other other collideable.
-	 * @return boolean if the collideables collide.
-	 */
-	public boolean collides(Collidable other) {
-		if (other instanceof Projectile) {
-			Projectile p = (Projectile) other;
-			return p.getBounds().intersects(x, y, width, height);
-		}
-		return false;
 	}
 	
 	/**
@@ -92,27 +77,14 @@ public class Wall implements Collidable, Drawable {
      * @param gc context to draw in.
      */
 	public void draw(GraphicsContext gc) {
-		if (spikes) {
-			gc.fillRect(x, y, width, height);
-			//gc.drawImage(new Image("/image/ceilingspikes.png"), x, y + height, width, 10);
-		}
-		if (playerwalk) {
-			if (endy > y - 100) {
-				endy = endy - speed;
-			} 
-			gc.fillRect(x, endy, width, height);
-		} else {
-			gc.fillRect(x, y, width, height);
-		}
+        if (open) {
+        	gc.setFill(Color.GRAY);
+        	gc.fillRect(x, y, width, height - 250);
+        } else {
+        	gc.fillRect(x, y, width, height);
+        }        
+        gc.setFill(Color.BLACK);
     }
-	
-	public void makeMoveable() {
-    	endx = x;
-    	endy = y;
-    	speed = 3;
-    	duration = 250;
-    	condition = "";
-	}
 
 	/**
 	 * Move the wall in the right direction.
@@ -122,12 +94,12 @@ public class Wall implements Collidable, Drawable {
 		if (duration > 0) {
 			if (x < endx) {
 				x = x + speed;
-			} else if (x > endx){
+			} else {
 				x = x - speed;
 			}
 			if (y < endy) {
 				y = y + speed;
-			} else if (y > endy){
+			} else {
 				y = y - speed;
 			}
 			duration--;
@@ -150,6 +122,14 @@ public class Wall implements Collidable, Drawable {
 		this.y = y;
 	}
 
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -166,28 +146,8 @@ public class Wall implements Collidable, Drawable {
 		this.height = height;
 	}
 
-	public Rectangle getR() {
-		return r;
-	}
-
-	public void setR(Rectangle r) {
-		this.r = r;
-	}
-
 	public boolean isMoveable() {
 		return moveable;
-	}
-
-	public void setMoveable(boolean moveable) {
-		this.moveable = moveable;
-	}
-
-	public boolean hasSpikes() {
-		return spikes;
-	}
-
-	public void setSpikes(boolean spikes) {
-		this.spikes = spikes;
 	}
 
 	public int getDuration() {
@@ -196,14 +156,6 @@ public class Wall implements Collidable, Drawable {
 
 	public void setDuration(int duration) {
 		this.duration = duration;
-	}
-
-	public boolean isPlayerwalk() {
-		return playerwalk;
-	}
-
-	public void setPlayerwalk(boolean playerwalk) {
-		this.playerwalk = playerwalk;
 	}
 
 	@Override

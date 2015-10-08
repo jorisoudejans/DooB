@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 public abstract class Projectile implements Drawable, Collidable {
 
 	private Image img;
+	private Player player;
 	private double x;
 	private double y;
 
@@ -25,10 +26,12 @@ public abstract class Projectile implements Drawable, Collidable {
 
 	/**
 	 * Abstract projectile.
+	 * @param player the player that shot the projectile.
 	 * @param x the x-location of the projectile.
 	 * @param y the y-location of the projectile.
 	 */
-	public Projectile(double x, double y) {
+	public Projectile(Player player, double x, double y) {
+		this.player = player;
 		this.x = x;
 		this.y = y;
 		this.state = State.NORMAL;
@@ -42,24 +45,9 @@ public abstract class Projectile implements Drawable, Collidable {
         gc.drawImage(img, x, y);
     }
 
-    /**
-     * Checks if projectile collides with other object.
-     * @param other object to be compared to.
-     * @return true if the two objects collide.
-     */
-    public boolean collides(Collidable other) {
-        if (other instanceof Ball) {
-            Ball b = (Ball) other;
-			if (img != null) {
-				return b.getBounds().intersects(x, y, img.getWidth(), img.getHeight());
-			}
-			return b.getBounds().intersects(x, y, 20, 20); // for testing
-		}
-        return false;
-    }
-    
+	@Override
     public Rectangle getBounds() {
-    	return new Rectangle(x, y, img.getWidth(), img.getHeight());
+    	return new Rectangle(x, y, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);
     }
 
 	public Image getImg() {
@@ -92,6 +80,14 @@ public abstract class Projectile implements Drawable, Collidable {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**

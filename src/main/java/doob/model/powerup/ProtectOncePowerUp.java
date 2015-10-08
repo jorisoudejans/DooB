@@ -50,8 +50,4 @@ public class ProtectOncePowerUp extends PowerUp {
         return "/image/powerup/shield-one.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

@@ -51,8 +51,4 @@ public class PlayerSpeedPowerUp extends PowerUp {
         return "/image/powerup/fast-right.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }

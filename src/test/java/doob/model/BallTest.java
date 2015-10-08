@@ -1,9 +1,9 @@
 package doob.model;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 
 public class BallTest {
   
@@ -46,27 +46,6 @@ public class BallTest {
     Ball input = new Ball(300, 400, 3, 5, 64);
     assertTrue(expected[0].equals(input.split()[0]));
     assertTrue(expected[1].equals(input.split()[1]));
-  }
-  
-  @Test
-  public void collidesWallTest1() {
-    Ball b = new Ball(100, 100, 0, 0, 128);
-    Wall w = new Wall(0, 0, 50, 50);
-    assertFalse(b.collides(w));
-  }
-  
-  @Test
-  public void collidesWallTest2() {
-    Ball b = new Ball(100, 100, 0, 0, 128);
-    Wall w = new Wall(300, 300, 50, 50);
-    assertFalse(b.collides(w));
-  }
-  
-  @Test
-  public void collidesWallTest3() {
-    Ball b = new Ball(100, 100, 0, 0, 128);
-    Wall w = new Wall(200, 200, 50, 50);
-    assertTrue(b.collides(w));
   }
   
   @Test
