@@ -1,30 +1,34 @@
 package doob.controller;
 
-import doob.App;
-import doob.DLog;
-import doob.level.LevelFactory;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import doob.App;
+import doob.DLog;
+import doob.level.LevelFactory;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
 
 /**
  * Controller for games.
@@ -47,6 +51,8 @@ public class GameController implements LevelObserver {
 	private ProgressBar progressBar;
 	@FXML
 	private Label levelLabel;
+	@FXML
+	private Button playPauseButton;
 
 	private GameState gameState;
 	private ArrayList<String> levelList;
@@ -55,6 +61,7 @@ public class GameController implements LevelObserver {
 	private AnimationTimer timer;
 	private GraphicsContext gc;
 	private double progress;
+	private boolean running;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
@@ -78,10 +85,35 @@ public class GameController implements LevelObserver {
 		gc2.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
 		pane.getChildren().add(background);
 		background.toBack();
+		running = true;
 
     DLog.setFile("DooB.log");
     DLog.info("Game started.", DLog.Type.STATE);
   }
+	
+	/**
+	 * Navigate back to the menu.
+	 */
+	@FXML
+	public void backToMenu() {
+		App.loadScene("/FXML/Menu.fxml");
+	}
+	
+	/**
+	 * Continues or pauses the game dependent on wheter it is running or not.
+	 */
+	@FXML
+	public void pausePlay() {
+		if (running) {
+			level.stopTimer();
+			running = false;
+			playPauseButton.setText("Play");
+		} else {
+			level.startTimer();
+			running = true;
+			playPauseButton.setText("Pause");
+		}
+	}
 
 	/**
 	 * Initializes the timer which uses an animationtimer to handle game steps.
@@ -208,7 +240,7 @@ public class GameController implements LevelObserver {
 	public void onLevelStateChange(Level.Event event) {
 		switch (event) {
 			case ZERO_LIVES:
-				App.loadScene("/FXML/menu.fxml");
+				App.loadHighscoreScene(level.getPlayers().get(0).getScore());
 				break;
 			case ALL_BALLS_GONE:
 				onAllBallsGone();
@@ -239,7 +271,7 @@ public class GameController implements LevelObserver {
 				} else {
 					gameState = GameState.WON;
 					DLog.info("Game won!", DLog.Type.STATE);
-					App.loadScene("/fxml/menu.fxml");
+					App.loadHighscoreScene(level.getPlayers().get(0).getScore());
 				}
 			}
 		});

@@ -6,6 +6,7 @@
 
 <AnchorPane fx:id="stage" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.controller.MenuController">
    <children>
-      <Button layoutX="350.0" layoutY="340.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="60.0" prefWidth="300.0" text="Singleplayer" />
+      <Button layoutX="350.0" layoutY="300.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="60.0" prefWidth="300.0" text="Singleplayer" />
+      <Button layoutX="350.0" layoutY="370.0" mnemonicParsing="false" onAction="#showHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores" />
    </children>
 </AnchorPane>

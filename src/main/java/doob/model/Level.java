@@ -225,6 +225,13 @@ public class Level {
     public void stopTimer() {
         timer.stop();
     }
+    
+    /**
+     * Start timer.
+     */
+    public void startTimer() {
+        timer.start();
+    }
 
     /**
      * Draw a textimage on the canvas.
