@@ -55,6 +55,11 @@ public class Level {
 
     private Event lastEvent = Event.NULL;
 
+    private KeyCode leftKey;
+    private KeyCode rightKey;
+    private KeyCode shootKey;
+
+
     /**
      * States the Level can have.
      */
@@ -387,34 +392,56 @@ public class Level {
         this.collisionManager = collisionManager;
     }
 
+    public KeyCode getLeftKey() {
+        return leftKey;
+    }
+
+    public void setLeftKey(KeyCode leftKey) {
+        this.leftKey = leftKey;
+    }
+
+    public KeyCode getRightKey() {
+        return rightKey;
+    }
+
+    public void setRightKey(KeyCode rightKey) {
+        this.rightKey = rightKey;
+    }
+
+    public KeyCode getShootKey() {
+        return shootKey;
+    }
+
+    public void setShootKey(KeyCode shootKey) {
+        this.shootKey = shootKey;
+    }
+
     /**
      * Handler for key presses.
      */
     private class KeyPressHandler implements EventHandler<KeyEvent> {
         private KeyCode last = KeyCode.SPACE;
+
         public void handle(KeyEvent key) {
-            switch (key.getCode()) {
-                case RIGHT:
-                    players.get(0).setSpeed(players.get(0).getMoveSpeed());
-                    if (last != KeyCode.RIGHT) {
-                        DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
-                        last = KeyCode.RIGHT;
-                    }
-                    break;
-                case LEFT:
-                    players.get(0).setSpeed(-players.get(0).getMoveSpeed());
-                    if (last != KeyCode.LEFT) {
-                        DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
-                        last = KeyCode.LEFT;
-                    }
-                    break;
-                case SPACE:
-                    shoot(players.get(0));
-                    break;
-                default:
-                    players.get(0).setSpeed(0);
-                    break;
+            if(key.getCode() == rightKey) {
+                players.get(0).setSpeed(players.get(0).getMoveSpeed());
+                if (last != rightKey) {
+                    DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+                    last = rightKey;
+                }
             }
+            if(key.getCode() == leftKey) {
+                players.get(0).setSpeed(-players.get(0).getMoveSpeed());
+                if (last != leftKey) {
+                    DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+                    last = leftKey;
+                }
+            }
+            if(key.getCode() == shootKey) {
+                    shoot(players.get(0));
+            }
+            //players.get(0).setSpeed(0);
+
         }
     }
 

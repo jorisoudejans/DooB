@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -65,6 +66,12 @@ public class GameController implements LevelObserver {
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
+	private KeyCode leftKey;
+	private KeyCode rightKey;
+	private KeyCode shootKey;
+
+	private int sound;
+
 	/**
 	 * Initialization of the game pane.
 	 * 
@@ -73,6 +80,7 @@ public class GameController implements LevelObserver {
 	 */
 	@FXML
 	public void initialize() throws IOException {
+		readOptions();
 		levelList = new ArrayList<String>();
 		readLevels();
 		levelLabel.setText((currentLevel + 1) + "");
@@ -159,6 +167,18 @@ public class GameController implements LevelObserver {
 	}
 
 	/**
+	 * Reads all options from the options xml
+	 */
+	public void readOptions(){
+		OptionsController oc = new OptionsController("src/main/resources/Options/Options.xml");
+		oc.read();
+		this.leftKey = oc.getLeft();
+		this.rightKey = oc.getRight();
+		this.shootKey = oc.getShoot();
+		this.sound = oc.getSound();
+	}
+
+	/**
 	 * Updates the score every gamestep.
 	 */
 	public void updateScore() {
@@ -230,6 +250,10 @@ public class GameController implements LevelObserver {
 			level.getPlayers().get(0).setLives(lives);
 			level.getPlayers().get(0).setScore(score);
 		}
+
+		level.setLeftKey(leftKey);
+		level.setRightKey(rightKey);
+		level.setShootKey(shootKey);
 	}
 
 	public Level getLevel() {
