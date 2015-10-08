@@ -1,13 +1,15 @@
 package doob.controller;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyEvent;
 import doob.App;
 
 /**
  * Controller class for the options menu.
  */
 public class OptionsMenuController {
-	
+		
 	private Key key;
 
 	/**
@@ -16,6 +18,7 @@ public class OptionsMenuController {
 	@FXML
 	public void initialize() {
 		key = Key.NONE;
+		App.getStage().getScene().getOnKeyPressed();
 		//TODO
 	}
 	
@@ -27,16 +30,25 @@ public class OptionsMenuController {
 		App.loadScene("/FXML/Menu.fxml");
 	}
 	
+	/**
+	 * Set the selected key to LEFT.
+	 */
 	@FXML
 	public void selectLeftKey() {
 		key = Key.LEFT;
 	}
 	
+	/**
+	 * Set the selected key to RIGHT.
+	 */
 	@FXML
 	public void selectRightKey() {
 		key = Key.RIGHT;
 	}
 	
+	/**
+	 * Set the selected key to SHOOT.
+	 */
 	@FXML
 	public void selectShootKey() {
 		key = Key.SHOOT;
@@ -51,4 +63,22 @@ public class OptionsMenuController {
 		SHOOT,
 		NONE
 	}
+	
+	/**
+	 *	Adapter to handle keys pressed .
+	 */
+	public class ControlAdapter implements EventHandler<KeyEvent> {
+
+		@Override
+		public void handle(KeyEvent event) {
+				switch (key) {
+					case LEFT: //TODO set event.getCode to be the leftkey
+					case RIGHT: //TODO set event.getCode to be the rightkey
+					case SHOOT: //TODO set event.getCode to be the shootkey
+					case NONE: break;
+					default: break;
+				}
+			}
+	}
+	
 }
