@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<options>
-	<sound>100</sound>
-    <controls>
-        <left>Left</left>
-        <right>Right</right>
-        <shoot>Space</shoot>
-    </controls>
-</options>
