@@ -28,21 +28,13 @@ public class CollisionManagerTest {
     private CollisionManager collisionManager;
 
     /**
-     * Init level mock
+     * Init level mock.
      */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         collisionManager = new CollisionManager(level, collisionResolver);
-    }
-
-    /**
-     * Tests the construction of the manager
-     */
-    @Test
-    public void testConstructor() {
-        // todo
     }
 
     /**
@@ -176,7 +168,7 @@ public class CollisionManagerTest {
     }
 
     /**
-     * Tests projectile that hits the ceiling
+     * Tests projectile that hits the ceiling.
      */
     @Test
     public void testProjectileVersusCeiling() {
@@ -189,7 +181,7 @@ public class CollisionManagerTest {
     }
 
     /**
-     * Tests projectile that hits the ceiling
+     * Tests projectile that hits the ceiling.
      */
     @Test
     public void testProjectileVersusCeilingNoHit() {
@@ -202,7 +194,7 @@ public class CollisionManagerTest {
     }
 
     /**
-     * Converts single object into an one-item arraylist
+     * Converts single object into an one-item arraylist.
      * @param object the single object
      * @param <T> lists' type
      * @return array list with one item of type T
