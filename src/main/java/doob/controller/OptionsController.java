@@ -1,11 +1,8 @@
 package doob.controller;
 
+import java.io.File;
+
 import javafx.scene.input.KeyCode;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,8 +13,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Class to manage options.
@@ -43,9 +43,9 @@ public class OptionsController {
 	}
 
 	/**
-	 * Reads the XML file
+	 * Reads the XML file.
 	 */
-	public void read(){
+	public void read() {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = factory.newDocumentBuilder();
@@ -62,10 +62,10 @@ public class OptionsController {
 	}
 
 	/**
-	 * Parses the controls from the XML
-	 * @param doc
+	 * Parses the controls from the XML.
+	 * @param doc The document to be parsed.
 	 */
-	public void parseControls(Document doc){
+	public void parseControls(Document doc) {
 		NodeList nList = doc.getElementsByTagName("controls");
 		for (int i = 0; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
@@ -84,10 +84,10 @@ public class OptionsController {
 	}
 
 	/**
-	 * Parses the sound level from the XML
-	 * @param doc
+	 * Parses the sound level from the XML.
+	 * @param doc The document to be parsed.
 	 */
-	public void parseSound(Document doc){
+	public void parseSound(Document doc) {
 		NodeList nListBall = doc.getElementsByTagName("sound");
 		Node nNode = nListBall.item(0);
 		this.sound = Integer.parseInt(nNode.getTextContent());
