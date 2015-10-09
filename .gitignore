@@ -90,3 +90,6 @@ local.properties
 .texlipse
 
 *.log
+
+# highscores file
+src/main/resources/Highscore/highscores.xml
