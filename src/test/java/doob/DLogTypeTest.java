@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class DLogTypeTest {
 
 	private static final String LOG = "Log this.";
-	private static final int MAGIC_NUMBER = 3;
+	private static final int POSITION_AFTER_TIMESTAMP = 3;
 
 	private DLog dLog;
 
@@ -82,7 +82,7 @@ public class DLogTypeTest {
 		  try {
 				// Skip init line.
 				mReader.readLine();
-				actual = mReader.readLine().split(":")[MAGIC_NUMBER];
+				actual = mReader.readLine().split(":")[POSITION_AFTER_TIMESTAMP];
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
