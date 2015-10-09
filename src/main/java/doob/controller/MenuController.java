@@ -24,4 +24,12 @@ public class MenuController {
 		App.loadScene("/FXML/HighscoreMenu.fxml");
 	}
 	
+	/**
+	 * Navigate to the options menu.
+	 */
+	@FXML
+	public void showOptions() {
+		App.loadScene("/FXML/OptionsMenu.fxml");
+	}
+	
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.controller.OptionsMenuController">
+   <children>
+      <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="150.0" text=" Back to Menu" />
+      <Pane layoutX="200.0" layoutY="100.0" prefHeight="600.0" prefWidth="600.0" style="-fx-border-style: solid;">
+         <children>
+            <Line endX="300.0" endY="600.0" startX="300.0" strokeWidth="0.5" />
+            <Slider layoutX="348.0" layoutY="272.0" prefHeight="57.0" prefWidth="216.0" />
+            <Label layoutX="116.0" layoutY="283.0" text="Volume">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Button fx:id="leftButton" layoutX="400.0" layoutY="43.0" mnemonicParsing="false" onAction="#selectLeftKey" text="Left">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="shootButton" layoutX="400.0" layoutY="103.0" mnemonicParsing="false" onAction="#selectShootKey" text="Space">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="rightButton" layoutX="400.0" layoutY="163.0" mnemonicParsing="false" onAction="#selectRightKey" text="Right">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Label layoutX="27.0" layoutY="109.0" text="Controls">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="51.0" text="Left">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="109.0" text="Shoot">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="171.0" text="Right">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
