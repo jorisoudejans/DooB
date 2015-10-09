@@ -5,9 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import doob.App;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import doob.App;
 
 /**
  * Controller class for the options menu.
@@ -26,7 +25,7 @@ public class OptionsMenuController {
 	@FXML
 	private Button shootButton;
 
-	private Key key;
+	private Key selectedKey;
 
 	private KeyCode leftKey;
 	private KeyCode rightKey;
@@ -39,7 +38,7 @@ public class OptionsMenuController {
 	 */
 	@FXML
 	public void initialize() {
-		key = Key.NONE;
+		selectedKey = Key.NONE;
 		anchorPane.setOnKeyPressed(new ControlAdapter());
 
 		oc = new OptionsController("src/main/resources/Options/Options.xml");
@@ -48,8 +47,9 @@ public class OptionsMenuController {
 		leftButton.setText(oc.getLeft().getName());
 		rightButton.setText(oc.getRight().getName());
 		shootButton.setText(oc.getShoot().getName());
+
 	}
-	
+
 	/**
 	 * Navigate back to the menu.
 	 */
@@ -59,92 +59,105 @@ public class OptionsMenuController {
 		App.loadScene("/FXML/Menu.fxml");
 	}
 
-	public void update(){
-		leftButton.setText(oc.getLeft().getName());
-		rightButton.setText(oc.getRight().getName());
-		shootButton.setText(oc.getShoot().getName());
-
-		//TODO: Actually make the screen show the new values.
+	/**
+	 * Update the display of the buttons to the new values.
+	 */
+	public void update() {
+		if (leftKey != null) {
+			leftButton.setText(leftKey.getName());
+		}
+		if (rightKey != null) {
+			rightButton.setText(rightKey.getName());
+		}
+		if (shootKey != null) {
+			shootButton.setText(shootKey.getName());
+		}
 	}
-	
+
 	/**
 	 * Set the selected key to LEFT.
 	 */
 	@FXML
 	public void selectLeftKey() {
-		key = Key.LEFT;
+		selectedKey = Key.LEFT;
 	}
-	
+
 	/**
 	 * Set the selected key to RIGHT.
 	 */
 	@FXML
 	public void selectRightKey() {
-		key = Key.RIGHT;
+		selectedKey = Key.RIGHT;
 	}
-	
+
 	/**
 	 * Set the selected key to SHOOT.
 	 */
 	@FXML
 	public void selectShootKey() {
-		key = Key.SHOOT;
+		selectedKey = Key.SHOOT;
 	}
-	
+
 	/**
 	 * Key defines which button is selected to adjust with a new key.
 	 */
 	public enum Key {
-		LEFT,
-		RIGHT,
-		SHOOT,
-		NONE
+		LEFT, RIGHT, SHOOT, NONE
 	}
-	
+
 	/**
-	 *	Adapter to handle keys pressed .
+	 * Adapter to handle keys pressed .
 	 */
 	public class ControlAdapter implements EventHandler<KeyEvent> {
 
 		@Override
 		public void handle(KeyEvent event) {
-				switch (key) {
-					case LEFT:
-						if(rightKey != event.getCode() && shootKey != event.getCode()){
-							leftKey = event.getCode();
-							update();
-						}
-					case RIGHT:
-						if(leftKey != event.getCode() && shootKey != event.getCode()){
-							rightKey = event.getCode();
-							update();
-						}
-					case SHOOT:
-						if(rightKey != event.getCode() && leftKey != event.getCode()){
-							shootKey = event.getCode();
-							update();
-						}
-					case NONE: break;
-					default: break;
+			switch (selectedKey) {
+			case LEFT:
+				if (rightKey != event.getCode() && shootKey != event.getCode()) {
+					leftKey = event.getCode();
+					update();
 				}
+				break;
+			case RIGHT:
+				if (leftKey != event.getCode() && shootKey != event.getCode()) {
+					rightKey = event.getCode();
+					update();
+				}
+				break;
+			case SHOOT:
+				if (rightKey != event.getCode() && leftKey != event.getCode()) {
+					shootKey = event.getCode();
+					update();
+				}
+				break;
+			case NONE:
+				break;
+			default:
+				break;
 			}
+			selectedKey = Key.NONE;
+		}
 	}
 
-	public void write(){
-		if(leftKey == null &&
-				rightKey == null &&
-				shootKey == null) return;
-		if(leftKey != null){
+	/**
+	 * Write the keysettings to the optionscontroller.
+	 */
+	public void write() {
+		if (leftKey == null && rightKey == null && shootKey == null) {
+			return;
+		}
+		if (leftKey != null) {
 			oc.setLeft(leftKey);
 		}
-		if(rightKey != null){
+		if (rightKey != null) {
 			oc.setRight(rightKey);
 		}
-		if(shootKey != null){
+		if (shootKey != null) {
 			oc.setShoot(shootKey);
 		}
 		oc.write();
 
 	}
-	
+
 }

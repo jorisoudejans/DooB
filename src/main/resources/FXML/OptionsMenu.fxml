@@ -12,28 +12,43 @@
       <Pane layoutX="200.0" layoutY="100.0" prefHeight="600.0" prefWidth="600.0" style="-fx-border-style: solid;">
          <children>
             <Line endX="300.0" endY="600.0" startX="300.0" strokeWidth="0.5" />
-            <Slider fx:id="slider" layoutX="342.0" layoutY="223.0" prefHeight="57.0" prefWidth="216.0" />
-            <Label layoutX="110.0" layoutY="234.0" text="Volume">
+            <Slider layoutX="348.0" layoutY="272.0" prefHeight="57.0" prefWidth="216.0" />
+            <Label layoutX="116.0" layoutY="283.0" text="Volume">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button fx:id="leftButton" layoutX="333.0" layoutY="101.0" mnemonicParsing="false" onAction="#selectLeftKey" prefHeight="51.0" prefWidth="70.0" text="←">
+            <Button fx:id="leftButton" layoutX="400.0" layoutY="43.0" mnemonicParsing="false" onAction="#selectLeftKey" text="Left">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button fx:id="shootButton" layoutX="403.0" layoutY="101.0" mnemonicParsing="false" onAction="#selectShootKey" text="Space">
+            <Button fx:id="shootButton" layoutX="400.0" layoutY="103.0" mnemonicParsing="false" onAction="#selectShootKey" text="Space">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Button fx:id="rightButton" layoutX="498.0" layoutY="101.0" mnemonicParsing="false" onAction="#selectRightKey" prefHeight="51.0" prefWidth="70.0" text="→">
+            <Button fx:id="rightButton" layoutX="400.0" layoutY="163.0" mnemonicParsing="false" onAction="#selectRightKey" text="Right">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <Label layoutX="106.0" layoutY="109.0" text="Controls">
+            <Label layoutX="27.0" layoutY="109.0" text="Controls">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="51.0" text="Left">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="109.0" text="Shoot">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="182.0" layoutY="171.0" text="Right">
                <font>
                   <Font size="24.0" />
                </font>
