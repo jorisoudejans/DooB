@@ -1,10 +1,7 @@
 package doob.model;
 
-import java.util.Random;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 /**
@@ -21,13 +18,15 @@ public class Ball implements Collidable, Drawable {
   private int splitBounce;
   private Color color;
 
-  public static final int SPLITBOUNCE = -4;
-  public static final double VERTICALSPEEDFACTOR = 0.2;
+  public static final int SPLIT_BOUNCE = -4;
+  public static final double VERTICAL_SPEED_FACTOR = 0.2;
   public static final int START_SPEED_X = 2;
+  public static final int MIN_SIZE = 32;
+  public static final int SCORE = 100;
 
   /**
    * Constructor.
-   * 
+   *
    * @param x
    *          x-coordinate
    * @param y
@@ -45,10 +44,10 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
-    this.splitBounce = SPLITBOUNCE;
+    this.splitBounce = SPLIT_BOUNCE;
     setColor();
   }
-  
+
   /**
    * Sets the value of the color variable dependent of the size of the ball.
    */
@@ -64,7 +63,7 @@ public class Ball implements Collidable, Drawable {
 
   /**
    * Draws the ball.
-   * 
+   *
    * @param graphicsContext
    *          graphicsContext
    */
@@ -80,12 +79,12 @@ public class Ball implements Collidable, Drawable {
   public void move() {
     moveHorizontally();
     moveVertically();
-    incrSpeedY(VERTICALSPEEDFACTOR);
+    incrSpeedY(VERTICAL_SPEED_FACTOR);
   }
 
   /**
    * Split function which handles the creation of new balls after one is hit.
-   * 
+   *
    * @return A list of new balls.
    */
   public Ball[] split() {
@@ -95,30 +94,6 @@ public class Ball implements Collidable, Drawable {
     res[0] = ball1;
     res[1] = ball2;
     return res;
-  }
-
-  /**
-   * Checks if the ball collides with a collidable, either a wall or a projectile.
-   * 
-   * @return boolean
-   * @param other
-   *          the collidable the ball collides with
-   */
-  public boolean collides(Collidable other) {
-    if (other instanceof Wall) {
-      Wall w = (Wall) other;
-      if (this.getBounds().intersects(w.getX(), w.getY(), w.getWidth(), w.getHeight())) {
-        return true;
-      }
-    } else if (other instanceof Projectile) {
-      Projectile p = (Projectile) other;
-      if (this.getBounds().intersects(p.getX(), p.getY(), p.getImg().getWidth(),
-          p.getImg().getHeight())) {
-        return true;
-      }
-    }
-    return false;
-
   }
 
   public int getSize() {
@@ -167,27 +142,13 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
   }
 
-  /**
-   * Increase the horizontal speed by adding up a parameter.
-   * 
-   * @param speedDX
-   *          amount to increase the speed with
-   */
-  public void incrSpeedX(double speedDX) {
-    this.speedX = speedX + speedDX;
-  }
-
-  public double getSpeedY() {
-    return speedY;
-  }
-
   public void setSpeedY(double speedY) {
     this.speedY = speedY;
   }
 
   /**
    * Increase the vertical speed by adding up a parameter.
-   * 
+   *
    * @param speedDY
    *          amount to increase the speed with
    */
@@ -195,6 +156,7 @@ public class Ball implements Collidable, Drawable {
     this.speedY = speedY + speedDY;
   }
 
+  @Override
   public Circle getBounds() {
     return new Circle(x + size / 2, y + size / 2, size / 2);
   }
@@ -202,7 +164,7 @@ public class Ball implements Collidable, Drawable {
   /**
    * Returns a bounce speed which determines how how the ball bounces depending in the size of the
    * ball.
-   * 
+   *
    * @return bounce speed
    */
   public int getBounceSpeed() {
@@ -210,14 +172,6 @@ public class Ball implements Collidable, Drawable {
       throw new IllegalArgumentException();
     }
     return (int) -((Math.log(size) / Math.log(2)) * 2);
-  }
-
-  public int getsplitBounce() {
-    return splitBounce;
-  }
-
-  public void setsplitBounce(int splitBounce) {
-    this.splitBounce = splitBounce;
   }
 
   @Override

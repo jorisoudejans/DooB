@@ -1,22 +1,19 @@
 package doob;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-
+import doob.DLog.Type;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import doob.DLog.Type;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -41,7 +38,7 @@ public class DLogTypeTest {
 				{ log, Type.PLAYER_INTERACTION,
 						" -Player interaction- Log this." },
 				{ log, Type.COLLISION, " -Collision- Log this." },
-				{ log, Type.STATE, " -State- Log this." },
+				{ log, Type.STATE, " -Event- Log this." },
 				{ log, Type.APPLICATION, " -App- Log this." },
 				{ log, Type.ERROR, " -ERROR- Log this." } });
 	}

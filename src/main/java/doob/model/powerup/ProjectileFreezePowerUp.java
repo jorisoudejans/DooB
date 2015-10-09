@@ -50,8 +50,4 @@ public class ProjectileFreezePowerUp extends PowerUp {
         return "/image/powerup/straight.png";
     }
 
-    @Override
-    public boolean collides(Collidable other) {
-        return false;
-    }
 }
