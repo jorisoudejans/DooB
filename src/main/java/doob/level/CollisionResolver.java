@@ -16,12 +16,15 @@ public class CollisionResolver {
 
     private Level level;
 
+    private DLog dLog;
+
     /**
      * Constructor for CollisionResolver. Takes Level as a parameter to act upon.
      * @param level the resolver is to act upon.
      */
     public CollisionResolver(Level level) {
         this.level = level;
+        dLog = DLog.getInstance();
     }
 
     /**
@@ -72,7 +75,7 @@ public class CollisionResolver {
             @Override
             public void handle(WorkerStateEvent event) {
                 level.notifyObservers();
-                DLog.info("Lost a life", DLog.Type.STATE);
+                dLog.info("Lost a life", DLog.Type.STATE);
             }
         });
     }
@@ -111,13 +114,13 @@ public class CollisionResolver {
      */
     public void ballVersusProjectile(Ball ball, Projectile projectile) {
         if (ball.getSize() >= Ball.MIN_SIZE) {
-            DLog.info(ball.toString() + " splits", DLog.Type.COLLISION);
+            dLog.info(ball.toString() + " splits", DLog.Type.COLLISION);
             Ball[] res = ball.split();
             projectile.getPlayer().incrScore(Ball.SCORE);
             level.addBall(res[0]);
             level.addBall(res[1]);
         } else {
-            DLog.info(ball.toString() + " disappears", DLog.Type.COLLISION);
+            dLog.info(ball.toString() + " disappears", DLog.Type.COLLISION);
         }
 
         level.removeBall(ball);
@@ -155,7 +158,7 @@ public class CollisionResolver {
             level.onEvent(Level.Event.ALL_BALLS_GONE);
             level.stopTimer();
             level.notifyObservers();
-            DLog.info("All balls gone", DLog.Type.STATE);
+            dLog.info("All balls gone", DLog.Type.STATE);
         } else if (walls.t0 == level.getLeft()) {
             walls.t1.setOpen(true);
         } else if (walls.t1 == level.getLeft()) {

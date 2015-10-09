@@ -1,19 +1,14 @@
 package doob;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.util.Date;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for test.
@@ -23,6 +18,8 @@ public class DLogTest {
 	private BufferedReader mReader;
 	private static final String PATH = "DLogTest.log";
 
+	private DLog dLog;
+
 	/**
 	 * Set up testing.
 	 * 
@@ -31,7 +28,8 @@ public class DLogTest {
 	 */
 	@Before
 	public void setUp() throws IOException {
-		DLog.setFile(PATH);
+		dLog = DLog.getInstance();
+		dLog.setFile(PATH);
 		mReader = new BufferedReader(new InputStreamReader(new FileInputStream(
 				PATH)));
 
@@ -59,7 +57,7 @@ public class DLogTest {
 		String input = "Log this.";
 		String expected = DateFormat.getTimeInstance().format(new Date())
 				+ ": Log this.";
-		DLog.info(input);
+		dLog.info(input);
 		String actual = null;
 		try {
 			// Skip init line.
@@ -79,7 +77,7 @@ public class DLogTest {
 		String input = "Error.";
 		String expected = DateFormat.getTimeInstance().format(new Date())
 				+ ": -ERROR- " + "Error.";
-		DLog.e(input);
+		dLog.e(input);
 		String actual = null;
 		try {
 			// Skip init line.
@@ -102,9 +100,9 @@ public class DLogTest {
 		printer.println("logEnabled=no");
 		printer.println("logTypesEnabled=");
 		printer.close();
-		DLog.invalidateProperties();
+		dLog.invalidateProperties();
 		String input = "Log this.";
-		DLog.info(input);
+		dLog.info(input);
 		String actual = "";
 		try {
 			// Skip init line.
@@ -125,10 +123,10 @@ public class DLogTest {
 	 */
 	@Test
 	public void testEmptyFIle() {
-		DLog.info("hoi");
-		DLog.info("hoi 2");
+		dLog.info("hoi");
+		dLog.info("hoi 2");
 		try {
-			DLog.emptyFile();
+			dLog.emptyFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

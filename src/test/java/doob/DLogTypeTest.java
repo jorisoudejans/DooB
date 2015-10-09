@@ -1,6 +1,7 @@
 package doob;
 
 import doob.DLog.Type;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -23,8 +24,16 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class DLogTypeTest {
 
-	private static String log = "Log this.";
+	private static final String LOG = "Log this.";
+	private static final int MAGIC_NUMBER = 3;
 
+	private DLog dLog;
+
+	@Before
+	public void setUp() {
+		dLog = DLog.getInstance();
+		dLog.setFile("DLogTest.log");
+	}
 
 	/**
 	*
@@ -35,12 +44,12 @@ public class DLogTypeTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
-				{ log, Type.PLAYER_INTERACTION,
+				{ LOG, Type.PLAYER_INTERACTION,
 						" -Player interaction- Log this." },
-				{ log, Type.COLLISION, " -Collision- Log this." },
-				{ log, Type.STATE, " -Event- Log this." },
-				{ log, Type.APPLICATION, " -App- Log this." },
-				{ log, Type.ERROR, " -ERROR- Log this." } });
+				{ LOG, Type.COLLISION, " -Collision- Log this." },
+				{ LOG, Type.STATE, " -Event- Log this." },
+				{ LOG, Type.APPLICATION, " -App- Log this." },
+				{ LOG, Type.ERROR, " -ERROR- Log this." } });
 	}
 
 	private String input;
@@ -66,15 +75,14 @@ public class DLogTypeTest {
 	   */
 	  @Test
 	  public void statesTest() throws IOException {
-		  DLog.setFile("DLogTest.log");
 		  BufferedReader mReader = new BufferedReader(new InputStreamReader(new FileInputStream(
 				  "DLogTest.log")));
-		  DLog.info(input, type);
+		  dLog.info(input, type);
 		  String actual = null;
 		  try {
 				// Skip init line.
 				mReader.readLine();
-				actual = mReader.readLine().split(":")[3];
+				actual = mReader.readLine().split(":")[MAGIC_NUMBER];
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

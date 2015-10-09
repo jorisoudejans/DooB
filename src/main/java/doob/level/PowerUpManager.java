@@ -28,11 +28,14 @@ public class PowerUpManager {
 
     private Level level;
 
+    private DLog dLog;
+
     /**
      * New instance of PowerUpManager.
      * @param level corresponding level
      */
     public PowerUpManager(Level level) {
+        dLog = DLog.getInstance();
         availablePowerups = new ArrayList<Class<?>>();
         powerupsOnScreen = new ArrayList<PowerUp>();
         powerupsOnScreenToRemove = new ArrayList<PowerUp>();
@@ -93,7 +96,7 @@ public class PowerUpManager {
     }
 
     public void handleCollision(PowerUp powerup, Player player) {
-        DLog.info(player.toString() + " is hit by a powerup", DLog.Type.COLLISION);
+        dLog.info(player.toString() + " is hit by a powerup", DLog.Type.COLLISION);
         powerup.onActivate(level, player);
         activePowerups.add(powerup);
         powerupsOnScreenToRemove.add(powerup);
