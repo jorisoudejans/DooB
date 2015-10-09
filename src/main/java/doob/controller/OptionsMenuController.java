@@ -2,6 +2,7 @@ package doob.controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import doob.App;
@@ -15,6 +16,15 @@ public class OptionsMenuController {
 
 	@FXML
 	private AnchorPane anchorPane;
+
+	@FXML
+	private Button leftButton;
+
+	@FXML
+	private Button rightButton;
+
+	@FXML
+	private Button shootButton;
 
 	private Key key;
 
@@ -34,6 +44,10 @@ public class OptionsMenuController {
 
 		oc = new OptionsController("src/main/resources/Options/Options.xml");
 		oc.read();
+
+		leftButton.setText(oc.getLeft().getName());
+		rightButton.setText(oc.getRight().getName());
+		shootButton.setText(oc.getShoot().getName());
 	}
 	
 	/**
@@ -43,6 +57,14 @@ public class OptionsMenuController {
 	public void backToMenu() {
 		write();
 		App.loadScene("/FXML/Menu.fxml");
+	}
+
+	public void update(){
+		leftButton.setText(oc.getLeft().getName());
+		rightButton.setText(oc.getRight().getName());
+		shootButton.setText(oc.getShoot().getName());
+
+		//TODO: Actually make the screen show the new values.
 	}
 	
 	/**
@@ -90,14 +112,17 @@ public class OptionsMenuController {
 					case LEFT:
 						if(rightKey != event.getCode() && shootKey != event.getCode()){
 							leftKey = event.getCode();
+							update();
 						}
 					case RIGHT:
 						if(leftKey != event.getCode() && shootKey != event.getCode()){
 							rightKey = event.getCode();
+							update();
 						}
 					case SHOOT:
 						if(rightKey != event.getCode() && leftKey != event.getCode()){
 							shootKey = event.getCode();
+							update();
 						}
 					case NONE: break;
 					default: break;
