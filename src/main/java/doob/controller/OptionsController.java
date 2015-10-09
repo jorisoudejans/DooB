@@ -97,30 +97,7 @@ public class OptionsController {
 	 * Writes the options to the file.
 	 */
 	public void write() {
-		Document doc = createDocument();
-		Element rootElement = doc.createElement("options");
-		doc.appendChild(rootElement);
-
-		Element sound = doc.createElement("sound");
-		sound.appendChild(doc.createTextNode(Integer.toString(this.sound)));
-		rootElement.appendChild(sound);
-
-
-		Element controls = doc.createElement("controls");
-		rootElement.appendChild(controls);
-
-		Element left = doc.createElement("left");
-		left.appendChild(doc.createTextNode(this.left.getName()));
-		controls.appendChild(left);
-
-		Element right = doc.createElement("right");
-		right.appendChild(doc.createTextNode(this.right.getName()));
-		controls.appendChild(right);
-
-		Element shoot = doc.createElement("shoot");
-		shoot.appendChild(doc.createTextNode(this.shoot.getName()));
-		controls.appendChild(shoot);
-
+		Document doc = appendElements();
 
 		try {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -136,7 +113,36 @@ public class OptionsController {
 
 	}
 
+	/**
+	 * Append options elements to the document.
+	 * @return The document.
+	 */
+	private Document appendElements() {
+		Document doc = createDocument();
+		Element rootElement = doc.createElement("options");
+		doc.appendChild(rootElement);
+		
+		Element sound = doc.createElement("sound");
+		sound.appendChild(doc.createTextNode(Integer.toString(this.sound)));
+		rootElement.appendChild(sound);
 
+		Element controls = doc.createElement("controls");
+		rootElement.appendChild(controls);
+
+		Element left = doc.createElement("left");
+		left.appendChild(doc.createTextNode(this.left.getName()));
+		controls.appendChild(left);
+
+		Element right = doc.createElement("right");
+		right.appendChild(doc.createTextNode(this.right.getName()));
+		controls.appendChild(right);
+
+		Element shoot = doc.createElement("shoot");
+		shoot.appendChild(doc.createTextNode(this.shoot.getName()));
+		controls.appendChild(shoot);
+		
+		return doc;
+	}
 
 	/**
 	 * Returns a new XML Document ready to be written in.
