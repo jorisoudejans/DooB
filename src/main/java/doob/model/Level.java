@@ -25,6 +25,7 @@ public class Level {
 
     private DLog dLog;
 
+
     private Canvas canvas;
     private GraphicsContext gc;
 
@@ -37,6 +38,7 @@ public class Level {
     public static final int PLAYER_SPEED = 3;
     public static final int PROJECTILE_START_SPEED = 12;
     public static final long FREEZE_TIME = 2000;
+    public static final int PROJECTILE_WIDTH = 7;
 
     private AnimationTimer timer;
 
@@ -115,8 +117,8 @@ public class Level {
      */
     public void shoot(Player player) {
         if (projectiles.size() < 1) {
-            projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2, canvas.getHeight(),
-                    PROJECTILE_START_SPEED));
+            projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2 
+            		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
             dLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
     }
@@ -245,22 +247,37 @@ public class Level {
                 canvas.getHeight() / 2 - i.getHeight());
     }
 
+    /**
+     * Remove the projectile.
+     * @param projectile to remove.
+     */
     public void removeProjectile(Projectile projectile) {
         projectiles.remove(projectile);
     }
 
+    /**
+     * Remove a ball.
+     * @param ball to remove.
+     */
     public void removeBall(Ball ball) {
         balls.remove(ball);
     }
-
+    
+    /**
+     * Add a ball to the level.
+     * @param ball to add
+     */
     public void addBall(Ball ball) {
         balls.add(ball);
     }
-
+    
+    /**
+     * Add an observer to level.
+     * @param observer to add.
+     */
     public void addObserver(LevelObserver observer) {
         observers.add(observer);
     }
-
     /**
      * Notify all observers of an event.
      */
@@ -269,7 +286,11 @@ public class Level {
             observer.onLevelStateChange(lastEvent);
         }
     }
-
+    
+    /**
+     * Function to record the last event.
+     * @param lastEvent the event
+     */
     public void onEvent(Event lastEvent) {
         this.lastEvent = lastEvent;
     }
@@ -281,7 +302,7 @@ public class Level {
     public Wall getRight() {
         return right;
     }
-
+    
     public void setRight(Wall right) {
         this.right = right;
     }
@@ -301,6 +322,7 @@ public class Level {
     public void setCeiling(Wall ceiling) {
         this.ceiling = ceiling;
     }
+
 
     public Wall getFloor() {
         return floor;
@@ -400,14 +422,16 @@ public class Level {
                 case RIGHT:
                     players.get(0).setSpeed(players.get(0).getMoveSpeed());
                     if (last != KeyCode.RIGHT) {
-                        dLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+                        dLog.info("Player direction changed to right.", 
+                        		DLog.Type.PLAYER_INTERACTION);
                         last = KeyCode.RIGHT;
                     }
                     break;
                 case LEFT:
                     players.get(0).setSpeed(-players.get(0).getMoveSpeed());
                     if (last != KeyCode.LEFT) {
-                        dLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+                        dLog.info("Player direction changed to left.", 
+                        		DLog.Type.PLAYER_INTERACTION);
                         last = KeyCode.LEFT;
                     }
                     break;
