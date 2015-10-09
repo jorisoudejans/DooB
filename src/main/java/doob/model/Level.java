@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class Level {
 
+    private DLog dLog;
+
     private Canvas canvas;
     private GraphicsContext gc;
 
@@ -72,6 +74,7 @@ public class Level {
      *          the canvas to be drawn upon.
      */
     public Level(Canvas canvas) {
+        dLog = DLog.getInstance();
         this.canvas = canvas;
         createTimer();
         ballFreeze = false;
@@ -114,7 +117,7 @@ public class Level {
         if (projectiles.size() < 1) {
             projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2, canvas.getHeight(),
                     PROJECTILE_START_SPEED));
-            DLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
+            dLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
     }
 
@@ -397,14 +400,14 @@ public class Level {
                 case RIGHT:
                     players.get(0).setSpeed(players.get(0).getMoveSpeed());
                     if (last != KeyCode.RIGHT) {
-                        DLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+                        dLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
                         last = KeyCode.RIGHT;
                     }
                     break;
                 case LEFT:
                     players.get(0).setSpeed(-players.get(0).getMoveSpeed());
                     if (last != KeyCode.LEFT) {
-                        DLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+                        dLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
                         last = KeyCode.LEFT;
                     }
                     break;

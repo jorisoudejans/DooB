@@ -10,8 +10,12 @@ import java.util.Properties;
  */
 public final class DLog {
 
-    private static Writer writer;
-    private static String path;
+    private static volatile DLog uniqueInstance;
+
+    private Writer writer;
+    private String path;
+
+    private static final String DEFAULT_LOG_FILE = "DooB.log";
 
     public static final String LOG_CREATED_MESSAGE = "Log file created. Path is ";
     public static final String ENCODING = "utf-8";
@@ -26,22 +30,15 @@ public final class DLog {
     private static final String PROPERTY_LOG_ENABLED = "logEnabled";
     private static final String PROPERTY_LOG_TYPES_ENABLED = "logTypesEnabled";
 
-    private static boolean isLogOn;
-    private static Type[] typesEnabled;
+    private boolean isLogOn;
+    private Type[] typesEnabled;
 
     /**
      * Disable instantiation of the class.
      */
-    private DLog() { }
-
-    /**
-     * Specify where the log file should be written to. Overwrites the file of it already exists.
-     * @param path The path the file should be written.
-     * @throws IOException when an I/O error occurs.
-     */
-    public static void setFile(String path) throws IOException {
+    private DLog() {
         invalidateProperties();
-        DLog.path = path;
+        this.path = DEFAULT_LOG_FILE;
         try {
             writer = new BufferedWriter(
                     new OutputStreamWriter(
@@ -52,17 +49,62 @@ public final class DLog {
             info(LOG_CREATED_MESSAGE + path, Type.APPLICATION);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Get unique instance of DLog.
+     * @return instance
+     */
+    public static DLog getInstance() {
+        if (uniqueInstance == null) {
+            synchronized (DLog.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new DLog();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+
+    /**
+     * Specify where the log file should be written to. Overwrites the file of it already exists.
+     * @param path The path the file should be written.
+     */
+    public void setFile(String path) {
+        invalidateProperties();
+        this.path = path;
+        try {
+            writer = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(path),
+                            ENCODING
+                    )
+            );
+            info(LOG_CREATED_MESSAGE + path, Type.APPLICATION);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Update DLog state from properties file.
-     * @throws IOException when the properties cannot be properly loaded.
      */
-    public static void invalidateProperties() throws IOException {
+    public void invalidateProperties() {
         Properties properties = new Properties();
-        FileInputStream fileInputStream = new FileInputStream(PROPERTIES_FILE);
-        properties.load(fileInputStream);
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(PROPERTIES_FILE);
+            properties.load(fileInputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Check whether log is enabled.
         isLogOn = properties.getProperty(PROPERTY_LOG_ENABLED).equals("yes");
@@ -87,7 +129,7 @@ public final class DLog {
      * Empties the assigned file.
      * @throws IOException when an I/O error occurs.
      */
-    public static void emptyFile() throws IOException {
+    public void emptyFile() throws IOException {
         setFile(path);
     }
 
@@ -96,7 +138,7 @@ public final class DLog {
      * @param text string to log.
      * @param type Type of log message to be written.
      */
-    public static void info(String text, Type type) {
+    public void info(String text, Type type) {
         if (!isEnabled(type)) {
             return;
         }
@@ -121,7 +163,7 @@ public final class DLog {
      * Prints information log to console and to file.
      * @param text string to log.
      */
-    public static void info(String text) {
+    public void info(String text) {
         info(text, Type.NONE);
     }
 
@@ -129,7 +171,7 @@ public final class DLog {
      * Prints error information to console and to file.
      * @param text message with the error.
      */
-    public static void e(String text) {
+    public void e(String text) {
         info(text, Type.ERROR);
     }
 
@@ -138,7 +180,7 @@ public final class DLog {
      * @param type the type that is checked
      * @return isEnabled boolean
      */
-    private static boolean isEnabled(Type type) {
+    private boolean isEnabled(Type type) {
         if (!isLogOn) {
             return false;
         }

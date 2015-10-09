@@ -1,9 +1,11 @@
 package doob.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import doob.App;
+import doob.DLog;
+import doob.level.LevelFactory;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -15,20 +17,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import doob.App;
-import doob.DLog;
-import doob.level.LevelFactory;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Controller for games.
@@ -65,6 +62,8 @@ public class GameController implements LevelObserver {
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
+	private DLog dLog;
+
 	/**
 	 * Initialization of the game pane.
 	 * 
@@ -73,6 +72,7 @@ public class GameController implements LevelObserver {
 	 */
 	@FXML
 	public void initialize() throws IOException {
+		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
 		readLevels();
 		levelLabel.setText((currentLevel + 1) + "");
@@ -87,8 +87,8 @@ public class GameController implements LevelObserver {
 		background.toBack();
 		running = true;
 
-    DLog.setFile("DooB.log");
-    DLog.info("Game started.", DLog.Type.STATE);
+		dLog.setFile("DooB.log");
+		dLog.info("Game started.", DLog.Type.STATE);
   }
 	
 	/**
@@ -258,7 +258,7 @@ public class GameController implements LevelObserver {
 	 */
 	public void onAllBallsGone() {
 		emptyProgressBar();
-		DLog.info("Level " + (currentLevel + 1) + " completed!", DLog.Type.STATE);
+		dLog.info("Level " + (currentLevel + 1) + " completed!", DLog.Type.STATE);
 		timer.stop();
 		level.freeze(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -270,7 +270,7 @@ public class GameController implements LevelObserver {
 					timer.start();
 				} else {
 					gameState = GameState.WON;
-					DLog.info("Game won!", DLog.Type.STATE);
+					dLog.info("Game won!", DLog.Type.STATE);
 					App.loadHighscoreScene(level.getPlayers().get(0).getScore());
 				}
 			}
