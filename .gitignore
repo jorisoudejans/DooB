@@ -93,3 +93,4 @@ local.properties
 
 # highscores file
 src/main/resources/Highscore/highscores.xml
+src/main/resources/Options/Options.xml
