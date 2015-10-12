@@ -6,6 +6,7 @@ import doob.level.LevelFactory;
 import doob.level.LevelObserver;
 import doob.model.Level;
 import doob.model.Player;
+import doob.util.SoundManager;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -18,12 +19,16 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +75,7 @@ public class GameController implements LevelObserver {
 	private KeyCode shootKey;
 
 	private int sound;
-
+	
 	/**
 	 * Initialization of the game pane.
 	 * 
@@ -93,6 +98,7 @@ public class GameController implements LevelObserver {
 		gc2.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
 		pane.getChildren().add(background);
 		background.toBack();
+		SoundManager.playTune(SoundManager.GAME_TUNE);
 		running = true;
 
 		dLog.setFile("DooB.log");
@@ -264,12 +270,14 @@ public class GameController implements LevelObserver {
 	public void onLevelStateChange(Level.Event event) {
 		switch (event) {
 			case ZERO_LIVES:
+				SoundManager.playSound(SoundManager.DIE_EFFECT);
 				App.loadHighscoreScene(level.getPlayers().get(0).getScore());
 				break;
 			case ALL_BALLS_GONE:
 				onAllBallsGone();
 				break;
 			case LOST_LIFE:
+				SoundManager.playSound(SoundManager.DIE_EFFECT);
 				newLevel();
 				break;
 			default:

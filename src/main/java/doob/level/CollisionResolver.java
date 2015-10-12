@@ -3,6 +3,7 @@ package doob.level;
 import doob.DLog;
 import doob.model.*;
 import doob.model.powerup.PowerUp;
+import doob.util.SoundManager;
 import doob.util.TupleTwo;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -128,6 +129,7 @@ public class CollisionResolver {
         level.getPowerUpManager().spawnPowerups(ball.getX(), ball.getY());
 
         handleDisappearingBall(ball);
+        SoundManager.playSound(SoundManager.DOOB_EFFECT);
     }
 
     /**
