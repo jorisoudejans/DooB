@@ -15,6 +15,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -75,21 +77,21 @@ public class HighscoreMenuController {
 		l.setFont(new Font(22));
 		final TextField tf = new TextField();
 		tf.setMaxWidth(350);
+		tf.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent e) {
+				if (e.getCode() == KeyCode.ENTER) {
+					handleAction(dialog, tf, score);
+				}
+			}
+		});
 		
 		Button b = new Button("OK");
 		b.setPrefWidth(100);
 		b.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				String name = tf.getText();
-				if (name.length() > 0) {
-					int index = hsc.highScoreIndex(score);
-					dialog.close();
-					hsc.addScore(new Score(name, score), index);
-					hsc.write();
-					updateTable();
-					scoreTable.getSelectionModel().select(index);
-				}
+				handleAction(dialog, tf, score);
 			}
 		});
 		
@@ -102,6 +104,18 @@ public class HighscoreMenuController {
         Scene dialogScene = new Scene(popUpVBox, 400, 150);
 		dialog.setScene(dialogScene);
 		dialog.show();
+	}
+	
+	private void handleAction(Stage dialog, TextField tf, int score) {
+		String name = tf.getText();
+		if (name.length() > 0) {
+			int index = hsc.highScoreIndex(score);
+			dialog.close();
+			hsc.addScore(new Score(name, score), index);
+			hsc.write();
+			updateTable();
+			scoreTable.getSelectionModel().select(index);
+		}
 	}
 	
 	/**
