@@ -94,7 +94,6 @@ public class OptionsController {
 	public void parseSound(Document doc) {
 		NodeList nListBall = doc.getElementsByTagName("sound");
 		Node nNode = nListBall.item(0);
-		System.out.println(nNode == null);
 		this.sound = Integer.parseInt(nNode.getTextContent());
 	}
 

@@ -18,12 +18,21 @@ public class MenuController {
 	}
 	
 	/**
-	 * Navigate to multiplayergame.
+	 * Navigate to duel mode multiplayer game.
 	 */
 	@FXML
-	public void playMultiPlayer() {
+	public void playDuelMode() {
 		GameController gc = App.loadScene("/fxml/game.fxml").getController();
-		gc.initMultiPlayer();
+		gc.initDuelMode();
+	}
+	
+	/**
+	 * Navigate to coop mode multiplayer game.
+	 */
+	@FXML
+	public void playCoopMode() {
+		GameController gc = App.loadScene("/fxml/CoopGame.fxml").getController();
+		gc.initCoopMode();
 	}
 	
 	/**
