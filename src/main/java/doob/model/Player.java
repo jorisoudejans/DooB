@@ -1,7 +1,10 @@
 package doob.model;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -19,6 +22,11 @@ public class Player implements Collidable, Drawable {
   private int lives;
   private int score;
   
+  private KeyCode leftKey;
+  private KeyCode rightKey;
+  private KeyCode shootKey;
+  private KeyCode lastKey;
+  
   public static final int LIVES = 5;
   public static final int START_SPEED = 4;
   public static final int BOUNCE_BACK_DISTANCE = 10;
@@ -28,6 +36,7 @@ public class Player implements Collidable, Drawable {
   private Image imageRight;
 
   private State state;
+  private ArrayList<Projectile> projectiles;
 
   /**
    * Possible player states.
@@ -64,10 +73,11 @@ public class Player implements Collidable, Drawable {
     this.score = 0;
     this.lives = LIVES;
     this.state = State.NORMAL;
-
+    lastKey = KeyCode.SPACE;
     imageStand = imageS;
     imageLeft = imageL;
     imageRight = imageR;
+    projectiles = new ArrayList<Projectile>();
   }
 
   @Override
@@ -165,11 +175,51 @@ public class Player implements Collidable, Drawable {
     this.state = state;
   }
 
-  /**
+  public KeyCode getLeftKey() {
+	return leftKey;
+}
+
+public void setLeftKey(KeyCode leftKey) {
+	this.leftKey = leftKey;
+}
+
+public KeyCode getRightKey() {
+	return rightKey;
+}
+
+public void setRightKey(KeyCode rightKey) {
+	this.rightKey = rightKey;
+}
+
+public KeyCode getShootKey() {
+	return shootKey;
+}
+
+public void setShootKey(KeyCode shootKey) {
+	this.shootKey = shootKey;
+}
+
+public KeyCode getLastKey() {
+	return lastKey;
+}
+
+public void setLastKey(KeyCode lastKey) {
+	this.lastKey = lastKey;
+}
+
+public ArrayList<Projectile> getProjectiles() {
+	return projectiles;
+}
+
+/**
    * Decreases lives by one.
    */
   public void die() {
     lives--;
+  }
+  
+  public boolean isAlive() {
+	  return lives > 0;
   }
 
   @Override

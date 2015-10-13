@@ -13,7 +13,17 @@ public class MenuController {
 	 */
 	@FXML
 	public void playSinglePlayer() {
-		App.loadScene("/fxml/game.fxml");
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initSinglePlayer();
+	}
+	
+	/**
+	 * Navigate to multiplayergame.
+	 */
+	@FXML
+	public void playMultiPlayer() {
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initMultiPlayer();
 	}
 	
 	/**

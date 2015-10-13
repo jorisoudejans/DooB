@@ -1,11 +1,9 @@
 package doob.controller;
 
-import doob.App;
-import doob.DLog;
-import doob.level.LevelFactory;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -16,17 +14,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import doob.App;
+import doob.DLog;
+import doob.level.LevelFactory;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
 
 /**
  * Controller for games.
@@ -58,6 +60,7 @@ public class GameController implements LevelObserver {
 	private Level level;
 	private AnimationTimer timer;
 	private GraphicsContext gc;
+	private GraphicsContext gc2;
 	private double progress;
 	private boolean running;
 	public static final int HEART_SPACE = 40;
@@ -65,32 +68,28 @@ public class GameController implements LevelObserver {
 
 	private DLog dLog;
 
-	private KeyCode leftKey;
-	private KeyCode rightKey;
-	private KeyCode shootKey;
-
-	private int sound;
-
 	/**
 	 * Initialization of the game pane.
 	 * 
 	 * @throws IOException
 	 *             it DooB.log can't be accessed.
+	 * @param levelPath The path of the levels to be read.
 	 */
-	@FXML
-	public void initialize() throws IOException {
+
+	public void initGame(String levelPath) {
 		dLog = DLog.getInstance();
-		readOptions();
 		levelList = new ArrayList<String>();
-		readLevels();
+		readLevels(levelPath);
 		levelLabel.setText((currentLevel + 1) + "");
 		gameState = GameState.RUNNING;
 		createTimer();
 		newLevel();
+		readOptions();
 		gc = lives1.getGraphicsContext2D();
+		gc2 = lives2.getGraphicsContext2D();
 		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
-		GraphicsContext gc2 = background.getGraphicsContext2D();
-		gc2.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
+		GraphicsContext gcBg = background.getGraphicsContext2D();
+		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
 		pane.getChildren().add(background);
 		background.toBack();
 		running = true;
@@ -98,6 +97,20 @@ public class GameController implements LevelObserver {
 		dLog.setFile("DooB.log");
 		dLog.info("Game started.", DLog.Type.STATE);
   }
+	
+	/**
+	 * Initialize a multiplayergame.
+	 */
+	public void initMultiPlayer() {
+		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
+	}
+	
+	/**
+	 * Initialize a singleplayergame.
+	 */
+	public void initSinglePlayer() {
+		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
+	}
 	
 	/**
 	 * Navigate back to the menu.
@@ -142,15 +155,15 @@ public class GameController implements LevelObserver {
 	/**
 	 * Reads all levels out of the levelsfile as a string and puts them in a
 	 * list of strings with all levels.
+	 * @param levelPath The path to the levels that have to be read.
 	 */
-	public void readLevels() {
+	public void readLevels(String levelPath) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder dBuilder = factory.newDocumentBuilder();
 
-			Document doc = dBuilder.parse(new File(
-					"src/main/resources/level/Levels.xml"));
+			Document doc = dBuilder.parse(new File(levelPath));
 			doc.getDocumentElement().normalize();
 
 			NodeList levels = doc.getElementsByTagName("LevelName");
@@ -167,23 +180,28 @@ public class GameController implements LevelObserver {
 	}
 
 	/**
-	 * Reads all options from the options xml
+	 * Reads all options from the options xml.
 	 */
-	public void readOptions(){
-		OptionsController oc = new OptionsController("src/main/resources/Options/Options.xml");
-		oc.read();
-		this.leftKey = oc.getLeft();
-		this.rightKey = oc.getRight();
-		this.shootKey = oc.getShoot();
-		this.sound = oc.getSound();
+	public void readOptions() {
+		for (int i = 0; i < level.getPlayers().size(); i++) {
+			OptionsController oc = new OptionsController("src/main/resources/Options/OptionsPlayer" + (i + 1) + ".xml");
+			oc.read();
+			level.getPlayers().get(i).setLeftKey(oc.getLeft());
+			level.getPlayers().get(i).setRightKey(oc.getRight());
+			level.getPlayers().get(i).setShootKey(oc.getShoot());
+		}
 	}
 
 	/**
 	 * Updates the score every gamestep.
 	 */
 	public void updateScore() {
-		int score = level.getPlayers().get(0).getScore();
-		scoreTextView1.setText(score + "");
+		int score1 = level.getPlayers().get(0).getScore();
+		scoreTextView1.setText(score1 + "");
+		if (level.getPlayers().size() > 1) {
+			int score2 = level.getPlayers().get(1).getScore();
+			scoreTextView2.setText(score2 + "");
+		}
 	}
 
 	/**
@@ -194,7 +212,9 @@ public class GameController implements LevelObserver {
     double progress = level.getCurrentTime() / level.getTime();
     if (progress <= 0) {
 		for (Player player : level.getPlayers()) {
-			player.die();
+			if (player.isAlive()) {
+				player.die();
+			}
 		}
 		onLevelStateChange(Level.Event.LOST_LIFE);
       	return;
@@ -223,11 +243,14 @@ public class GameController implements LevelObserver {
 	 * Updates the amount of lives every gamestep.
 	 */
 	public void updateLives() {
-		gc.clearRect(0, 0, lives1.getWidth(), lives2.getHeight());
-		for (Player p : level.getPlayers()) {
-			for (int i = 0; i < p.getLives(); i++) {
-				gc.drawImage(new Image("/image/heart.png"), i * HEART_SPACE,
-						HEART_Y);
+		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
+		gc2.clearRect(0, 0, lives2.getWidth(), lives2.getHeight());
+		for (int i = 0; i < level.getPlayers().get(0).getLives(); i++) {
+			gc.drawImage(new Image("/image/heart.png"), i * HEART_SPACE, HEART_Y);
+		}
+		if (level.getPlayers().size() > 1) {
+			for (int i = 0; i < level.getPlayers().get(1).getLives(); i++) {
+				gc2.drawImage(new Image("/image/heart.png"), i * HEART_SPACE, HEART_Y);
 			}
 		}
 	}
@@ -236,24 +259,24 @@ public class GameController implements LevelObserver {
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
 	 */
 	public void newLevel() {
-		Player currentPlayer = null;
+		ArrayList<Player> players = null;
 		if (level != null) {
-			currentPlayer = level.getPlayers().get(0);
+			players = level.getPlayers();
 			level.stopTimer();
 		}
 
 		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
 		level.addObserver(this);
-		if (currentPlayer != null) {
-			int lives = currentPlayer.getLives();
-			int score = currentPlayer.getScore();
-			level.getPlayers().get(0).setLives(lives);
-			level.getPlayers().get(0).setScore(score);
-		}
-
-		level.setLeftKey(leftKey);
-		level.setRightKey(rightKey);
-		level.setShootKey(shootKey);
+		if (players != null) {
+			for (int i = 0; i < players.size(); i++) {
+				Player p = level.getPlayers().get(i);
+				int lives = players.get(i).getLives();
+				int score = players.get(i).getScore();
+				p.setLives(lives);
+				p.setScore(score);
+			}
+		} 
+		readOptions();
 	}
 
 	public Level getLevel() {

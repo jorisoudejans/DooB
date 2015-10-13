@@ -64,7 +64,12 @@ public class CollisionResolver {
         }
         player.die();
 
-        final boolean gameOver = player.getLives() <= 1;
+        boolean gameOver = true;
+        for (Player p : level.getPlayers()) {
+        	if (p.getLives() > 1) {
+        		gameOver = false;
+        	}
+        }
         if (gameOver) {
             level.onEvent(Level.Event.ZERO_LIVES);
         } else {

@@ -30,7 +30,6 @@ public class Level {
     private GraphicsContext gc;
 
     private ArrayList<Ball> balls;
-    private ArrayList<Projectile> projectiles;
     private ArrayList<Player> players;
     private ArrayList<Wall> walls;
     private double currentTime;
@@ -94,14 +93,17 @@ public class Level {
 
         canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent key) {
-                if (key.getCode() != KeyCode.SPACE) {
-                    players.get(0).setSpeed(0);
-                }
+            	for (Player p : players) {
+            		if (p.isAlive()) {
+	            		if (key.getCode() == p.getLeftKey() || key.getCode() == p.getRightKey()) {
+	                    	p.setSpeed(0);
+	                	}
+            		}
+            	}
             }
         });
 
         canvas.requestFocus();
-        projectiles = new ArrayList<Projectile>();
     }
 
     private void createTimer() {
@@ -121,8 +123,8 @@ public class Level {
      *          the player that shoots the projectile.
      */
     public void shoot(Player player) {
-        if (projectiles.size() < 1) {
-            projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2 
+        if (player.getProjectiles().size() < 1) {
+        	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2 
             		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
             dLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
@@ -178,10 +180,14 @@ public class Level {
     public void paint() {
         // Clear canvas.
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        players.get(0).draw(gc);
-        for (Projectile p : projectiles) {
-            gc.drawImage(p.getImg(), p.getX(), p.getY());
-            p.draw(gc);
+        for (Player p : players)  {
+        	if (p.isAlive()) {
+	        	p.draw(gc);
+	        	for (Projectile pr : p.getProjectiles()) {
+	                gc.drawImage(pr.getImg(), pr.getX(), pr.getY());
+	                pr.draw(gc);
+	            }
+        	}
         }
         for (Ball b : balls) {
             b.draw(gc);
@@ -210,12 +216,6 @@ public class Level {
      * Timer for animation.
      */
     public void update() {
-        for (Projectile projectile : projectiles) {
-            if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
-                projectile.move();
-            }
-            projectile.draw(gc);
-        }
         // endlessLevel();
         collisionManager.detectCollisions();
         moveBalls();
@@ -223,7 +223,15 @@ public class Level {
         paint();
         currentTime -= 1;
         for (Player player : players) {
-            player.move();
+        	if (player.isAlive()) {
+	            player.move();
+	            for (Projectile projectile : player.getProjectiles()) {
+	                if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
+	                    projectile.move();
+	                }
+	                projectile.draw(gc);
+	            }
+        	}
         }
         powerUpManager.onUpdate(currentTime);
     }
@@ -257,7 +265,8 @@ public class Level {
      * @param projectile to remove.
      */
     public void removeProjectile(Projectile projectile) {
-        projectiles.remove(projectile);
+    	Player p = projectile.getPlayer();
+    	p.getProjectiles().remove(projectile);
     }
 
     /**
@@ -401,10 +410,6 @@ public class Level {
         this.projectileFreeze = projectileFreeze;
     }
 
-    public ArrayList<Projectile> getProjectiles() {
-        return projectiles;
-    }
-
     public ArrayList<PowerUp> getCollidablePowerups() {
         return powerUpManager.getCollidables();
     }
@@ -445,27 +450,29 @@ public class Level {
      * Handler for key presses.
      */
     private class KeyPressHandler implements EventHandler<KeyEvent> {
-        private KeyCode last = KeyCode.SPACE;
 
         public void handle(KeyEvent key) {
-            if(key.getCode() == rightKey) {
-                players.get(0).setSpeed(players.get(0).getMoveSpeed());
-                if (last != rightKey) {
-                    dLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
-                    last = rightKey;
-                }
-            }
-            if(key.getCode() == leftKey) {
-                players.get(0).setSpeed(-players.get(0).getMoveSpeed());
-                if (last != leftKey) {
-                    dLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
-                    last = leftKey;
-                }
-            }
-            if(key.getCode() == shootKey) {
-                    shoot(players.get(0));
-            }
-            //players.get(0).setSpeed(0);
+        	for (Player p : players) {
+        		if (p.isAlive()) {
+		            if (key.getCode() == p.getRightKey()) {
+		               p.setSpeed(p.getMoveSpeed());
+		                if (p.getLastKey() != p.getRightKey()) {
+		                    dLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
+		                    p.setLastKey(p.getRightKey());
+		                }
+		            }
+		            if (key.getCode() == p.getLeftKey()) {
+		                p.setSpeed(-p.getMoveSpeed());
+		                if (p.getLastKey() != p.getLeftKey()) {
+		                    dLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
+		                    p.setLastKey(p.getLeftKey());
+		                }
+		            }
+		            if (key.getCode() == p.getShootKey()) {
+		                    shoot(p);
+		            }
+        		}
+        	}
 
         }
     }

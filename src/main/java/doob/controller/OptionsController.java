@@ -29,6 +29,10 @@ public class OptionsController {
 	private KeyCode left;
 	private KeyCode right;
 	private KeyCode shoot;
+	
+	private KeyCode mpLeft;
+	private KeyCode mpRight;
+	private KeyCode mpShoot;
 
 	private int sound;
 
@@ -90,6 +94,7 @@ public class OptionsController {
 	public void parseSound(Document doc) {
 		NodeList nListBall = doc.getElementsByTagName("sound");
 		Node nNode = nListBall.item(0);
+		System.out.println(nNode == null);
 		this.sound = Integer.parseInt(nNode.getTextContent());
 	}
 

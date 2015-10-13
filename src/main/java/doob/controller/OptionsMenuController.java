@@ -41,7 +41,7 @@ public class OptionsMenuController {
 		selectedKey = Key.NONE;
 		anchorPane.setOnKeyPressed(new ControlAdapter());
 
-		oc = new OptionsController("src/main/resources/Options/Options.xml");
+		oc = new OptionsController("src/main/resources/Options/OptionsPlayer1.xml");
 		oc.read();
 
 		leftButton.setText(oc.getLeft().getName());
