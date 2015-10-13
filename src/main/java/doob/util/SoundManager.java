@@ -23,6 +23,7 @@ public final class SoundManager {
 	 */
 	public static void playTune(String path) {
 		tune = new MediaPlayer(new Media(SoundManager.class.getResource(path).toString()));
+		tune.setVolume(0.1);
 		tune.play();
 	}
 	
