@@ -1,20 +1,21 @@
 package doob.level;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import javafx.scene.media.MediaException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import doob.model.Ball;
 import doob.model.Level;
 import doob.model.Player;
 import doob.model.Projectile;
 import doob.model.Wall;
 import doob.model.powerup.PowerUp;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.anyInt;
 
 /**
  * Class to test all resolving of collisions.
@@ -192,6 +193,8 @@ public class CollisionResolverTest {
 	    	verify(level).getPowerUpManager();
 	    	verify(player).incrScore(anyInt());   
     	} catch (IllegalStateException e) {
+    		e.printStackTrace();
+    	} catch (MediaException e) {
     		e.printStackTrace();
     	}
     }
