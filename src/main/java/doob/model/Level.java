@@ -16,10 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Level class, created from LevelFactory.
@@ -65,6 +62,8 @@ public class Level {
     private KeyCode leftKey;
     private KeyCode rightKey;
     private KeyCode shootKey;
+
+    private boolean survival = false;
 
 
     /**
@@ -224,12 +223,47 @@ public class Level {
         moveBalls();
         animateWalls();
         paint();
-        currentTime -= 1;
+        if(!survival) {
+            currentTime -= 1;
+        }else{
+            currentTime += 1;
+            if(balls.size() <= 1){
+              spawnBalls(System.currentTimeMillis());
+            }
+        }
         for (Player player : players) {
             player.move();
         }
         powerUpManager.onUpdate(currentTime);
     }
+
+    public void spawnBalls(long seed){
+
+        Random generator = new Random(seed);
+        int i = generator.nextInt() % 5;
+        switch(i){
+            case 0: spawnSameSizeBalls(6, 16);
+                break;
+            case 1: spawnSameSizeBalls(4, 32);
+                break;
+            case 2: spawnSameSizeBalls(3, 32);
+                break;
+            case 3: spawnSameSizeBalls(2, 64);
+                break;
+            case 4: spawnSameSizeBalls(1, 128);
+                break;
+        }
+    }
+
+    public void spawnSameSizeBalls(int amount, int size){
+        double y = canvas.getHeight()/4;
+        for(int i = 0; i < amount; i++){
+            double x = canvas.getWidth() / (amount + 1) * (i+1);
+            Ball ball = new Ball(x, y, 2, 0, size);
+            this.balls.add(ball);
+        }
+    }
+
 
 
     /**
@@ -442,6 +476,14 @@ public class Level {
 
     public void setShootKey(KeyCode shootKey) {
         this.shootKey = shootKey;
+    }
+
+    public boolean isSurvival() {
+        return survival;
+    }
+
+    public void setSurvival(boolean survival) {
+        this.survival = survival;
     }
 
     /**

@@ -98,6 +98,34 @@ public class GameController implements LevelObserver {
 		dLog.setFile("DooB.log");
 		dLog.info("Game started.", DLog.Type.STATE);
   }
+
+	@FXML
+	public void initSurvival() {
+		dLog = DLog.getInstance();
+		readOptions();
+		levelList = new ArrayList<String>();
+		levelList.add("src/main/resources/level/Survival.xml");
+		gameState = GameState.RUNNING;
+		createTimer();
+		newLevel();
+		level.getPlayers().get(0).setLives(1);
+		level.setSurvival(true);
+
+		gc = lives1.getGraphicsContext2D();
+		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
+		GraphicsContext gc2 = background.getGraphicsContext2D();
+		gc2.drawImage(new Image("/image/background.jpg"), 0, 0, canvas.getWidth(), canvas.getHeight());
+		pane.getChildren().add(background);
+		background.toBack();
+		running = true;
+
+		dLog.setFile("DooB.log");
+		dLog.info("Game started.", DLog.Type.STATE);
+
+
+	}
+
+
 	
 	/**
 	 * Navigate back to the menu.
@@ -165,6 +193,7 @@ public class GameController implements LevelObserver {
 			e.printStackTrace();
 		}
 	}
+
 
 	/**
 	 * Reads all options from the options xml

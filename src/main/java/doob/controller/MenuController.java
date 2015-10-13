@@ -31,5 +31,14 @@ public class MenuController {
 	public void showOptions() {
 		App.loadScene("/FXML/OptionsMenu.fxml");
 	}
+
+	/**
+	 * navigate to Survivalgame.
+	 */
+	@FXML
+	public void playSurvival() {
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initSurvival();
+	}
 	
 }

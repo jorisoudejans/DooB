@@ -205,7 +205,7 @@ public class CollisionResolver {
             return;
         }
 
-        if (walls.t0 == level.getLeft() && walls.t1 == level.getRight()) {
+        if (walls.t0 == level.getLeft() && walls.t1 == level.getRight() && !level.isSurvival()) {
             level.onEvent(Level.Event.ALL_BALLS_GONE);
             level.stopTimer();
             level.notifyObservers();
