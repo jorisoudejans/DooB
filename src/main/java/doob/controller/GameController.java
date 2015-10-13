@@ -73,8 +73,6 @@ public class GameController implements LevelObserver {
 	private KeyCode leftKey;
 	private KeyCode rightKey;
 	private KeyCode shootKey;
-
-	private int sound;
 	
 	/**
 	 * Initialization of the game pane.
@@ -173,15 +171,15 @@ public class GameController implements LevelObserver {
 	}
 
 	/**
-	 * Reads all options from the options xml
+	 * Reads all options from the options xml.
 	 */
-	public void readOptions(){
+	public void readOptions() {
 		OptionsController oc = new OptionsController("src/main/resources/Options/Options.xml");
 		oc.read();
 		this.leftKey = oc.getLeft();
 		this.rightKey = oc.getRight();
 		this.shootKey = oc.getShoot();
-		this.sound = oc.getSound();
+		SoundManager.setVolume(oc.getVolume());
 	}
 
 	/**
