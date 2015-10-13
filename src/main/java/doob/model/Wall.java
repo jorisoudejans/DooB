@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Wall implements Collidable, Drawable {
 
-	private static final int BOUNDS_DELTA = 10;
+	public static final int BOUNDS_DELTA = 10;
 	
 	private int x, y, width, height;
 	private boolean moveable;

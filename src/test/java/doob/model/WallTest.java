@@ -1,10 +1,9 @@
 package doob.model;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import javafx.scene.shape.Rectangle;
-
-import org.junit.Test;
 
 /**
  * Class to test Wall.
@@ -18,7 +17,7 @@ public class WallTest {
 	@Test
 	public void getBoundsTest() {
 		Wall w = new Wall(0, 0, 50, 800);
-		double expectedX = 0, expectedY = 0, expectedWidth = 50, expectedHeight = 800;
+		double expectedX = 0, expectedY = 0, expectedWidth = 50 + Wall.BOUNDS_DELTA, expectedHeight = 800;
 		double x = w.getBounds().getX(), y = w.getBounds().getY(), width = w
 				.getBounds().getWidth(), height = w.getBounds().getHeight();
 		assertTrue(expectedX == x);
