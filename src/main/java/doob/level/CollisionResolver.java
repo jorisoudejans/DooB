@@ -33,23 +33,74 @@ public class CollisionResolver {
      * @param wall collider
      */
     public void playerVersusWall(Player player, Wall wall) {
-        int xSpeed = player.getSpeed();
+        int playerSpeed = player.getSpeed();
+        int wallX = wall.getX();
+        int wallWidth = wall.getWidth();
+        int playerWidth = player.getWidth();
+
         if (wall.isOpen()) {
             return;
         }
-        if (xSpeed > 0) {
-            if (player.getX() + player.getWidth() >= wall.getX()) {
-                player.setX(wall.getX()  - player.getWidth() - Player.BOUNCE_BACK_DISTANCE);
-            }
-        } else if (xSpeed < 0) {
-            if (player.getX() <= wall.getX() + wall.getWidth()) {
-                player.setX(wall.getX() + wall.getWidth() + Player.BOUNCE_BACK_DISTANCE);
-            }
+
+        switch (getHitDirection(player, wall)) {
+            case LEFT:
+                if (playerSpeed >= 0) {
+                    stopPlayer(player, wallX - playerWidth);
+                }
+                break;
+            case TOP:
+                killPlayer(player);
+                break;
+            case RIGHT:
+                if (playerSpeed <= 0) {
+                    stopPlayer(player, wallX + wallWidth);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Kill player.
+     * @param player player to be killed
+     */
+    private void killPlayer(Player player) {
+        player.die();
+    }
+
+    /**
+     * Stop player from moving.
+     * @param player player to be stopped.
+     */
+    private void stopPlayer(Player player, int x) {
+        player.setSpeed(0);
+        player.setX(x);
+    }
+
+    /**
+     * Directions Player and Wall can collide.
+     */
+    private enum HitDirection {
+        LEFT,
+        TOP,
+        RIGHT
+    }
+
+    /**
+     * Get directions Player and Wall collide.
+     * @param player player collider
+     * @param wall wall collider
+     * @return HitDirection detected
+     */
+    private HitDirection getHitDirection(Player player, Wall wall) {
+        int playerX = player.getX();
+        int wallX = wall.getX();
+        int wallWidth = wall.getWidth();
+        if (playerX <= wallX) {
+            return HitDirection.LEFT;
+        } else if (playerX >= wallX + wallWidth) {
+            return HitDirection.RIGHT;
         } else {
-            if (player.getX() == wall.getX() + wall.getWidth()) {
-                player.setX(player.getX() + 1);
-            } else {
-                player.setX(player.getX() - 1); }
+            return HitDirection.TOP;
         }
     }
 
