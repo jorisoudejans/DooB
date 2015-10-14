@@ -132,6 +132,7 @@ public class GameController implements LevelObserver {
 	 */
 	@FXML
 	public void backToMenu() {
+		level.stopTimer();
 		App.loadScene("/FXML/Menu.fxml");
 	}
 
