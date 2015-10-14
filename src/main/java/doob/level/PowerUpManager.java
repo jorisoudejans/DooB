@@ -114,6 +114,10 @@ public class PowerUpManager {
         return powerupsOnScreen;
     }
 
+    public ArrayList<Class<?>> getAvailablePowerups() {
+        return availablePowerups;
+    }
+
     public void onUpdate(double time) {
         for (PowerUp p : powerupsOnScreenToRemove) {
             powerupsOnScreen.remove(p);

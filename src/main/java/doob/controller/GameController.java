@@ -6,6 +6,8 @@ import doob.level.LevelFactory;
 import doob.level.LevelObserver;
 import doob.model.Level;
 import doob.model.Player;
+import doob.model.powerup.LifePowerUp;
+import doob.model.powerup.TimePowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -108,8 +110,13 @@ public class GameController implements LevelObserver {
 		gameState = GameState.RUNNING;
 		createTimer();
 		newLevel();
-		level.getPlayers().get(0).setLives(1);
+
 		level.setSurvival(true);
+		level.getPlayers().get(0).setLives(1);
+		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
+		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
+
+
 
 		gc = lives1.getGraphicsContext2D();
 		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());

@@ -64,6 +64,7 @@ public class Level {
     private KeyCode shootKey;
 
     private boolean survival = false;
+    private int nextWaveHP = 0;
 
 
     /**
@@ -227,7 +228,11 @@ public class Level {
             currentTime -= 1;
         }else{
             currentTime += 1;
-            if(balls.size() <= 1){
+            if(currentTime > 1000){
+                currentTime -= 1000;
+                nextWaveHP++;
+            }
+            if(totalBallHitpoints() <= nextWaveHP){
               spawnBalls(System.currentTimeMillis());
             }
         }
@@ -255,11 +260,45 @@ public class Level {
         }
     }
 
+    /**
+     * calculates the amount of time you would need to hit all the
+     * balls in order for them to all be gone.
+     * @return
+     */
+    public int totalBallHitpoints(){
+        int sum = 0;
+        for(Ball b: balls){
+            sum += ballHitpoints(0, b.getSize());
+        }
+        return sum;
+    }
+
+    /**
+     * Calculates the amount of times a ball would
+     * need to be hit to be gone.
+     * @param sum
+     * @param size
+     * @return
+     */
+    public static int ballHitpoints(int sum, int size) {
+        if(size <= 16){
+            return sum + 1;
+        }
+        return 1 + 2 * ballHitpoints(sum, size / 2);
+    }
+
+
     public void spawnSameSizeBalls(int amount, int size){
         double y = canvas.getHeight()/4;
         for(int i = 0; i < amount; i++){
+            int direction;
+            if(Math.random() < 0.5){
+                direction  = -2;
+            }else{
+                direction = 2;
+            }
             double x = canvas.getWidth() / (amount + 1) * (i+1);
-            Ball ball = new Ball(x, y, 2, 0, size);
+            Ball ball = new Ball(x, y, direction, 0, size);
             this.balls.add(ball);
         }
     }
