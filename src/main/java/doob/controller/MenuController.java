@@ -1,6 +1,7 @@
 package doob.controller;
 
 import doob.App;
+import doob.controller.GameController.GameMode;
 import javafx.fxml.FXML;
 
 /**
@@ -13,15 +14,62 @@ public class MenuController {
 	 */
 	@FXML
 	public void playSinglePlayer() {
-		App.loadScene("/fxml/game.fxml");
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initSinglePlayer();
 	}
 	
 	/**
-	 * Navigate to the highscores menu.
+	 * Navigate to duel mode multiplayer game.
 	 */
 	@FXML
-	public void showHighscores() {
-		App.loadScene("/FXML/HighscoreMenu.fxml");
+	public void playDuelMode() {
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initDuelMode();
+	}
+	
+	/**
+	 * Navigate to coop mode multiplayer game.
+	 */
+	@FXML
+	public void playCoopMode() {
+		GameController gc = App.loadScene("/fxml/CoopGame.fxml").getController();
+		gc.initCoopMode();
+	}
+	
+	/**
+	 * Navigate to the singleplayer highscores menu.
+	 */
+	@FXML
+	public void showSinglePlayerHighscores() {
+		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
+		hsmc.updateTable("src/main/resources/Highscore/highscores.xml", GameMode.SINGLEPLAYER);
+	}
+	
+	/**
+	 * Navigate to the duel highscores menu.
+	 */
+	@FXML
+	public void showDuelHighscores() {
+		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
+		hsmc.updateTable("src/main/resources/Highscore/duelhighscores.xml", GameMode.DUEL);
+	}
+	
+	/**
+	 * Navigate to the coop highscores menu.
+	 */
+	@FXML
+	public void showCoopHighscores() {
+		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
+		hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml", GameMode.COOP);
+	}
+	
+	/**
+	 * Navigate to the survival highscores menu.
+	 */
+	@FXML
+	public void playSurvivalMode() {
+		GameController gc = App.loadScene("/fxml/Game.fxml").getController();
+		gc.initSurvival();
 	}
 	
 	/**

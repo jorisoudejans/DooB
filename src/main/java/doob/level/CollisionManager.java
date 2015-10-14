@@ -33,20 +33,22 @@ public class CollisionManager {
     public void detectCollisions() {
         this.callbacks = new ArrayList<CollisionCallback>();
         for (Player player : level.getPlayers()) {
-            detectCollision(player);
+        	if (player.isAlive()) {
+	            detectCollision(player);
+	            for (final Projectile p : player.getProjectiles()) {
+	                if (p.getY() <= 0) {
+	                    callbacks.add(new CollisionCallback() {
+	                        @Override
+	                        public void perform() {
+	                            collisionResolver.projectileVersusCeiling(p);
+	                        }
+	                    });
+	                }
+	            }
+        	}
         }
         for (Ball ball : level.getBalls()) {
             detectCollision(ball);
-        }
-        for (final Projectile p : level.getProjectiles()) {
-            if (p.getY() <= 0) {
-                callbacks.add(new CollisionCallback() {
-                    @Override
-                    public void perform() {
-                        collisionResolver.projectileVersusCeiling(p);
-                    }
-                });
-            }
         }
         for (CollisionCallback callback : callbacks) {
             callback.perform();
@@ -90,15 +92,19 @@ public class CollisionManager {
                 });
             }
         }
-        for (final Projectile p : level.getProjectiles()) {
-            if (collides(ball, p)) {
-                callbacks.add(new CollisionCallback() {
-                    @Override
-                    public void perform() {
-                        collisionResolver.ballVersusProjectile(ball, p);
-                    }
-                });
-            }
+        for (Player player : level.getPlayers()) {
+        	if (player.isAlive()) {
+		        for (final Projectile p : player.getProjectiles()) {
+		            if (collides(ball, p)) {
+		                callbacks.add(new CollisionCallback() {
+		                    @Override
+		                    public void perform() {
+		                        collisionResolver.ballVersusProjectile(ball, p);
+		                    }
+		                });
+		            }
+		        }
+        	}
         }
     }
 

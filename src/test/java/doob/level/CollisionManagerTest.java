@@ -140,12 +140,13 @@ public class CollisionManagerTest {
      */
     @Test
     public void testBallVersusProjectile() {
-        Player player = mock(Player.class);
+        Player player = new Player(0, 0, 0, 0, null, null, null);
         Ball ball = new Ball(0, 0, 0, 0, 50);
         Projectile projectile = new Spike(player, 10, 10, -1);
+        player.getProjectiles().add(projectile);
 
+        when(level.getPlayers()).thenReturn(asList(player));
         when(level.getBalls()).thenReturn(asList(ball));
-        when(level.getProjectiles()).thenReturn(asList(projectile));
 
         collisionManager.detectCollisions();
         verify(collisionResolver).ballVersusProjectile(ball, projectile);
@@ -161,7 +162,7 @@ public class CollisionManagerTest {
         Projectile projectile = new Spike(player, 100, 10, -1);
 
         when(level.getBalls()).thenReturn(asList(ball));
-        when(level.getProjectiles()).thenReturn(asList(projectile));
+        when(player.getProjectiles()).thenReturn(asList(projectile));
 
         collisionManager.detectCollisions();
         verifyNoMoreInteractions(collisionResolver);
@@ -172,10 +173,11 @@ public class CollisionManagerTest {
      */
     @Test
     public void testProjectileVersusCeiling() {
-        Player player = mock(Player.class);
+        Player player = new Player(0, 0, 0, 0, null, null, null);
         Projectile projectile = new Spike(player, 0, -10, -1);
+        player.getProjectiles().add(projectile);
 
-        when(level.getProjectiles()).thenReturn(asList(projectile));
+        when(level.getPlayers()).thenReturn(asList(player));
 
         collisionManager.detectCollisions();
         verify(collisionResolver).projectileVersusCeiling(projectile);
@@ -186,10 +188,11 @@ public class CollisionManagerTest {
      */
     @Test
     public void testProjectileVersusCeilingNoHit() {
-        Player player = mock(Player.class);
+        Player player = new Player(0, 0, 0, 0, null, null, null);
         Projectile projectile = new Spike(player, 0, 10, -1);
-
-        when(level.getProjectiles()).thenReturn(asList(projectile));
+        player.getProjectiles().add(projectile);
+        
+        when(level.getPlayers()).thenReturn(asList(player));
 
         collisionManager.detectCollisions();
         verifyNoMoreInteractions(collisionResolver);

@@ -115,7 +115,12 @@ public class CollisionResolver {
         }
         player.die();
 
-        final boolean gameOver = player.getLives() <= 1;
+        boolean gameOver = true;
+        for (Player p : level.getPlayers()) {
+        	if (p.getLives() > 0) {
+        		gameOver = false;
+        	}
+        }
         if (gameOver) {
             level.onEvent(Level.Event.ZERO_LIVES);
         } else {
@@ -167,13 +172,12 @@ public class CollisionResolver {
         if (ball.getSize() >= Ball.MIN_SIZE) {
             dLog.info(ball.toString() + " splits", DLog.Type.COLLISION);
             Ball[] res = ball.split();
-            projectile.getPlayer().incrScore(Ball.SCORE);
             level.addBall(res[0]);
             level.addBall(res[1]);
         } else {
             dLog.info(ball.toString() + " disappears", DLog.Type.COLLISION);
         }
-
+        projectile.getPlayer().incrScore(Ball.SCORE);
         level.removeBall(ball);
         level.removeProjectile(projectile);
         level.getPowerUpManager().spawnPowerups(ball.getX(), ball.getY());
