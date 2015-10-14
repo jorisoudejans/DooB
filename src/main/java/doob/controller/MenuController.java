@@ -67,8 +67,9 @@ public class MenuController {
 	 * Navigate to the survival highscores menu.
 	 */
 	@FXML
-	public void showSurvivalHighscores() {
-		//TODO
+	public void playSurvivalMode() {
+		GameController gc = App.loadScene("/fxml/Game.fxml").getController();
+		gc.initSurvival();
 	}
 	
 	/**
@@ -77,6 +78,15 @@ public class MenuController {
 	@FXML
 	public void showOptions() {
 		App.loadScene("/FXML/OptionsMenu.fxml");
+	}
+
+	/**
+	 * navigate to Survivalgame.
+	 */
+	@FXML
+	public void playSurvival() {
+		GameController gc = App.loadScene("/fxml/game.fxml").getController();
+		gc.initSurvival();
 	}
 	
 }

@@ -2,6 +2,7 @@ package doob.model;
 
 import doob.DLog;
 import doob.level.CollisionManager;
+import doob.level.CollisionResolver;
 import doob.level.LevelObserver;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
@@ -15,8 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Level class, created from LevelFactory.
@@ -61,6 +61,9 @@ public class Level {
     private KeyCode leftKey;
     private KeyCode rightKey;
     private KeyCode shootKey;
+
+    private boolean survival = false;
+    private int nextWaveHP = 0;
 
 
     /**
@@ -221,7 +224,18 @@ public class Level {
         moveBalls();
         animateWalls();
         paint();
-        currentTime -= 1;
+        if(!survival) {
+            currentTime -= 1;
+        }else{
+            currentTime += 1;
+            if(currentTime > 1000){
+                currentTime -= 1000;
+                nextWaveHP++;
+            }
+            if(totalBallHitpoints() <= nextWaveHP){
+              spawnBalls(System.currentTimeMillis());
+            }
+        }
         for (Player player : players) {
         	if (player.isAlive()) {
 	            player.move();
@@ -235,6 +249,68 @@ public class Level {
         }
         powerUpManager.onUpdate(currentTime);
     }
+
+    public void spawnBalls(long seed){
+
+        Random generator = new Random(seed);
+        int i = generator.nextInt() % 5;
+        switch(i){
+            case 0: spawnSameSizeBalls(6, 16);
+                break;
+            case 1: spawnSameSizeBalls(4, 32);
+                break;
+            case 2: spawnSameSizeBalls(3, 32);
+                break;
+            case 3: spawnSameSizeBalls(2, 64);
+                break;
+            case 4: spawnSameSizeBalls(1, 128);
+                break;
+        }
+    }
+
+    /**
+     * calculates the amount of time you would need to hit all the
+     * balls in order for them to all be gone.
+     * @return
+     */
+    public int totalBallHitpoints(){
+        int sum = 0;
+        for(Ball b: balls){
+            sum += ballHitpoints(0, b.getSize());
+        }
+        return sum;
+    }
+
+    /**
+     * Calculates the amount of times a ball would
+     * need to be hit to be gone.
+     * @param sum
+     * @param size
+     * @return
+     */
+    public static int ballHitpoints(int sum, int size) {
+        if(size <= 16){
+            return sum + 1;
+        }
+        return 1 + 2 * ballHitpoints(sum, size / 2);
+    }
+
+
+    public void spawnSameSizeBalls(int amount, int size){
+        double y = canvas.getHeight()/4;
+        for(int i = 0; i < amount; i++){
+            int direction;
+            if(Math.random() < 0.5){
+                direction  = -2;
+            }else{
+                direction = 2;
+            }
+            double x = canvas.getWidth() / (amount + 1) * (i+1);
+            Ball ball = new Ball(x, y, direction, 0, size);
+            this.balls.add(ball);
+        }
+    }
+
 
 
     /**
@@ -446,6 +522,14 @@ public class Level {
         this.shootKey = shootKey;
     }
 
+    public boolean isSurvival() {
+        return survival;
+    }
+
+    public void setSurvival(boolean survival) {
+        this.survival = survival;
+    }
+
     /**
      * Handler for key presses.
      */
@@ -474,6 +558,101 @@ public class Level {
         		}
         	}
 
+        }
+    }
+
+    /**
+     * Class that assists in building level.
+     */
+    public static class Builder {
+
+        private Canvas canvas;
+        private ArrayList<Ball> balls;
+        private ArrayList<Player> players;
+        private ArrayList<Wall> walls;
+        private int time;
+
+        /**
+         * Canvas setter.
+         * @param canvas canvas
+         */
+        public Builder setCanvas(Canvas canvas) {
+            this.canvas = canvas;
+            return this;
+        }
+
+        /**
+         * Time setter.
+         * @param time time
+         */
+        public Builder setTime(int time) {
+            this.time = time;
+            return this;
+        }
+
+        /**
+         * Balls setter.
+         * @param balls balls
+         */
+        public Builder setBalls(ArrayList<Ball> balls) {
+            this.balls = balls;
+            return this;
+        }
+
+        /**
+         * Walls setter.
+         * @param walls walls
+         */
+        public Builder setWalls(ArrayList<Wall> walls) {
+            this.walls = walls;
+            return this;
+        }
+
+        /**
+         * Player setter.
+         * @param players players
+         */
+        public Builder setPlayers(ArrayList<Player> players) {
+            this.players = players;
+            return this;
+        }
+
+        /**
+         * Builds the level.
+         * @return level
+         */
+        public Level build() {
+            Level level = new Level(canvas);
+            Wall right = new Wall((int) canvas.getWidth(), 0, 1, (int) canvas.getHeight());
+            Wall left = new Wall(0, 0, 1, (int) canvas.getHeight());
+            Wall ceiling = new Wall(0, 0, (int) canvas.getWidth(), 1);
+            Wall floor = new Wall(0, (int) canvas.getHeight(), (int) canvas.getWidth(), 1);
+
+            level.setLeft(left);
+            level.setRight(right);
+            level.setCeiling(ceiling);
+            level.setFloor(floor);
+
+            Collections.sort(walls, new Comparator<Wall>() {
+                @Override
+                public int compare(Wall w1, Wall w2) {
+                    return Integer.compare(w1.getX(), w2.getX());
+                }
+            });
+
+            walls.add(right);
+            walls.add(0, left);
+            walls.add(floor);
+            walls.add(ceiling);
+
+            level.setCollisionManager(new CollisionManager(level, new CollisionResolver(level)));
+            level.setPowerUpManager(new PowerUpManager(level));
+            level.setBalls(balls);
+            level.setPlayers(players);
+            level.setWalls(walls);
+            level.setTime(time);
+            level.setCurrentTime(time);
+            return level;
         }
     }
 

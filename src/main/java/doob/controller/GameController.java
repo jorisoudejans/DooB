@@ -1,9 +1,18 @@
 package doob.controller;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import doob.App;
+import doob.DLog;
+import doob.level.LevelFactory;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.powerup.LifePowerUp;
+import doob.model.powerup.TimePowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -23,12 +32,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import doob.App;
-import doob.DLog;
-import doob.level.LevelFactory;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
 
 /**
  * Controller for games.
@@ -127,6 +130,43 @@ public class GameController implements LevelObserver {
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}
 
+
+	@FXML
+	public void initSurvival() {
+		dLog = DLog.getInstance();
+		levelList = new ArrayList<String>();
+		levelList.add("src/main/resources/level/Survival.xml");
+
+		// gameState = GameState.RUNNING;
+		createTimer();
+		newLevel();
+		readOptions();
+
+		level.setSurvival(true);
+		level.getPlayers().get(0).setLives(1);
+		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
+		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
+		gameMode = GameMode.SURVIVAL;
+
+		gc = lives1.getGraphicsContext2D();
+		gc2 = lives2.getGraphicsContext2D();
+		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
+		GraphicsContext gcBg = background.getGraphicsContext2D();
+		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0,
+				canvas.getWidth(), canvas.getHeight());
+		pane.getChildren().add(background);
+		background.toBack();
+		running = true;
+
+		dLog.setFile("DooB.log");
+		dLog.info("Game started.", DLog.Type.STATE);
+
+
+	}
+
+
+	
+
 	/**
 	 * Navigate back to the menu.
 	 */
@@ -197,6 +237,7 @@ public class GameController implements LevelObserver {
 		}
 	}
 
+
 	/**
 	 * Reads all options from the options xml.
 	 */
@@ -225,7 +266,7 @@ public class GameController implements LevelObserver {
 			scoreTextView2.setText(score2 + ""); break;
 		case COOP: score2 = level.getPlayers().get(1).getScore();
 			score = score + score2; break;
-		case SURVIVAL: //TODO
+		case SURVIVAL: break;
 		default: break;
 		}
 		
@@ -290,7 +331,7 @@ public class GameController implements LevelObserver {
 			} break;
 		case COOP: lives2 = level.getPlayers().get(1).getLives();
 			lives = lives + lives2; break;
-		case SURVIVAL: //TODO
+		case SURVIVAL:  break;
 		default: break;
 		}
 		
