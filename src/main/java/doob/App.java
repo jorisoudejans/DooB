@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import doob.controller.GameController.GameMode;
 import doob.controller.HighscoreMenuController;
 
 import java.io.IOException;
@@ -59,9 +60,17 @@ public class App extends Application {
 	 * @param score
 	 *            The score that is passed as a parameter to the controller
 	 */
-	public static void loadHighscoreScene(int score) {
-		HighscoreMenuController hsmc = loadScene("/FXML/HighscoreMenu.fxml")
-				.getController();
+	public static void loadHighscoreScene(int score, GameMode gameMode) {
+		HighscoreMenuController hsmc = loadScene("/FXML/HighscoreMenu.fxml").getController();;
+		
+		switch (gameMode) {
+		case SINGLEPLAYER: hsmc.updateTable("src/main/resources/Highscore/highscores.xml"); break;
+		case DUEL: //TODO hsmc.updateTable("src/main/resources/Highscore/highscores.xml"); break;
+		case COOP: hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml"); break;
+		case SURVIVAL: //TODO
+		default: break;
+		}
+		
 		hsmc.insertScore(score);
 	}
 

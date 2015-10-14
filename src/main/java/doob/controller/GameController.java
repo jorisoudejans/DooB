@@ -55,6 +55,7 @@ public class GameController implements LevelObserver {
 	private Button playPauseButton;
 
 	// private GameState gameState;
+	private GameMode gameMode;
 	private ArrayList<String> levelList;
 	private int currentLevel;
 	private Level level;
@@ -63,7 +64,7 @@ public class GameController implements LevelObserver {
 	private GraphicsContext gc2;
 	private double progress;
 	private boolean running;
-	private boolean duelMode;
+	private int score;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
@@ -105,7 +106,7 @@ public class GameController implements LevelObserver {
 	 * Initialize a duel mode multiplayergame.
 	 */
 	public void initDuelMode() {
-		duelMode = true;
+		gameMode = GameMode.DUEL;
 		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
 	}
 
@@ -113,7 +114,7 @@ public class GameController implements LevelObserver {
 	 * Initialize a coop mode multiplayergame.
 	 */
 	public void initCoopMode() {
-		duelMode = false;
+		gameMode = GameMode.COOP;
 		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
 	}
 
@@ -121,7 +122,7 @@ public class GameController implements LevelObserver {
 	 * Initialize a singleplayergame.
 	 */
 	public void initSinglePlayer() {
-		duelMode = false;
+		gameMode = GameMode.SINGLEPLAYER;
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}
 
@@ -213,15 +214,19 @@ public class GameController implements LevelObserver {
 	 * Updates the score every gamestep.
 	 */
 	public void updateScore() {
-		int score = level.getPlayers().get(0).getScore();
-		if (level.getPlayers().size() > 1) {
-			int score2 = level.getPlayers().get(1).getScore();
-			if (duelMode) {
-				scoreTextView2.setText(score2 + "");
-			} else {
-				score = score + score2;
-			}
+		score = level.getPlayers().get(0).getScore();
+		int score2 = 0;
+		
+		switch (gameMode) {
+		case SINGLEPLAYER: break;
+		case DUEL: score2 = level.getPlayers().get(1).getScore();
+			scoreTextView2.setText(score2 + ""); break;
+		case COOP: score2 = level.getPlayers().get(1).getScore();
+			score = score + score2; break;
+		case SURVIVAL: //TODO
+		default: break;
 		}
+		
 		scoreTextView1.setText(score + "");
 	}
 
@@ -270,21 +275,26 @@ public class GameController implements LevelObserver {
 	 */
 	public void updateLives() {
 		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
+		gc2.clearRect(0, 0, lives2.getWidth(), lives2.getHeight());
 		int lives = level.getPlayers().get(0).getLives();
-		if (level.getPlayers().size() > 1) {
-			if (duelMode) {
-				gc2.clearRect(0, 0, lives2.getWidth(), lives2.getHeight());
-				for (int i = 0; i < level.getPlayers().get(1).getLives(); i++) {
-					gc2.drawImage(new Image("/image/heart.png"), i
-							* HEART_SPACE, HEART_Y);
-				}
-			} else {
-				lives = lives + level.getPlayers().get(1).getLives();
-				for (int i = 0; i < lives; i++) {
-					gc.drawImage(new Image("/image/heart.png"),
-							i * HEART_SPACE, HEART_Y);
-				}
-			}
+		int lives2 = 0; 
+		
+		switch (gameMode) {
+		case SINGLEPLAYER: break;
+		case DUEL: lives2 = level.getPlayers().get(1).getLives();
+			for (int i = 0; i < lives2; i++) {
+				gc2.drawImage(new Image("/image/heart.png"), i
+						* HEART_SPACE, HEART_Y);
+			} break;
+		case COOP: lives2 = level.getPlayers().get(1).getLives();
+			lives = lives + lives2; break;
+		case SURVIVAL: //TODO
+		default: break;
+		}
+		
+		for (int i = 0; i < lives; i++) {
+			gc.drawImage(new Image("/image/heart.png"), i
+					* HEART_SPACE, HEART_Y);
 		}
 	}
 
@@ -320,7 +330,7 @@ public class GameController implements LevelObserver {
 	public void onLevelStateChange(Level.Event event) {
 		switch (event) {
 		case ZERO_LIVES:
-			App.loadHighscoreScene(level.getPlayers().get(0).getScore());
+			App.loadHighscoreScene(score, gameMode);
 			break;
 		case ALL_BALLS_GONE:
 			onAllBallsGone();
@@ -352,7 +362,7 @@ public class GameController implements LevelObserver {
 				} else {
 					// gameState = GameState.WON;
 					dLog.info("Game won!", DLog.Type.STATE);
-					App.loadHighscoreScene(level.getPlayers().get(0).getScore());
+					App.loadHighscoreScene(score, gameMode);
 				}
 			}
 		});
@@ -363,5 +373,9 @@ public class GameController implements LevelObserver {
 	 */
 	public enum GameState {
 		PAUSED, RUNNING, WON, LOST
+	}
+	
+	public enum GameMode {
+		SINGLEPLAYER, DUEL, COOP, SURVIVAL;
 	}
 }

@@ -34,21 +34,15 @@ public class HighscoreMenuController {
 	private TableView<Score> scoreTable;
 
 	private HighscoreController hsc;
-
-	/**
-	 * Initialize.
-	 */
-	@FXML
-	public void initialize() {
-		updateTable();
-	}
+	private String source;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
+	 * @param source The path to the highscores file.
 	 */
-	public void updateTable() {
-		hsc = new HighscoreController(
-				"src/main/resources/Highscore/highscores.xml");
+	public void updateTable(String source) {
+		this.source = source;
+		hsc = new HighscoreController(source);
 		ArrayList<Score> scoreList = hsc.read();
 		nameCol.setCellValueFactory(new PropertyValueFactory<Score, String>(
 				"name"));
@@ -87,7 +81,7 @@ public class HighscoreMenuController {
 					dialog.close();
 					hsc.addScore(new Score(name, score), index);
 					hsc.write();
-					updateTable();
+					updateTable(source);
 					scoreTable.getSelectionModel().select(index);
 				}
 			}
