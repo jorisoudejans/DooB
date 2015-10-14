@@ -65,6 +65,7 @@ public class GameController implements LevelObserver {
 	private double progress;
 	private boolean running;
 	private int score;
+	private int score2;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 
@@ -330,7 +331,7 @@ public class GameController implements LevelObserver {
 	public void onLevelStateChange(Level.Event event) {
 		switch (event) {
 		case ZERO_LIVES:
-			App.loadHighscoreScene(score, gameMode);
+			App.loadHighscoreScene(score, score2, gameMode);
 			break;
 		case ALL_BALLS_GONE:
 			onAllBallsGone();
@@ -362,7 +363,7 @@ public class GameController implements LevelObserver {
 				} else {
 					// gameState = GameState.WON;
 					dLog.info("Game won!", DLog.Type.STATE);
-					App.loadHighscoreScene(score, gameMode);
+					App.loadHighscoreScene(score, score2, gameMode);
 				}
 			}
 		});
@@ -375,7 +376,27 @@ public class GameController implements LevelObserver {
 		PAUSED, RUNNING, WON, LOST
 	}
 	
+	/**
+	 * Game modes.
+	 */
 	public enum GameMode {
-		SINGLEPLAYER, DUEL, COOP, SURVIVAL;
+		SINGLEPLAYER("SinglePlayer Mode"), 
+		DUEL("Duel Mode"), 
+		COOP("Coop Mode"), 
+		SURVIVAL("Survival Mode");
+		
+		private String outputName;
+		
+		/**
+		 * Constructor.
+		 * @param outputName The name that can be used as output.
+		 */
+		GameMode(String outputName) {
+			this.outputName = outputName;	
+		}
+		
+		public String getName() {
+			return outputName;
+		}
 	}
 }

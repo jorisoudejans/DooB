@@ -60,18 +60,19 @@ public class App extends Application {
 	 * @param score
 	 *            The score that is passed as a parameter to the controller
 	 */
-	public static void loadHighscoreScene(int score, GameMode gameMode) {
+	public static void loadHighscoreScene(int score, int score2, GameMode gameMode) {
 		HighscoreMenuController hsmc = loadScene("/FXML/HighscoreMenu.fxml").getController();;
 		
 		switch (gameMode) {
-		case SINGLEPLAYER: hsmc.updateTable("src/main/resources/Highscore/highscores.xml"); break;
-		case DUEL: //TODO hsmc.updateTable("src/main/resources/Highscore/highscores.xml"); break;
-		case COOP: hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml"); break;
+		case SINGLEPLAYER: hsmc.updateTable("src/main/resources/Highscore/highscores.xml", gameMode); break;
+		case DUEL:hsmc.updateTable("src/main/resources/Highscore/duelhighscores.xml", gameMode);
+			hsmc.insertScore(score2, 2); break;
+		case COOP: hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml", gameMode); break;
 		case SURVIVAL: //TODO
 		default: break;
 		}
 		
-		hsmc.insertScore(score);
+		hsmc.insertScore(score, 1);
 	}
 
 	public static Stage getStage() {
