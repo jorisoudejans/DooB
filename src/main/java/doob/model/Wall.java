@@ -9,6 +9,8 @@ import javafx.scene.shape.Rectangle;
  *
  */
 public class Wall implements Collidable, Drawable {
+
+	public static final int BOUNDS_DELTA = 10;
 	
 	private int x, y, width, height;
 	private boolean moveable;
@@ -69,7 +71,7 @@ public class Wall implements Collidable, Drawable {
 	 */
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
+		return new Rectangle(x, y, width + BOUNDS_DELTA, height);
 	}
 	
 	/**

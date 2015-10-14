@@ -1,6 +1,9 @@
 package doob.level;
 
-import doob.model.*;
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Wall;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
@@ -189,14 +192,21 @@ public class LevelFactory {
         //XML parsing
         parseXML();
 
-        LevelBuilder builder = new LevelBuilder();
+        /*Level.Builder builder = new Level.Builder();
         builder.setBalls(ballList);
         builder.setCanvas(canvas);
         builder.setPlayers(playerList);
         builder.setWalls(wallList);
-        builder.setTime(time);
+        builder.setTime(time);*/
 
-        return builder.build();
+        return new Level.Builder()
+                .setBalls(ballList)
+                .setCanvas(canvas)
+                .setPlayers(playerList)
+                .setWalls(wallList)
+                .setTime(time)
+                .build();
+
     }
 
 }
