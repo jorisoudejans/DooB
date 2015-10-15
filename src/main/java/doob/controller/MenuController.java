@@ -67,9 +67,9 @@ public class MenuController {
 	 * Navigate to the survival highscores menu.
 	 */
 	@FXML
-	public void playSurvivalMode() {
-		GameController gc = App.loadScene("/fxml/Game.fxml").getController();
-		gc.initSurvival();
+	public void showSurvivalHighscores() {
+		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
+		hsmc.updateTable("src/main/resources/Highscore/survivalhighscores.xml", GameMode.COOP);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class MenuController {
 	 * navigate to Survivalgame.
 	 */
 	@FXML
-	public void playSurvival() {
+	public void playSurvivalMode() {
 		GameController gc = App.loadScene("/fxml/game.fxml").getController();
 		gc.initSurvival();
 	}

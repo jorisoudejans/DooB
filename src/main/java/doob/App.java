@@ -68,7 +68,7 @@ public class App extends Application {
 		case DUEL:hsmc.updateTable("src/main/resources/Highscore/duelhighscores.xml", gameMode);
 			hsmc.insertScore(score2, 2); break;
 		case COOP: hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml", gameMode); break;
-		case SURVIVAL: //TODO
+		case SURVIVAL: hsmc.updateTable("src/main/resources/Highscore/survivalhighscores.xml", gameMode); break;
 		default: break;
 		}
 		
