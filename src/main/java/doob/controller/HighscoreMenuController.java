@@ -40,9 +40,14 @@ public class HighscoreMenuController {
 	private String source;
 	private GameMode gameMode;
 	
+	private static final int BUTTON_WIDTH = 100;
+	private static final int TEXT_FIELD_WIDTH = 350;
+	private static final int CELL_SIZE = 70;
+	
 	/**
 	 * Read the highscores file and insert the scores into the table.
 	 * @param source The path to the highscores file.
+	 * @param gameMode The gamemode which is chosen.
 	 */
 	public void updateTable(String source, GameMode gameMode) {
 		this.source = source;
@@ -57,7 +62,7 @@ public class HighscoreMenuController {
 		ObservableList<Score> oscoreList = FXCollections
 				.observableArrayList(scoreList);
 		scoreTable.setItems(oscoreList);
-		scoreTable.setFixedCellSize(70);
+		scoreTable.setFixedCellSize(CELL_SIZE);
 	}
 	
 	/**
@@ -67,23 +72,19 @@ public class HighscoreMenuController {
 	 */
 	public void insertScore(final int score, int player) {
 		if (hsc.highScoreIndex(score) == -1) {
-			return;
-		}
+			return;	}
 		final Stage dialog = new Stage();
-		dialog.initOwner(App.getStage());
-		
+		dialog.initOwner(App.getStage());		
 		Label l;
 		if (gameMode == GameMode.DUEL) {
 			l = new Label("Player " + player + " has a highscore! Enter your name");
 		} else {
-			l = new Label("You got a highscore! Enter your name");
-		}
+			l = new Label("You got a highscore! Enter your name");	}
 		l.setFont(new Font(22));
 		final TextField tf = new TextField();
-		tf.setMaxWidth(350);
-		
+		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
 		Button b = new Button("OK");
-		b.setPrefWidth(100);
+		b.setPrefWidth(BUTTON_WIDTH);
 		b.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -116,6 +117,14 @@ public class HighscoreMenuController {
 	@FXML
 	public void backToMenu() {
 		App.loadScene("/FXML/Menu.fxml");
+	}
+	
+	/**
+	 * Navigate to the highscores menu.
+	 */
+	@FXML
+	public void showHighScores() {
+		App.loadScene("/FXML/HighScore.fxml");
 	}
 
 }

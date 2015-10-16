@@ -37,6 +37,13 @@ public class MenuController {
 	}
 	
 	/**
+	 * Navigate to the highscore sub-menu.
+	 */
+	@FXML void showHighscores() {
+		MenuController mc = App.loadScene("/fxml/Highscore.fxml").getController();
+	}
+	
+	/**
 	 * Navigate to the singleplayer highscores menu.
 	 */
 	@FXML
@@ -49,7 +56,7 @@ public class MenuController {
 	 * Navigate to the duel highscores menu.
 	 */
 	@FXML
-	public void showDuelHighscores() {
+	public void showDuelPlayerHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/duelhighscores.xml", GameMode.DUEL);
 	}
@@ -58,7 +65,7 @@ public class MenuController {
 	 * Navigate to the coop highscores menu.
 	 */
 	@FXML
-	public void showCoopHighscores() {
+	public void showCoopPlayerHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/coophighscores.xml", GameMode.COOP);
 	}
@@ -69,7 +76,7 @@ public class MenuController {
 	@FXML
 	public void showSurvivalHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
-		hsmc.updateTable("src/main/resources/Highscore/survivalhighscores.xml", GameMode.COOP);
+		hsmc.updateTable("src/main/resources/Highscore/survivalhighscores.xml", GameMode.SURVIVAL);
 	}
 	
 	/**
@@ -89,4 +96,11 @@ public class MenuController {
 		gc.initSurvival();
 	}
 	
+	/**
+	 * Navigate back to the menu.
+	 */
+	@FXML
+	public void backToMenu() {
+		App.loadScene("/FXML/Menu.fxml");
+	}	
 }

@@ -58,7 +58,7 @@ public class GameController implements LevelObserver {
 	private Button playPauseButton;
 
 	// private GameState gameState;
-	private GameMode gameMode;
+	public static GameMode gameMode;
 	private ArrayList<String> levelList;
 	private int currentLevel;
 	private Level level;
@@ -141,7 +141,7 @@ public class GameController implements LevelObserver {
 		level.getPlayers().get(0).setLives(1);
 		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
 		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
-		gameMode = GameMode.SURVIVAL;
+		//gameMode = GameMode.SURVIVAL;
 	}
 	
 
@@ -307,8 +307,8 @@ public class GameController implements LevelObserver {
 				gc2.drawImage(new Image("/image/heart.png"), i
 						* HEART_SPACE, HEART_Y);
 			} break;
-		case COOP: lives2 = level.getPlayers().get(1).getLives();
-			lives = lives + lives2; break;
+		case COOP: /*lives2 = level.getPlayers().get(1).getLives();
+			lives = lives + lives2;*/ break;
 		case SURVIVAL:  break;
 		default: break;
 		}

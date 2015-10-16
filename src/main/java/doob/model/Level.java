@@ -131,7 +131,7 @@ public class Level {
         if (player.getProjectiles().size() < 1) {
         	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2 
             		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
-            dLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
+            dLog.info(player.toString() + " shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
     }
 
