@@ -16,9 +16,16 @@ public class ObjectDrawer {
     Canvas canvas;
     Level level;
 
+    /**
+     * Construct new ObjectDrawer.
+     * @param gc graphicsContext to draw upon
+     * @param level level
+     */
     public ObjectDrawer(GraphicsContext gc, Level level) {
         this.gc = gc;
-        this.canvas = gc.getCanvas();
+        if (gc != null) {
+            this.canvas = gc.getCanvas();
+        }
         this.level = level;
     }
 
