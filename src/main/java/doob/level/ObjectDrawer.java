@@ -45,15 +45,7 @@ public class ObjectDrawer {
             Level.Event lastEvent
     ) {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (Player player : players)  {
-            if (player.isAlive()) {
-                player.draw(gc);
-                for (Projectile projectile : player.getProjectiles()) {
-                    gc.drawImage(projectile.getImg(), projectile.getX(), projectile.getY());
-                    projectile.draw(gc);
-                }
-            }
-        }
+        drawPlayers(players);
         for (Ball ball : balls) {
             ball.draw(gc);
         }
@@ -61,7 +53,14 @@ public class ObjectDrawer {
             wall.draw(gc);
         }
         powerUpManager.onDraw(gc);
+        drawEvent(lastEvent);
+    }
 
+    /**
+     * Draws image on the canvas in case of event.
+     * @param lastEvent event
+     */
+    private void drawEvent(Level.Event lastEvent) {
         switch (lastEvent) {
             case LOST_LIFE:
                 drawText(new Image("/image/crushed.png"));
@@ -74,6 +73,22 @@ public class ObjectDrawer {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Draws all players to the canvas.
+     * @param players players
+     */
+    private void drawPlayers(List<Player> players) {
+        for (Player player : players)  {
+            if (player.isAlive()) {
+                player.draw(gc);
+                for (Projectile projectile : player.getProjectiles()) {
+                    gc.drawImage(projectile.getImg(), projectile.getX(), projectile.getY());
+                    projectile.draw(gc);
+                }
+            }
         }
     }
 
