@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<options>
+    <controls>
+        <left>A</left>
+        <right>D</right>
+        <shoot>Space</shoot>
+    </controls>
+</options>
