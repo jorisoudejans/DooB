@@ -23,6 +23,11 @@ public class Ball implements Collidable, Drawable {
   public static final int START_SPEED_X = 2;
   public static final int MIN_SIZE = 32;
   public static final int SCORE = 100;
+  
+  private static final int MEGA = 128;
+  private static final int BIG = 64;
+  private static final int MEDIUM = 32;
+  private static final int SMALL = 16;
 
   /**
    * Constructor.
@@ -52,11 +57,11 @@ public class Ball implements Collidable, Drawable {
    * Sets the value of the color variable dependent of the size of the ball.
    */
   public void setColor() {
-	  switch(size) {
-	  case 128: color = Color.RED; break;
-	  case 64 : color = Color.GREEN; break;
-	  case 32 : color = Color.BLUE; break;
-	  case 16 : color = Color.PURPLE; break;
+	  switch (size) {
+	  case MEGA : color = Color.RED; break;
+	  case BIG : color = Color.GREEN; break;
+	  case MEDIUM : color = Color.BLUE; break;
+	  case SMALL : color = Color.PURPLE; break;
 	  default : color = Color.BLACK;
 	  }
   }
@@ -173,7 +178,7 @@ public class Ball implements Collidable, Drawable {
     }
     return (int) -((Math.log(size) / Math.log(2)) * 2);
   }
-
+  
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
