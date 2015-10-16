@@ -130,41 +130,19 @@ public class GameController implements LevelObserver {
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}
 
-
-	@FXML
+	/**
+	 * Initialize a survivalgame.
+	 */
 	public void initSurvival() {
-		dLog = DLog.getInstance();
-		levelList = new ArrayList<String>();
-		levelList.add("src/main/resources/level/Survival.xml");
-
-		// gameState = GameState.RUNNING;
-		createTimer();
-		newLevel();
-		readOptions();
+		gameMode = GameMode.SURVIVAL;
+		initGame("src/main/resources/Level/SurvivalLevels.xml");
 
 		level.setSurvival(true);
 		level.getPlayers().get(0).setLives(1);
 		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
 		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
 		gameMode = GameMode.SURVIVAL;
-
-		gc = lives1.getGraphicsContext2D();
-		gc2 = lives2.getGraphicsContext2D();
-		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
-		GraphicsContext gcBg = background.getGraphicsContext2D();
-		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0,
-				canvas.getWidth(), canvas.getHeight());
-		pane.getChildren().add(background);
-		background.toBack();
-		running = true;
-
-		dLog.setFile("DooB.log");
-		dLog.info("Game started.", DLog.Type.STATE);
-
-
 	}
-
-
 	
 
 	/**
