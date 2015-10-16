@@ -9,7 +9,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
 import java.util.*;
@@ -23,7 +22,6 @@ public class Level {
     private DLog dLog;
 
     private Canvas canvas;
-    private GraphicsContext gc;
 
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
@@ -33,6 +31,7 @@ public class Level {
     public static final int PROJECTILE_START_SPEED = 12;
     public static final long FREEZE_TIME = 2000;
     public static final int PROJECTILE_WIDTH = 7;
+    private static final int DIFFICULTY_TIME = 1000;
 
     private AnimationTimer timer;
 
@@ -56,7 +55,6 @@ public class Level {
 
     private boolean survival = false;
     private int nextWaveHP = 0;
-    private static final int DIFFICULTY_TIME = 1000;
 
     /**
      * States the Level can have.
@@ -80,7 +78,7 @@ public class Level {
         createTimer();
         ballFreeze = false;
         projectileFreeze = false;
-        gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
         canvas.setOnKeyPressed(new KeyPressHandler());
 
@@ -151,32 +149,32 @@ public class Level {
     }
 
     /**
-     * Paint all views.
-     */
-    public void paint() {
-        objectDrawer.draw(players, balls, walls, powerUpManager, lastEvent);
-        objectDrawer.move(players, balls, walls);
-    }
-
-    /**
      * Timer for animation.
      */
     public void update() {
         collisionManager.detectCollisions();
-        paint();
-        if (!survival) {
-            currentTime -= 1;
-        } else {
-            currentTime += 1;
-            if (currentTime > DIFFICULTY_TIME) {
-                currentTime -= DIFFICULTY_TIME;
-                nextWaveHP++;
-            }
-            if (totalBallHitpoints() <= nextWaveHP) {
-              spawnBalls(System.currentTimeMillis());
-            }
-        }
         powerUpManager.onUpdate(currentTime);
+        objectDrawer.draw(players, balls, walls, powerUpManager, lastEvent);
+        objectDrawer.move(players, balls, walls);
+        if (survival) {
+            updateSurvival();
+        } else {
+            currentTime -= 1;
+        }
+    }
+
+    /**
+     * Update level when in survival mode.
+     */
+    private void updateSurvival() {
+        currentTime += 1;
+        if (currentTime > DIFFICULTY_TIME) {
+            currentTime -= DIFFICULTY_TIME;
+            nextWaveHP++;
+        }
+        if (totalBallHitpoints() <= nextWaveHP) {
+            spawnBalls(System.currentTimeMillis());
+        }
     }
 
     /**
@@ -187,7 +185,7 @@ public class Level {
 
         Random generator = new Random(seed);
         int i = generator.nextInt() % 5;
-        switch(i) {
+        /*switch(i) {
             case 0: spawnSameSizeBalls(6, 16);
                 break;
             case 1: spawnSameSizeBalls(4, 32);
@@ -200,7 +198,8 @@ public class Level {
                 break;
             default:
                 break;
-        }
+        }*/
+        spawnSameSizeBalls(6 - i, (int) (8 * Math.pow(2, i)));
     }
 
     /**
@@ -239,18 +238,15 @@ public class Level {
         double y = canvas.getHeight() / 4;
         for (int i = 0; i < amount; i++) {
             int direction;
-            if (Math.random() < 0.5) {
-                direction = -2;
-            } else {
-                direction = 2;
-            }
+            direction = (int) (Math.pow(
+                    -1,
+                    (int) Math.round(Math.random() * 10)) * 2
+            );
             double x = canvas.getWidth() / (amount + 1) * (i + 1);
             Ball ball = new Ball(x, y, direction, 0, size);
             this.balls.add(ball);
         }
     }
-
-
 
     /**
      * Stop timer.
@@ -264,15 +260,6 @@ public class Level {
      */
     public void startTimer() {
         timer.start();
-    }
-
-    /**
-     * Draw a textimage on the canvas.
-     * @param i image to draw
-     */
-    public void drawText(Image i) {
-        gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
-                canvas.getHeight() / 2 - i.getHeight());
     }
 
     /**
