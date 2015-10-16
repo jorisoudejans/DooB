@@ -11,9 +11,9 @@
     </playerList>
     <ballList>
         <ball id="1">
-            <x>0</x>
+            <x>25</x>
             <y>200</y>
-            <speedX>-2</speedX>
+            <speedX>2</speedX>
             <speedY>0</speedY>
             <size>128</size>
         </ball>
