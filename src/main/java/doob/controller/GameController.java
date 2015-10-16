@@ -2,7 +2,6 @@ package doob.controller;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import doob.App;
@@ -58,7 +57,7 @@ public class GameController implements LevelObserver {
 	private Button playPauseButton;
 
 	// private GameState gameState;
-	private GameMode gameMode;
+	public static GameMode gameMode;
 	private ArrayList<String> levelList;
 	private int currentLevel;
 	private Level level;
@@ -71,6 +70,8 @@ public class GameController implements LevelObserver {
 	private int score2;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
+	private static final int TIME_BONUS = 3;
+	private static final double PROGRESS_PER_TICK = 0.01;
 
 	private DLog dLog;
 
@@ -141,7 +142,7 @@ public class GameController implements LevelObserver {
 		level.getPlayers().get(0).setLives(1);
 		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
 		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
-		gameMode = GameMode.SURVIVAL;
+		//gameMode = GameMode.SURVIVAL;
 	}
 	
 
@@ -276,13 +277,13 @@ public class GameController implements LevelObserver {
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				progress = progress - 0.01;
+				progress = progress - PROGRESS_PER_TICK;
 				if (progress <= 0) {
 					this.stop();
 				} else {
 					progressBar.setProgress(progress);
 					for (Player p : level.getPlayers()) {
-						p.incrScore(3);
+						p.incrScore(TIME_BONUS);
 					}
 					updateScore();
 				}
@@ -306,8 +307,8 @@ public class GameController implements LevelObserver {
 				gc2.drawImage(new Image("/image/heart.png"), i
 						* HEART_SPACE, HEART_Y);
 			} break;
-		case COOP: lives2 = level.getPlayers().get(1).getLives();
-			lives = lives + lives2; break;
+		case COOP: /*lives2 = level.getPlayers().get(1).getLives();
+			lives = lives + lives2;*/ break;
 		case SURVIVAL:  break;
 		default: break;
 		}

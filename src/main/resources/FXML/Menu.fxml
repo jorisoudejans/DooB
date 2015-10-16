@@ -8,14 +8,11 @@
    <children>
 
       <Button layoutX="350.0" layoutY="95.0" mnemonicParsing="false" onAction="#playSinglePlayer" prefHeight="60.0" prefWidth="300.0" text="Singleplayer" />
-      <Button layoutX="351.0" layoutY="375.0" mnemonicParsing="false" onAction="#showSinglePlayerHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores SinglePlayer Mode" />
+      <Button layoutX="351.0" layoutY="375.0" mnemonicParsing="false" onAction="#showHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores" />
       <Button layoutX="351.0" layoutY="656.0" mnemonicParsing="false" onAction="#showOptions" prefHeight="60.0" prefWidth="300.0" text="Options" />
       <Button layoutX="351.0" layoutY="164.0" mnemonicParsing="false" onAction="#playDuelMode" prefHeight="60.0" prefWidth="300.0" text="Duel Mode" />
       <Button layoutX="351.0" layoutY="234.0" mnemonicParsing="false" onAction="#playCoopMode" prefHeight="60.0" prefWidth="300.0" text="Coop mode" />
-      <Button layoutX="351.0" layoutY="446.0" mnemonicParsing="false" onAction="#showDuelHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores Duel Mode" />
-      <Button layoutX="351.0" layoutY="515.0" mnemonicParsing="false" onAction="#showCoopHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores Coop Mode" />
       <Button layoutX="351.0" layoutY="305.0" mnemonicParsing="false" onAction="#playSurvivalMode" prefHeight="60.0" prefWidth="300.0" text="Survival mode" />
-      <Button layoutX="351.0" layoutY="585.0" mnemonicParsing="false" onAction="#showSurvivalHighscores" prefHeight="60.0" prefWidth="300.0" text="Highscores Survival Mode" />
 
 
    </children>

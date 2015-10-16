@@ -1,6 +1,7 @@
 package doob.level;
 
 import doob.DLog;
+import doob.controller.GameController;
 import doob.model.*;
 import doob.model.powerup.PowerUp;
 import doob.util.TupleTwo;
@@ -117,6 +118,11 @@ public class CollisionResolver {
 
         boolean gameOver = true;
         for (Player p : level.getPlayers()) {
+        	if (GameController.gameMode == GameController.GameMode.COOP && p != player) {
+        		if (p.getLives() > 0) {
+        			p.die();
+        		}
+        	}
         	if (p.getLives() > 0) {
         		gameOver = false;
         	}

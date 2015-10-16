@@ -165,38 +165,32 @@ public class OptionsMenuController {
 			case LEFT:
 				if (rightKey != event.getCode() && shootKey != event.getCode()) {
 					leftKey = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case RIGHT:
 				if (leftKey != event.getCode() && shootKey != event.getCode()) {
 					rightKey = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case SHOOT:
 				if (rightKey != event.getCode() && leftKey != event.getCode()) {
 					shootKey = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case LEFTMP:
 				if (rightKeyMP != event.getCode() && shootKeyMP != event.getCode()) {
 					leftKeyMP = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case RIGHTMP:
 				if (leftKeyMP != event.getCode() && shootKeyMP != event.getCode()) {
 					rightKeyMP = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case SHOOTMP:
 				if (rightKeyMP != event.getCode() && leftKeyMP != event.getCode()) {
 					shootKeyMP = event.getCode();
-					update();
-				}
+					update(); }
 				break;
 			case NONE:
 				break;
