@@ -2,7 +2,6 @@ package doob.controller;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import doob.App;
@@ -71,6 +70,8 @@ public class GameController implements LevelObserver {
 	private int score2;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
+	private static final int TIME_BONUS = 3;
+	private static final double PROGRESS_PER_TICK = 0.01;
 
 	private DLog dLog;
 
@@ -277,13 +278,13 @@ public class GameController implements LevelObserver {
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				progress = progress - 0.01;
+				progress = progress - PROGRESS_PER_TICK;
 				if (progress <= 0) {
 					this.stop();
 				} else {
 					progressBar.setProgress(progress);
 					for (Player p : level.getPlayers()) {
-						p.incrScore(3);
+						p.incrScore(TIME_BONUS);
 					}
 					updateScore();
 				}

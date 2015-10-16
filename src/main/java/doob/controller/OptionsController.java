@@ -29,10 +29,7 @@ public class OptionsController {
 	private KeyCode left;
 	private KeyCode right;
 	private KeyCode shoot;
-	
-	private KeyCode mpLeft;
-	private KeyCode mpRight;
-	private KeyCode mpShoot;
+	//TODO are these necessary?
 
 	private int sound;
 

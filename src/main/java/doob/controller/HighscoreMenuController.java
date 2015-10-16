@@ -43,6 +43,7 @@ public class HighscoreMenuController {
 	private static final int BUTTON_WIDTH = 100;
 	private static final int TEXT_FIELD_WIDTH = 350;
 	private static final int CELL_SIZE = 70;
+	private static final int FONT_SIZE = 22;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
@@ -80,7 +81,7 @@ public class HighscoreMenuController {
 			l = new Label("Player " + player + " has a highscore! Enter your name");
 		} else {
 			l = new Label("You got a highscore! Enter your name");	}
-		l.setFont(new Font(22));
+		l.setFont(new Font(FONT_SIZE));
 		final TextField tf = new TextField();
 		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
 		Button b = new Button("OK");
