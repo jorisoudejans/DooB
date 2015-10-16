@@ -100,7 +100,7 @@ public class Level {
             public void handle(KeyEvent key) {
             	for (Player p : players) {
             		if (p.isAlive()) {
-	            		if (key.getCode() == p.getLeftKey() || key.getCode() == p.getRightKey()) {
+	            		if (p.getControlKeys().isMoveKey(key.getCode())) {
 	                    	p.setSpeed(0);
 	                	}
             		}
@@ -549,25 +549,20 @@ public class Level {
         public void handle(KeyEvent key) {
         	for (Player p : players) {
         		if (p.isAlive()) {
-		            if (key.getCode() == p.getRightKey()) {
-		               p.setSpeed(p.getMoveSpeed());
-		                if (p.getLastKey() != p.getRightKey()) {
-		                    dLog.info("Player direction changed to right.",
-                                    DLog.Type.PLAYER_INTERACTION);
-		                    p.setLastKey(p.getRightKey());
-		                }
-		            }
-		            if (key.getCode() == p.getLeftKey()) {
-		                p.setSpeed(-p.getMoveSpeed());
-		                if (p.getLastKey() != p.getLeftKey()) {
-		                    dLog.info("Player direction changed to left.",
-                                    DLog.Type.PLAYER_INTERACTION);
-		                    p.setLastKey(p.getLeftKey());
-		                }
-		            }
-		            if (key.getCode() == p.getShootKey()) {
-		                    shoot(p);
-		            }
+                    Player.ControlKeys.Action action = p.getControlKeys().determineAction(key.getCode());
+                    switch (action) {
+                        case RIGHT:
+                            p.setSpeed(p.getMoveSpeed());
+                            break;
+                        case LEFT:
+                            p.setSpeed(-p.getMoveSpeed());
+                            break;
+                        case SHOOT:
+                            shoot(p);
+                            break;
+                        default:
+                            break;
+                    }
         		}
         	}
         }
