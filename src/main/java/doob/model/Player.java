@@ -22,10 +22,7 @@ public class Player implements Collidable, Drawable {
   private int lives;
   private int score;
   
-  private KeyCode leftKey;
-  private KeyCode rightKey;
-  private KeyCode shootKey;
-  private KeyCode lastKey;
+  private ControlKeys controlKeys;
   
   public static final int LIVES = 5;
   public static final int START_SPEED = 4;
@@ -73,7 +70,7 @@ public class Player implements Collidable, Drawable {
     this.score = 0;
     this.lives = LIVES;
     this.state = State.NORMAL;
-    lastKey = KeyCode.SPACE;
+    controlKeys = null;
     imageStand = imageS;
     imageLeft = imageL;
     imageRight = imageR;
@@ -131,10 +128,6 @@ public class Player implements Collidable, Drawable {
     return y;
   }
 
-  public void setY(int y) {
-    this.y = y;
-  }
-
   public int getSpeed() {
     return speed;
   }
@@ -162,7 +155,11 @@ public class Player implements Collidable, Drawable {
   public void setScore(int score) {
     this.score = score;
   }
-  
+
+  /**
+   * Increments score by amount.
+   * @param scoreIncr amount to increment
+   */
   public void incrScore(int scoreIncr) {
 	  score = score + scoreIncr;
   }
@@ -175,39 +172,15 @@ public class Player implements Collidable, Drawable {
     this.state = state;
   }
 
-  public KeyCode getLeftKey() {
-	return leftKey;
-}
+  public ControlKeys getControlKeys() {
+    return controlKeys;
+  }
 
-public void setLeftKey(KeyCode leftKey) {
-	this.leftKey = leftKey;
-}
+  public void setControlKeys(ControlKeys controlKeys) {
+    this.controlKeys = controlKeys;
+  }
 
-public KeyCode getRightKey() {
-	return rightKey;
-}
-
-public void setRightKey(KeyCode rightKey) {
-	this.rightKey = rightKey;
-}
-
-public KeyCode getShootKey() {
-	return shootKey;
-}
-
-public void setShootKey(KeyCode shootKey) {
-	this.shootKey = shootKey;
-}
-
-public KeyCode getLastKey() {
-	return lastKey;
-}
-
-public void setLastKey(KeyCode lastKey) {
-	this.lastKey = lastKey;
-}
-
-public ArrayList<Projectile> getProjectiles() {
+  public ArrayList<Projectile> getProjectiles() {
 	return projectiles;
 }
 
@@ -228,4 +201,67 @@ public ArrayList<Projectile> getProjectiles() {
             + "x=" + x
             + ", lives=" + lives + '}';
   }
+
+
+  /**
+   * Represents control keys for player.
+   */
+  public static class ControlKeys {
+    private KeyCode leftKey;
+    private KeyCode rightKey;
+    private KeyCode shootKey;
+    private KeyCode lastKey;
+
+    /**
+     * Moving action.
+     */
+    public enum Action {
+      NONE, LEFT, SHOOT, RIGHT
+    }
+
+    /**
+     * Get new instance.
+     * @param leftKey left
+     * @param rightKey right
+     * @param shootKey shoot
+     */
+    public ControlKeys(KeyCode leftKey, KeyCode rightKey, KeyCode shootKey) {
+      this.leftKey = leftKey;
+      this.rightKey = rightKey;
+      this.shootKey = shootKey;
+      this.lastKey = KeyCode.SPACE;
+    }
+
+    /**
+     * Determines if the key pressed matches a player set key.
+     * @param key pressed key
+     * @return Action result
+     */
+    public Action determineAction(KeyCode key) {
+      Action action = Action.NONE;
+      if (key == rightKey) {
+        action = Action.RIGHT;
+      } else if (key == leftKey) {
+        action = Action.LEFT;
+      } else if (key == shootKey) {
+        action = Action.SHOOT;
+      }
+      if (action != Action.NONE) {
+        lastKey = key;
+      }
+      return action;
+    }
+
+    /**
+     * Determines whether the key pressed moves the character.
+     * @param press input key
+     * @return true if the key moves the player
+     */
+    public boolean isMoveKey(KeyCode press) {
+      return press == rightKey || press == leftKey;
+    }
+
+  }
+
+
 }
