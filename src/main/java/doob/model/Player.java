@@ -1,12 +1,13 @@
 package doob.model;
 
-import java.util.ArrayList;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Player class, acts as both model and view.
@@ -180,7 +181,7 @@ public class Player implements Collidable, Drawable {
     this.controlKeys = controlKeys;
   }
 
-  public ArrayList<Projectile> getProjectiles() {
+  public List<Projectile> getProjectiles() {
 	return projectiles;
 }
 

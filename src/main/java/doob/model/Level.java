@@ -1,10 +1,7 @@
 package doob.model;
 
 import doob.DLog;
-import doob.level.CollisionManager;
-import doob.level.CollisionResolver;
-import doob.level.LevelObserver;
-import doob.level.PowerUpManager;
+import doob.level.*;
 import doob.model.powerup.PowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
@@ -12,8 +9,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.*;
@@ -26,19 +21,17 @@ public class Level {
 
     private DLog dLog;
 
-
     private Canvas canvas;
-    private GraphicsContext gc;
 
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
     private ArrayList<Wall> walls;
     private double currentTime;
     private int time;
-    public static final int PLAYER_SPEED = 3;
     public static final int PROJECTILE_START_SPEED = 12;
     public static final long FREEZE_TIME = 2000;
     public static final int PROJECTILE_WIDTH = 7;
+    private static final int DIFFICULTY_TIME = 1000;
 
     private AnimationTimer timer;
 
@@ -54,19 +47,14 @@ public class Level {
 
     private PowerUpManager powerUpManager;
     private CollisionManager collisionManager;
+    private ObjectDrawer objectDrawer;
 
     private List<LevelObserver> observers;
 
     private Event lastEvent = Event.NULL;
 
-    private KeyCode leftKey;
-    private KeyCode rightKey;
-    private KeyCode shootKey;
-
     private boolean survival = false;
     private int nextWaveHP = 0;
-    private static final int DIFFICULTY_TIME = 1000;
-
 
     /**
      * States the Level can have.
@@ -90,11 +78,15 @@ public class Level {
         createTimer();
         ballFreeze = false;
         projectileFreeze = false;
-        gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
         canvas.setOnKeyPressed(new KeyPressHandler());
 
         observers = new ArrayList<LevelObserver>();
+
+        powerUpManager = new PowerUpManager(this);
+        collisionManager = new CollisionManager(this, new CollisionResolver(this));
+        objectDrawer = new ObjectDrawer(gc, this);
 
         canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent key) {
@@ -157,109 +149,43 @@ public class Level {
     }
 
     /**
-     * Handle the movement of balls.
-     */
-    public void moveBalls() {
-        if (ballFreeze) {
-            return;
-        }
-        for (Ball b : balls) {
-            b.move();
-        }
-    }
-
-    /**
-     * Handle the movements of walls.
-     */
-    public void animateWalls() {
-        for (Wall w : walls) {
-            if (w.isMoveable()) {
-                w.move();
-            }
-        }
-    }
-
-    /**
-     * Paint all views.
-     */
-    public void paint() {
-        // Clear canvas.
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (Player p : players)  {
-        	if (p.isAlive()) {
-	        	p.draw(gc);
-	        	for (Projectile pr : p.getProjectiles()) {
-	                gc.drawImage(pr.getImg(), pr.getX(), pr.getY());
-	                pr.draw(gc);
-	            }
-        	}
-        }
-        for (Ball b : balls) {
-            b.draw(gc);
-        }
-        for (Wall w : walls) {
-            w.draw(gc);
-        }
-        powerUpManager.onDraw(gc);
-
-        switch (lastEvent) {
-            case LOST_LIFE:
-                drawText(new Image("/image/crushed.png"));
-                break;
-            case ZERO_LIVES:
-                drawText(new Image("/image/gameover.png"));
-                break;
-            case ALL_BALLS_GONE:
-                drawText(new Image("/image/levelcomplete.png"));
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
      * Timer for animation.
      */
     public void update() {
         collisionManager.detectCollisions();
-        moveBalls();
-        animateWalls();
-        paint();
-        if (!survival) {
-            currentTime -= 1;
-        } else {
-            currentTime += 1;
-            if (currentTime > DIFFICULTY_TIME) {
-                currentTime -= DIFFICULTY_TIME;
-                nextWaveHP++;
-            }
-            if (totalBallHitpoints() <= nextWaveHP) {
-              spawnBalls(System.currentTimeMillis());
-            }
-        }
-        for (Player player : players) {
-        	if (player.isAlive()) {
-	            player.move();
-	            for (Projectile projectile : player.getProjectiles()) {
-	                if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
-	                    projectile.move();
-	                }
-	                projectile.draw(gc);
-	            }
-        	}
-        }
         powerUpManager.onUpdate(currentTime);
+        objectDrawer.draw(players, balls, walls, powerUpManager, lastEvent);
+        objectDrawer.move(players, balls, walls);
+        if (survival) {
+            updateSurvival();
+        } else {
+            currentTime -= 1;
+        }
     }
 
     /**
-     * Spawns a randomly selected set of balls
+     * Update level when in survival mode.
+     */
+    private void updateSurvival() {
+        currentTime += 1;
+        if (currentTime > DIFFICULTY_TIME) {
+            currentTime -= DIFFICULTY_TIME;
+            nextWaveHP++;
+        }
+        if (totalBallHitpoints() <= nextWaveHP) {
+            spawnBalls(System.currentTimeMillis());
+        }
+    }
+
+    /**
+     * Spawns a randomly selected set of balls.
      * @param seed the random seed
      */
     public void spawnBalls(long seed) {
 
         Random generator = new Random(seed);
         int i = generator.nextInt() % 5;
-        switch(i) {
+        /*switch(i) {
             case 0: spawnSameSizeBalls(6, 16);
                 break;
             case 1: spawnSameSizeBalls(4, 32);
@@ -272,7 +198,8 @@ public class Level {
                 break;
             default:
                 break;
-        }
+        }*/
+        spawnSameSizeBalls(6 - i, (int) (8 * Math.pow(2, i)));
     }
 
     /**
@@ -311,18 +238,15 @@ public class Level {
         double y = canvas.getHeight() / 4;
         for (int i = 0; i < amount; i++) {
             int direction;
-            if (Math.random() < 0.5) {
-                direction = -2;
-            } else {
-                direction = 2;
-            }
+            direction = (int) (Math.pow(
+                    -1,
+                    (int) Math.round(Math.random() * 10)) * 2
+            );
             double x = canvas.getWidth() / (amount + 1) * (i + 1);
             Ball ball = new Ball(x, y, direction, 0, size);
             this.balls.add(ball);
         }
     }
-
-
 
     /**
      * Stop timer.
@@ -336,15 +260,6 @@ public class Level {
      */
     public void startTimer() {
         timer.start();
-    }
-
-    /**
-     * Draw a textimage on the canvas.
-     * @param i image to draw
-     */
-    public void drawText(Image i) {
-        gc.drawImage(i, canvas.getWidth() / 2 - i.getWidth() / 2,
-                canvas.getHeight() / 2 - i.getHeight());
     }
 
     /**
@@ -382,7 +297,7 @@ public class Level {
     /**
      * Notify all observers of an event.
      */
-    public void notifyObservers() {
+    private void notifyObservers() {
         for (LevelObserver observer : observers) {
             observer.onLevelStateChange(lastEvent);
         }
@@ -501,44 +416,19 @@ public class Level {
         return powerUpManager.getCollidables();
     }
 
-    public void setPowerUpManager(PowerUpManager powerUpManager) {
-        this.powerUpManager = powerUpManager;
-    }
-
-    public void setCollisionManager(CollisionManager collisionManager) {
-        this.collisionManager = collisionManager;
-    }
-
-    public KeyCode getLeftKey() {
-        return leftKey;
-    }
-
-    public void setLeftKey(KeyCode leftKey) {
-        this.leftKey = leftKey;
-    }
-
-    public KeyCode getRightKey() {
-        return rightKey;
-    }
-
-    public void setRightKey(KeyCode rightKey) {
-        this.rightKey = rightKey;
-    }
-
-    public KeyCode getShootKey() {
-        return shootKey;
-    }
-
-    public void setShootKey(KeyCode shootKey) {
-        this.shootKey = shootKey;
-    }
-
     public boolean isSurvival() {
         return survival;
     }
 
     public void setSurvival(boolean survival) {
         this.survival = survival;
+    }
+
+    /**
+     * Continues to next level immediately after event.
+     */
+    public void continueNextLevel() {
+        notifyObservers();
     }
 
     /**
@@ -657,8 +547,6 @@ public class Level {
             walls.add(floor);
             walls.add(ceiling);
 
-            level.setCollisionManager(new CollisionManager(level, new CollisionResolver(level)));
-            level.setPowerUpManager(new PowerUpManager(level));
             level.setBalls(balls);
             level.setPlayers(players);
             level.setWalls(walls);
