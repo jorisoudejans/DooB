@@ -15,23 +15,31 @@ public class OptionsMenuController {
 
 	@FXML
 	private AnchorPane anchorPane;
-
 	@FXML
 	private Button leftButton;
-
 	@FXML
 	private Button rightButton;
-
 	@FXML
 	private Button shootButton;
-
+	@FXML
+	private Button leftButtonMP;
+	@FXML
+	private Button rightButtonMP;
+	@FXML
+	private Button shootButtonMP;
+	
 	private Key selectedKey;
 
 	private KeyCode leftKey;
 	private KeyCode rightKey;
 	private KeyCode shootKey;
+	
+	private KeyCode leftKeyMP;
+	private KeyCode rightKeyMP;
+	private KeyCode shootKeyMP;
 
 	private OptionsController oc;
+	private OptionsController ocMP;
 
 	/**
 	 * Initialize.
@@ -41,12 +49,19 @@ public class OptionsMenuController {
 		selectedKey = Key.NONE;
 		anchorPane.setOnKeyPressed(new ControlAdapter());
 
-		oc = new OptionsController("src/main/resources/Options/Options.xml");
+		oc = new OptionsController("src/main/resources/Options/OptionsPlayer1.xml");
 		oc.read();
+		
+		ocMP = new OptionsController("src/main/resources/Options/OptionsPlayer2.xml");
+		ocMP.read();
 
 		leftButton.setText(oc.getLeft().getName());
 		rightButton.setText(oc.getRight().getName());
 		shootButton.setText(oc.getShoot().getName());
+		
+		leftButtonMP.setText(ocMP.getLeft().getName());
+		rightButtonMP.setText(ocMP.getRight().getName());
+		shootButtonMP.setText(ocMP.getShoot().getName());
 
 	}
 
@@ -71,6 +86,15 @@ public class OptionsMenuController {
 		}
 		if (shootKey != null) {
 			shootButton.setText(shootKey.getName());
+		}
+		if (leftKeyMP != null) {
+			leftButtonMP.setText(leftKeyMP.getName());
+		}
+		if (rightKeyMP != null) {
+			rightButtonMP.setText(rightKeyMP.getName());
+		}
+		if (shootKeyMP != null) {
+			shootButtonMP.setText(shootKeyMP.getName());
 		}
 	}
 
@@ -97,12 +121,37 @@ public class OptionsMenuController {
 	public void selectShootKey() {
 		selectedKey = Key.SHOOT;
 	}
+	
+	/**
+	 * Set the selected key to LEFT.
+	 */
+	@FXML
+	public void selectLeftKeyMP() {
+		selectedKey = Key.LEFTMP;
+	}
+
+	/**
+	 * Set the selected key to RIGHT.
+	 */
+	@FXML
+	public void selectRightKeyMP() {
+		selectedKey = Key.RIGHTMP;
+	}
+
+	/**
+	 * Set the selected key to SHOOT.
+	 */
+	@FXML
+	public void selectShootKeyMP() {
+		selectedKey = Key.SHOOTMP;
+	}
 
 	/**
 	 * Key defines which button is selected to adjust with a new key.
+	 * MP stands for multiplayer and defines the keys for player2.
 	 */
 	public enum Key {
-		LEFT, RIGHT, SHOOT, NONE
+		LEFT, RIGHT, SHOOT, LEFTMP, RIGHTMP, SHOOTMP, NONE
 	}
 
 	/**
@@ -131,6 +180,24 @@ public class OptionsMenuController {
 					update();
 				}
 				break;
+			case LEFTMP:
+				if (rightKeyMP != event.getCode() && shootKeyMP != event.getCode()) {
+					leftKeyMP = event.getCode();
+					update();
+				}
+				break;
+			case RIGHTMP:
+				if (leftKeyMP != event.getCode() && shootKeyMP != event.getCode()) {
+					rightKeyMP = event.getCode();
+					update();
+				}
+				break;
+			case SHOOTMP:
+				if (rightKeyMP != event.getCode() && leftKeyMP != event.getCode()) {
+					shootKeyMP = event.getCode();
+					update();
+				}
+				break;
 			case NONE:
 				break;
 			default:
@@ -144,9 +211,6 @@ public class OptionsMenuController {
 	 * Write the keysettings to the optionscontroller.
 	 */
 	public void write() {
-		if (leftKey == null && rightKey == null && shootKey == null) {
-			return;
-		}
 		if (leftKey != null) {
 			oc.setLeft(leftKey);
 		}
@@ -156,7 +220,18 @@ public class OptionsMenuController {
 		if (shootKey != null) {
 			oc.setShoot(shootKey);
 		}
+		if (leftKeyMP != null) {
+			ocMP.setLeft(leftKeyMP);
+		}
+		if (rightKeyMP != null) {
+			ocMP.setRight(rightKeyMP);
+		}
+		if (shootKeyMP != null) {
+			ocMP.setShoot(shootKeyMP);
+		}
+
 		oc.write();
+		ocMP.write();
 
 	}
 

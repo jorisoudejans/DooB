@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import doob.App;
+import doob.controller.GameController.GameMode;
 import doob.model.Score;
 
 /**
@@ -32,23 +33,22 @@ public class HighscoreMenuController {
 	private TableColumn<Score, Integer> scoreCol;
 	@FXML
 	private TableView<Score> scoreTable;
-
-	private HighscoreController hsc;
-
-	/**
-	 * Initialize.
-	 */
 	@FXML
-	public void initialize() {
-		updateTable();
-	}
+	private Label gameModeLabel;
+	
+	private HighscoreController hsc;
+	private String source;
+	private GameMode gameMode;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
+	 * @param source The path to the highscores file.
 	 */
-	public void updateTable() {
-		hsc = new HighscoreController(
-				"src/main/resources/Highscore/highscores.xml");
+	public void updateTable(String source, GameMode gameMode) {
+		this.source = source;
+		this.gameMode = gameMode;
+		gameModeLabel.setText(gameMode.getName());
+		hsc = new HighscoreController(source);
 		ArrayList<Score> scoreList = hsc.read();
 		nameCol.setCellValueFactory(new PropertyValueFactory<Score, String>(
 				"name"));
@@ -63,15 +63,21 @@ public class HighscoreMenuController {
 	/**
 	 * Insert a new score into the table and the highscore file.
 	 * @param score The score to be inserted.
+	 * @param player The player for whom the popup is shown.
 	 */
-	public void insertScore(final int score) {
+	public void insertScore(final int score, int player) {
 		if (hsc.highScoreIndex(score) == -1) {
 			return;
 		}
 		final Stage dialog = new Stage();
 		dialog.initOwner(App.getStage());
 		
-		Label l = new Label("You got a highscore! Enter your name");
+		Label l;
+		if (gameMode == GameMode.DUEL) {
+			l = new Label("Player " + player + " has a highscore! Enter your name");
+		} else {
+			l = new Label("You got a highscore! Enter your name");
+		}
 		l.setFont(new Font(22));
 		final TextField tf = new TextField();
 		tf.setMaxWidth(350);
@@ -87,7 +93,7 @@ public class HighscoreMenuController {
 					dialog.close();
 					hsc.addScore(new Score(name, score), index);
 					hsc.write();
-					updateTable();
+					updateTable(source, gameMode);
 					scoreTable.getSelectionModel().select(index);
 				}
 			}
@@ -99,7 +105,7 @@ public class HighscoreMenuController {
         popUpVBox.getChildren().add(tf);
         popUpVBox.getChildren().add(b);
 
-        Scene dialogScene = new Scene(popUpVBox, 400, 150);
+        Scene dialogScene = new Scene(popUpVBox, 500, 150);
 		dialog.setScene(dialogScene);
 		dialog.show();
 	}

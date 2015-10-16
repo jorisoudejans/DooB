@@ -29,6 +29,10 @@ public class OptionsController {
 	private KeyCode left;
 	private KeyCode right;
 	private KeyCode shoot;
+	
+	private KeyCode mpLeft;
+	private KeyCode mpRight;
+	private KeyCode mpShoot;
 
 	private int sound;
 

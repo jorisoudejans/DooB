@@ -16,10 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 
 /**
  * Level class, created from LevelFactory.
@@ -33,7 +31,6 @@ public class Level {
     private GraphicsContext gc;
 
     private ArrayList<Ball> balls;
-    private ArrayList<Projectile> projectiles;
     private ArrayList<Player> players;
     private ArrayList<Wall> walls;
     private double currentTime;
@@ -66,6 +63,10 @@ public class Level {
     private KeyCode rightKey;
     private KeyCode shootKey;
 
+    private boolean survival = false;
+    private int nextWaveHP = 0;
+    private static final int DIFFICULTY_TIME = 1000;
+
 
     /**
      * States the Level can have.
@@ -97,14 +98,17 @@ public class Level {
 
         canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent key) {
-                if (key.getCode() != KeyCode.SPACE) {
-                    players.get(0).setSpeed(0);
-                }
+            	for (Player p : players) {
+            		if (p.isAlive()) {
+	            		if (key.getCode() == p.getLeftKey() || key.getCode() == p.getRightKey()) {
+	                    	p.setSpeed(0);
+	                	}
+            		}
+            	}
             }
         });
 
         canvas.requestFocus();
-        projectiles = new ArrayList<Projectile>();
     }
 
     private void createTimer() {
@@ -124,8 +128,8 @@ public class Level {
      *          the player that shoots the projectile.
      */
     public void shoot(Player player) {
-        if (projectiles.size() < 1) {
-            projectiles.add(new Spike(player, player.getX() + player.getWidth() / 2 
+        if (player.getProjectiles().size() < 1) {
+        	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2 
             		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
             dLog.info("Player shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
@@ -181,10 +185,14 @@ public class Level {
     public void paint() {
         // Clear canvas.
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        players.get(0).draw(gc);
-        for (Projectile p : projectiles) {
-            gc.drawImage(p.getImg(), p.getX(), p.getY());
-            p.draw(gc);
+        for (Player p : players)  {
+        	if (p.isAlive()) {
+	        	p.draw(gc);
+	        	for (Projectile pr : p.getProjectiles()) {
+	                gc.drawImage(pr.getImg(), pr.getX(), pr.getY());
+	                pr.draw(gc);
+	            }
+        	}
         }
         for (Ball b : balls) {
             b.draw(gc);
@@ -213,23 +221,107 @@ public class Level {
      * Timer for animation.
      */
     public void update() {
-        for (Projectile projectile : projectiles) {
-            if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
-                projectile.move();
-            }
-            projectile.draw(gc);
-        }
-        // endlessLevel();
         collisionManager.detectCollisions();
         moveBalls();
         animateWalls();
         paint();
-        currentTime -= 1;
+        if (!survival) {
+            currentTime -= 1;
+        } else {
+            currentTime += 1;
+            if (currentTime > DIFFICULTY_TIME) {
+                currentTime -= DIFFICULTY_TIME;
+                nextWaveHP++;
+            }
+            if (totalBallHitpoints() <= nextWaveHP) {
+              spawnBalls(System.currentTimeMillis());
+            }
+        }
         for (Player player : players) {
-            player.move();
+        	if (player.isAlive()) {
+	            player.move();
+	            for (Projectile projectile : player.getProjectiles()) {
+	                if (!(projectile.getState() == Projectile.State.FROZEN && projectileFreeze)) {
+	                    projectile.move();
+	                }
+	                projectile.draw(gc);
+	            }
+        	}
         }
         powerUpManager.onUpdate(currentTime);
     }
+
+    /**
+     * Spawns a randomly selected set of balls
+     * @param seed the random seed
+     */
+    public void spawnBalls(long seed) {
+
+        Random generator = new Random(seed);
+        int i = generator.nextInt() % 5;
+        switch(i) {
+            case 0: spawnSameSizeBalls(6, 16);
+                break;
+            case 1: spawnSameSizeBalls(4, 32);
+                break;
+            case 2: spawnSameSizeBalls(3, 32);
+                break;
+            case 3: spawnSameSizeBalls(2, 64);
+                break;
+            case 4: spawnSameSizeBalls(1, 128);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * calculates the amount of time you would need to hit all the
+     * balls in order for them to all be gone.
+     * @return the sum of hitpoints the balls have
+     */
+    public int totalBallHitpoints() {
+        int sum = 0;
+        for (Ball b: balls) {
+            sum += ballHitpoints(0, b.getSize());
+        }
+        return sum;
+    }
+
+    /**
+     * Calculates the amount of times a ball would
+     * need to be hit to be gone.
+     * @param sum current sum of hitpoints
+     * @param size current size of ball
+     * @return total sum of hitpoints
+     */
+    public static int ballHitpoints(int sum, int size) {
+        if (size <= 16) {
+            return sum + 1;
+        }
+        return 1 + 2 * ballHitpoints(sum, size / 2);
+    }
+
+    /**
+     * Spawns an amount of balls of the same size equally spaced out.
+     * @param amount The amount of balls to spawn
+     * @param size The size of the balls
+     */
+    public void spawnSameSizeBalls(int amount, int size) {
+        double y = canvas.getHeight() / 4;
+        for (int i = 0; i < amount; i++) {
+            int direction;
+            if (Math.random() < 0.5) {
+                direction = -2;
+            } else {
+                direction = 2;
+            }
+            double x = canvas.getWidth() / (amount + 1) * (i + 1);
+            Ball ball = new Ball(x, y, direction, 0, size);
+            this.balls.add(ball);
+        }
+    }
+
 
 
     /**
@@ -260,7 +352,8 @@ public class Level {
      * @param projectile to remove.
      */
     public void removeProjectile(Projectile projectile) {
-        projectiles.remove(projectile);
+    	Player p = projectile.getPlayer();
+    	p.getProjectiles().remove(projectile);
     }
 
     /**
@@ -404,10 +497,6 @@ public class Level {
         this.projectileFreeze = projectileFreeze;
     }
 
-    public ArrayList<Projectile> getProjectiles() {
-        return projectiles;
-    }
-
     public ArrayList<PowerUp> getCollidablePowerups() {
         return powerUpManager.getCollidables();
     }
@@ -444,32 +533,43 @@ public class Level {
         this.shootKey = shootKey;
     }
 
+    public boolean isSurvival() {
+        return survival;
+    }
+
+    public void setSurvival(boolean survival) {
+        this.survival = survival;
+    }
+
     /**
      * Handler for key presses.
      */
     private class KeyPressHandler implements EventHandler<KeyEvent> {
-        private KeyCode last = KeyCode.SPACE;
 
         public void handle(KeyEvent key) {
-            if(key.getCode() == rightKey) {
-                players.get(0).setSpeed(players.get(0).getMoveSpeed());
-                if (last != rightKey) {
-                    dLog.info("Player direction changed to right.", DLog.Type.PLAYER_INTERACTION);
-                    last = rightKey;
-                }
-            }
-            if(key.getCode() == leftKey) {
-                players.get(0).setSpeed(-players.get(0).getMoveSpeed());
-                if (last != leftKey) {
-                    dLog.info("Player direction changed to left.", DLog.Type.PLAYER_INTERACTION);
-                    last = leftKey;
-                }
-            }
-            if(key.getCode() == shootKey) {
-                    shoot(players.get(0));
-            }
-            //players.get(0).setSpeed(0);
-
+        	for (Player p : players) {
+        		if (p.isAlive()) {
+		            if (key.getCode() == p.getRightKey()) {
+		               p.setSpeed(p.getMoveSpeed());
+		                if (p.getLastKey() != p.getRightKey()) {
+		                    dLog.info("Player direction changed to right.",
+                                    DLog.Type.PLAYER_INTERACTION);
+		                    p.setLastKey(p.getRightKey());
+		                }
+		            }
+		            if (key.getCode() == p.getLeftKey()) {
+		                p.setSpeed(-p.getMoveSpeed());
+		                if (p.getLastKey() != p.getLeftKey()) {
+		                    dLog.info("Player direction changed to left.",
+                                    DLog.Type.PLAYER_INTERACTION);
+		                    p.setLastKey(p.getLeftKey());
+		                }
+		            }
+		            if (key.getCode() == p.getShootKey()) {
+		                    shoot(p);
+		            }
+        		}
+        	}
         }
     }
 
@@ -487,6 +587,7 @@ public class Level {
         /**
          * Canvas setter.
          * @param canvas canvas
+         * @return the Builder-object
          */
         public Builder setCanvas(Canvas canvas) {
             this.canvas = canvas;
@@ -496,6 +597,7 @@ public class Level {
         /**
          * Time setter.
          * @param time time
+         * @return the Builder-object
          */
         public Builder setTime(int time) {
             this.time = time;
@@ -505,6 +607,7 @@ public class Level {
         /**
          * Balls setter.
          * @param balls balls
+         * @return the Builder-object
          */
         public Builder setBalls(ArrayList<Ball> balls) {
             this.balls = balls;
@@ -514,6 +617,7 @@ public class Level {
         /**
          * Walls setter.
          * @param walls walls
+         * @return the Builder-object
          */
         public Builder setWalls(ArrayList<Wall> walls) {
             this.walls = walls;
@@ -523,6 +627,7 @@ public class Level {
         /**
          * Player setter.
          * @param players players
+         * @return the Builder-object
          */
         public Builder setPlayers(ArrayList<Player> players) {
             this.players = players;

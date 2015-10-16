@@ -3,6 +3,12 @@
 	<time>2000</time>
     <playerList>
         <player id="1">
+            <x>420</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+        <player id="2">
             <x>500</x>
             <y>575</y>
             <width>50</width>
@@ -11,9 +17,9 @@
     </playerList>
     <ballList>
         <ball id="1">
-            <x>25</x>
+            <x>0</x>
             <y>200</y>
-            <speedX>2</speedX>
+            <speedX>-2</speedX>
             <speedY>0</speedY>
             <size>128</size>
         </ball>

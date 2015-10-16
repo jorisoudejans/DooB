@@ -49,7 +49,7 @@ public abstract class Projectile implements Drawable, Collidable {
     public Rectangle getBounds() {
     	return new Rectangle(x, y, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);
     }
-
+	
 	public Image getImg() {
 		return img;
 	}

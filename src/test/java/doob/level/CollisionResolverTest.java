@@ -1,5 +1,7 @@
 package doob.level;
 
+import java.util.ArrayList;
+
 import doob.model.Ball;
 import doob.model.Level;
 import doob.model.Player;
@@ -97,6 +99,7 @@ public class CollisionResolverTest {
     	Ball ball = mock(Ball.class);
     	when(player.getState()).thenReturn(Player.State.NORMAL);
     	when(player.getLives()).thenReturn(PLAYER_LIVES);
+    	when(level.getPlayers()).thenReturn(asList(player));
     	collisionResolver.playerVersusBall(player, ball);
     	verify(player).die();
     	verify(this.level).onEvent(Level.Event.LOST_LIFE);
@@ -212,5 +215,17 @@ public class CollisionResolverTest {
     	when(level.isProjectileFreeze()).thenReturn(true);
     	collisionResolver.projectileVersusCeiling(projectile);
     	verify(projectile).setState(Projectile.State.FROZEN);
+    }
+    
+    /**
+     * Converts single object into an one-item arraylist.
+     * @param object the single object
+     * @param <T> lists' type
+     * @return array list with one item of type T
+     */
+    private <T> ArrayList<T> asList(T object) {
+        ArrayList<T> list = new ArrayList<T>();
+        list.add(object);
+        return list;
     }
 }
