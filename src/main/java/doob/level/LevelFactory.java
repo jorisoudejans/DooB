@@ -144,8 +144,10 @@ public class LevelFactory {
                     int endy = parseInt("endy", eElement);
                     int duration = parseInt("duration", eElement);
                     int speed = parseInt("speed", eElement);
-                    String condition = eElement.getElementsByTagName("condition").item(0).getTextContent();
-                    Wall wall = new Wall(x, y, width, height, endx, endy, duration, speed, condition);
+                    String condition = eElement.getElementsByTagName("condition")
+                    		.item(0).getTextContent();
+                    Wall wall = new Wall(x, y, width, height, endx, endy, 
+                    		duration, speed, condition);
                     wallList.add(wall);
                 } else {
                     Wall wall = new Wall(x, y, width, height);
@@ -154,7 +156,11 @@ public class LevelFactory {
             }
         }
     }
-
+    
+    /**
+     * Parse the level from a document.
+     * @param doc Document to be read.
+     */
     public void parseLevel(Document doc) {
     	NodeList nListBall = doc.getElementsByTagName("time");	
         Node nNode = nListBall.item(0);

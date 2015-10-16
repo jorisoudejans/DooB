@@ -25,7 +25,8 @@ public class PowerUpManager {
     private ArrayList<PowerUp> powerupsOnScreen;
     private ArrayList<PowerUp> powerupsOnScreenToRemove;
     private ArrayList<PowerUp> activePowerups;
-
+    
+    private static final int POWER_UP_HEIGHT = 30;
     private Level level;
 
     private DLog dLog;
@@ -56,7 +57,8 @@ public class PowerUpManager {
             for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
                 if (info.getName().startsWith("doob.model.powerup")) {
                     final Class<?> clazz = info.load();
-                    if (clazz.getSuperclass() != null && clazz.getSuperclass().equals(PowerUp.class)) {
+                    if (clazz.getSuperclass() != null 
+                    		&& clazz.getSuperclass().equals(PowerUp.class)) {
                         availablePowerups.add(clazz);
                     }
                     // do something with your clazz
@@ -94,14 +96,24 @@ public class PowerUpManager {
             }
         }
     }
-
+    
+    /**
+     * Handle the collision of a powerup and a player.
+     * @param powerup the powerup
+     * @param player the player
+     */
     public void handleCollision(PowerUp powerup, Player player) {
         dLog.info(player.toString() + " is hit by a powerup", DLog.Type.COLLISION);
         powerup.onActivate(level, player);
         activePowerups.add(powerup);
         powerupsOnScreenToRemove.add(powerup);
     }
-
+    
+    /**
+     * Checks if there can be a collision between an item and the collider.
+     * @param collider The collider
+     * @return boolean if items can collide.
+     */
     public boolean itemsCanCollideWith(Collidable collider) {
         return collider instanceof Player;
     }
@@ -117,7 +129,11 @@ public class PowerUpManager {
     public ArrayList<Class<?>> getAvailablePowerups() {
         return availablePowerups;
     }
-
+    
+    /**
+     * Method to execute on update.
+     * @param time the time
+     */
     public void onUpdate(double time) {
         for (PowerUp p : powerupsOnScreenToRemove) {
             powerupsOnScreen.remove(p);
@@ -125,7 +141,7 @@ public class PowerUpManager {
         powerupsOnScreenToRemove = new ArrayList<PowerUp>();
         ArrayList<PowerUp> toRemoveWait = new ArrayList<PowerUp>();
         for (PowerUp powerup : powerupsOnScreen) { // move powerups down
-            if (powerup.getLocationY() < level.getFloor().getY() - 30) {
+            if (powerup.getLocationY() < level.getFloor().getY() - POWER_UP_HEIGHT) {
                 powerup.setLocationY(powerup.getLocationY() + 2);
             }
             powerup.tickWait();
