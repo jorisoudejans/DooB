@@ -178,7 +178,7 @@ public class Level {
     }
 
     /**
-     * Spawns a randomly selected set of balls
+     * Spawns a randomly selected set of balls.
      * @param seed the random seed
      */
     public void spawnBalls(long seed) {
@@ -297,7 +297,7 @@ public class Level {
     /**
      * Notify all observers of an event.
      */
-    public void notifyObservers() {
+    private void notifyObservers() {
         for (LevelObserver observer : observers) {
             observer.onLevelStateChange(lastEvent);
         }
@@ -422,6 +422,13 @@ public class Level {
 
     public void setSurvival(boolean survival) {
         this.survival = survival;
+    }
+
+    /**
+     * Continues to next level immediately after event.
+     */
+    public void continueNextLevel() {
+        notifyObservers();
     }
 
     /**
