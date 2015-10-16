@@ -47,8 +47,8 @@ public class LevelFactory {
         playerImages = new Image[1];
     }
 
-    public void setPlayerImages(Image[] images) {
-        this.playerImages = images;
+    public void setPlayerImages(Image[] playerImages) {
+        this.playerImages = playerImages;
     }
 
     /**
@@ -81,11 +81,7 @@ public class LevelFactory {
                 int width = parseInt("width", eElement);
                 int height = parseInt("height", eElement);
 
-                if (playerImages.length < NUMBER_OF_PLAYER_IMAGES) {
-                    playerImages = new Image[] { new Image("/image/character1_stand.png"),
-                            new Image("/image/character1_left.gif"),
-                            new Image("/image/character1_right.gif") };
-                }
+                setPlayerImages(i);
 
                 Player pl = new Player(
                         x,
@@ -99,6 +95,16 @@ public class LevelFactory {
                 playerList.add(pl);
             }
         }
+    }
+
+    /**
+     * Sets the playerImages to the corresponding images.
+     * @param i Images for the i-th player
+     */
+    public void setPlayerImages(int i) {
+            playerImages = new Image[] { new Image("/image/character" + i + "_stand.png"),
+                    new Image("/image/character" + i + "_left.gif"),
+                    new Image("/image/character" + i + "_right.gif") };
     }
 
     /**

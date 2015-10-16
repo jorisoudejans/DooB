@@ -136,7 +136,7 @@ public class CollisionResolver {
         level.freeze(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                level.notifyObservers();
+                level.continueNextLevel();
                 dLog.info("Lost a life", DLog.Type.STATE);
             }
         });
@@ -218,7 +218,7 @@ public class CollisionResolver {
         if (walls.t0 == level.getLeft() && walls.t1 == level.getRight() && !level.isSurvival()) {
             level.onEvent(Level.Event.ALL_BALLS_GONE);
             level.stopTimer();
-            level.notifyObservers();
+            level.continueNextLevel();
             dLog.info("All balls gone", DLog.Type.STATE);
         } else if (walls.t0 == level.getLeft()) {
             walls.t1.setOpen(true);
