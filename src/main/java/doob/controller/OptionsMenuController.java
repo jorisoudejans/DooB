@@ -192,8 +192,6 @@ public class OptionsMenuController {
 					shootKeyMP = event.getCode();
 					update(); }
 				break;
-			case NONE:
-				break;
 			default:
 				break;
 			}

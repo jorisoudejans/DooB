@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
 import java.util.List;
 
 /**
@@ -217,7 +218,12 @@ public class Player implements Collidable, Drawable {
     private KeyCode leftKey;
     private KeyCode rightKey;
     private KeyCode shootKey;
-    private KeyCode lastKey;
+    
+    /**
+     * the lastKey value is used, suppressed warning.
+     */
+    @SuppressWarnings("unused")
+	private KeyCode lastKey;
 
     /**
      * Moving action.
