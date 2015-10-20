@@ -106,22 +106,7 @@ public class Game implements LevelObserver {
 
 		dLog.setFile("DooB.log");
 		dLog.info("Game started.", DLog.Type.STATE);
-	}
-
-	/**
-	 * Initialize a survivalgame.
-	 */
-	public void initSurvival() {
-		//gameMode = GameMode.SURVIVAL;
-		initGame("src/main/resources/Level/SurvivalLevels.xml");
-
-		level.setSurvival(true);
-		level.getPlayers().get(0).setLives(1);
-		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
-		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
-		//gameMode = GameMode.SURVIVAL;
-	}
-	
+	}	
 
 	/**
 	 * Navigate back to the menu.

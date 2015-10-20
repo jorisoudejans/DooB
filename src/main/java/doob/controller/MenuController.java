@@ -4,8 +4,8 @@ import javafx.fxml.FXML;
 import doob.App;
 import doob.game.CoopGame;
 import doob.game.DuelGame;
-import doob.game.Game;
 import doob.game.SinglePlayerGame;
+import doob.game.SurvivalGame;
 
 /**
  * Opening menu.
@@ -37,6 +37,15 @@ public class MenuController {
 	public void playCoopMode() {
 		CoopGame cg = App.loadScene("/FXML/CoopGame.fxml").getController();
 		cg.initialize();
+	}
+	
+	/**
+	 * navigate to Survivalgame.
+	 */
+	@FXML
+	public void playSurvivalMode() {
+		SurvivalGame sg = App.loadScene("/FXML/SurvivalGame.fxml").getController();
+		sg.initialize();
 	}
 	
 	/**
@@ -88,15 +97,6 @@ public class MenuController {
 	@FXML
 	public void showOptions() {
 		App.loadScene("/FXML/OptionsMenu.fxml");
-	}
-
-	/**
-	 * navigate to Survivalgame.
-	 */
-	@FXML
-	public void playSurvivalMode() {
-		Game gc = App.loadScene("/fxml/game.fxml").getController();
-		gc.initSurvival();
 	}
 	
 	/**
