@@ -47,33 +47,6 @@ public class DuelGame extends Game {
 	}
 	
 	@Override
-	public void newLevel() {
-		ArrayList<Player> players = null;
-		if (level != null) {
-			level.stopTimer();
-			players = level.getPlayers();
-		}
-
-		BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
-		level = new LevelFactory(levelList.get(currentLevel), bounds).build();
-		level.addObserver(this);
-		LevelController levelController = new LevelController(level);
-		LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
-		levelView.setLevelController(levelController);
-		level.addObserver(levelView);
-		if (players != null) {
-			for (int i = 0; i < players.size(); i++) {
-				Player p = players.get(i);
-				int lives = p.getLives();
-				int score = p.getScore();
-				level.getPlayers().get(i).setLives(lives);
-				level.getPlayers().get(i).setScore(score);
-			}
-		}
-		readOptions();
-	}
-	
-	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/duelhighscores.xml", "Duel Mode");

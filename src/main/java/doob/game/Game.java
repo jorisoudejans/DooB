@@ -306,10 +306,10 @@ public abstract class Game implements Observer {
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
 	 */
 	public void newLevel() {
-		Player p = null;
+		ArrayList<Player> players = null;
 		if (level != null) {
 			level.stopTimer();
-			p = level.getPlayers().get(0);
+			players = level.getPlayers();
 		}
 		BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
 		level = new LevelFactory(levelList.get(currentLevel), bounds).build();
@@ -318,11 +318,14 @@ public abstract class Game implements Observer {
 		LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
 		levelView.setLevelController(levelController);
 		level.addObserver(levelView);
-		if (p != null) {
-			int lives = p.getLives();
-			int score = p.getScore();
-			level.getPlayers().get(0).setLives(lives);
-			level.getPlayers().get(0).setScore(score);
+		if (players != null) {
+			for (int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				int lives = p.getLives();
+				int score = p.getScore();
+				level.getPlayers().get(i).setLives(lives);
+				level.getPlayers().get(i).setScore(score);
+			}
 		}
 		readOptions();
 	}
