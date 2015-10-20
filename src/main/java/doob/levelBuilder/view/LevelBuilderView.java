@@ -1,4 +1,4 @@
-package doob.levelBuilder;
+package doob.levelBuilder.view;
 
 public class LevelBuilderView {
 
