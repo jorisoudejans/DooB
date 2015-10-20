@@ -1,5 +1,5 @@
 package doob.levelBuilder;
 
-public class BallElement {
+public class BallElement extends BuilderElement{
 
 }
