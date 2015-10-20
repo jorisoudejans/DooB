@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Tuple with infinite values.
+ * Tuple with infinite values. Basically a List with
+ * a more useful constructor.
  */
 public class Tuple<T> {
 
@@ -25,7 +26,7 @@ public class Tuple<T> {
      * @param position position of value in tuple
      * @return Object
      */
-    public T value(int position) {
+    public T v(int position) {
         return valueList.get(position);
     }
 
