@@ -4,6 +4,7 @@ import doob.model.Ball;
 import doob.model.Level;
 import doob.model.Player;
 import doob.model.Wall;
+import doob.util.BoundsTuple;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
@@ -24,7 +25,7 @@ public class LevelFactory {
     public static final int NUMBER_OF_PLAYER_IMAGES = 3;
 
     private File file;
-    private Canvas canvas;
+    private BoundsTuple bounds;
     private int time;
     private ArrayList<Player> playerList;
     private ArrayList<Ball> ballList;
@@ -35,11 +36,11 @@ public class LevelFactory {
      * Creates a LevelFactory object which all that is needed to build a level.
      *
      * @param path path to the XML-file
-     * @param canvas javaFX canvas
+     * @param bounds javaFX bounds
      */
-    public LevelFactory(String path, Canvas canvas) {
+    public LevelFactory(String path, BoundsTuple bounds) {
         this.file = new File(path);
-        this.canvas = canvas;
+        this.bounds = bounds;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
         this.wallList = new ArrayList<Wall>();
@@ -206,14 +207,14 @@ public class LevelFactory {
 
         /*Level.Builder builder = new Level.Builder();
         builder.setBalls(ballList);
-        builder.setCanvas(canvas);
+        builder.setCanvas(bounds);
         builder.setPlayers(playerList);
         builder.setWalls(wallList);
         builder.setTime(time);*/
 
         return new Level.Builder()
                 .setBalls(ballList)
-                .setCanvas(canvas)
+                .setBounds(bounds)
                 .setPlayers(playerList)
                 .setWalls(wallList)
                 .setTime(time)

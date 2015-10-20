@@ -4,7 +4,13 @@ package doob.game;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
+import doob.controller.LevelController;
+import doob.level.LevelFactory;
+import doob.level.LevelView;
+import doob.util.BoundsTuple;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -27,7 +33,6 @@ import org.w3c.dom.NodeList;
 import doob.App;
 import doob.DLog;
 import doob.controller.OptionsController;
-import doob.level.LevelObserver;
 import doob.model.Level;
 import doob.model.Player;
 
@@ -35,7 +40,7 @@ import doob.model.Player;
 /**
  * Controller for games.
  */
-public abstract class Game implements LevelObserver {
+public abstract class Game implements Observer {
 
 	@FXML
 	protected Canvas canvas;
@@ -204,7 +209,7 @@ public abstract class Game implements LevelObserver {
 					player.die();
 				}
 			}
-			onLevelStateChange(Level.Event.LOST_LIFE);
+			update(null, Level.Event.LOST_LIFE);
 			return;
 		}
 		progressBar.setProgress(progress);
@@ -232,24 +237,33 @@ public abstract class Game implements LevelObserver {
 		}.start();
 	}
 
+
 	public Level getLevel() {
 		return level;
 	}
 
+	/**
+	 * On update of level.
+	 * @param o the level
+	 * @param arg an object
+	 */
 	@Override
-	public void onLevelStateChange(Level.Event event) {
-		switch (event) {
-		case ZERO_LIVES:
-			loadHighscores();
-			break;
-		case ALL_BALLS_GONE:
-			onAllBallsGone();
-			break;
-		case LOST_LIFE:
-			newLevel();
-			break;
-		default:
-			break;
+	public void update(Observable o, Object arg) {
+		if (arg instanceof Level.Event) {
+			Level.Event event = (Level.Event) arg;
+			switch (event) {
+				case ZERO_LIVES:
+					//App.loadHighscoreScene(score, score2, gameMode);
+					break;
+				case ALL_BALLS_GONE:
+					onAllBallsGone();
+					break;
+				case LOST_LIFE:
+					newLevel();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -291,7 +305,27 @@ public abstract class Game implements LevelObserver {
 	/**
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
 	 */
-	public abstract void newLevel();
+	public void newLevel() {
+		Player p = null;
+		if (level != null) {
+			level.stopTimer();
+			p = level.getPlayers().get(0);
+		}
+		BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
+		level = new LevelFactory(levelList.get(currentLevel), bounds).build();
+		level.addObserver(this);
+		LevelController levelController = new LevelController(level);
+		LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
+		levelView.setLevelController(levelController);
+		level.addObserver(levelView);
+		if (p != null) {
+			int lives = p.getLives();
+			int score = p.getScore();
+			level.getPlayers().get(0).setLives(lives);
+			level.getPlayers().get(0).setScore(score);
+		}
+		readOptions();
+	}
 	
 	/**
 	 * Show the highscores.

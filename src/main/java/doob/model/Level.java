@@ -3,34 +3,28 @@ package doob.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
 import doob.DLog;
 import doob.level.CollisionManager;
 import doob.level.CollisionResolver;
-import doob.level.LevelObserver;
-import doob.level.ObjectDrawer;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
+import doob.util.BoundsTuple;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 
 
 
 /**
  * Level class, created from LevelFactory.
  */
-public class Level {
+public class Level extends Observable {
 
     private DLog dLog;
-
-    private Canvas canvas;
 
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
@@ -53,14 +47,13 @@ public class Level {
     private Wall ceiling;
     private Wall floor;
 
+    private BoundsTuple bounds;
+
     private boolean ballFreeze;
     private boolean projectileFreeze;
 
     private PowerUpManager powerUpManager;
     private CollisionManager collisionManager;
-    private ObjectDrawer objectDrawer;
-
-    private List<LevelObserver> observers;
 
     private Event lastEvent = Event.NULL;
 
@@ -78,40 +71,19 @@ public class Level {
     }
 
     /**
-     * Initialize javaFx.
-     *
-     * @param canvas
-     *          the canvas to be drawn upon.
+     * Init new level with size bounds.
+     * @param bounds width and height
      */
-    public Level(Canvas canvas) {
+    public Level(BoundsTuple bounds) {
         dLog = DLog.getInstance();
-        this.canvas = canvas;
+        this.bounds = bounds;
         createTimer();
         ballFreeze = false;
         projectileFreeze = false;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        canvas.setFocusTraversable(true);
-        canvas.setOnKeyPressed(new KeyPressHandler());
-
-        observers = new ArrayList<LevelObserver>();
 
         powerUpManager = new PowerUpManager(this);
         collisionManager = new CollisionManager(this, new CollisionResolver(this));
-        objectDrawer = new ObjectDrawer(gc, this);
 
-        canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent key) {
-            	for (Player p : players) {
-            		if (p.isAlive()) {
-	            		if (p.getControlKeys().isMoveKey(key.getCode())) {
-	                    	p.setSpeed(0);
-	                	}
-            		}
-            	}
-            }
-        });
-
-        canvas.requestFocus();
     }
 
     private void createTimer() {
@@ -133,7 +105,7 @@ public class Level {
     public void shoot(Player player) {
         if (player.getProjectiles().size() < 1) {
         	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2 
-            		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
+            		 - PROJECTILE_WIDTH, bounds.getHeight(), PROJECTILE_START_SPEED));
             dLog.info(player.toString() + " shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
     }
@@ -165,8 +137,8 @@ public class Level {
     public void update() {
         collisionManager.detectCollisions();
         powerUpManager.onUpdate(currentTime);
-        objectDrawer.draw(players, balls, walls, powerUpManager, lastEvent);
-        objectDrawer.move(players, balls, walls);
+        setChanged();
+        notifyObservers(this.lastEvent);
         if (survival) {
             updateSurvival();
         } else {
@@ -233,14 +205,14 @@ public class Level {
      * @param size The size of the balls
      */
     public void spawnSameSizeBalls(int amount, int size) {
-        double y = canvas.getHeight() / 4;
+        double y = bounds.getHeight() / 4;
         for (int i = 0; i < amount; i++) {
             int direction;
             direction = (int) (Math.pow(
                     -1,
                     (int) Math.round(Math.random() * 10)) * 2
             );
-            double x = canvas.getWidth() / (amount + 1) * (i + 1);
+            double x = bounds.getWidth() / (amount + 1) * (i + 1);
             Ball ball = new Ball(x, y, direction, 0, size);
             this.balls.add(ball);
         }
@@ -283,22 +255,6 @@ public class Level {
      */
     public void addBall(Ball ball) {
         balls.add(ball);
-    }
-    
-    /**
-     * Add an observer to level.
-     * @param observer to add.
-     */
-    public void addObserver(LevelObserver observer) {
-        observers.add(observer);
-    }
-    /**
-     * Notify all observers of an event.
-     */
-    private void notifyObservers() {
-        for (LevelObserver observer : observers) {
-            observer.onLevelStateChange(lastEvent);
-        }
     }
     
     /**
@@ -430,35 +386,8 @@ public class Level {
      * Continues to next level immediately after event.
      */
     public void continueNextLevel() {
-        notifyObservers();
-    }
-
-    /**
-     * Handler for key presses.
-     */
-    private class KeyPressHandler implements EventHandler<KeyEvent> {
-
-        public void handle(KeyEvent key) {
-        	for (Player p : players) {
-        		if (p.isAlive()) {
-                    Player.ControlKeys.Action action = p.getControlKeys().determineAction(
-                    		key.getCode());
-                    switch (action) {
-                        case RIGHT:
-                            p.setSpeed(p.getMoveSpeed());
-                            break;
-                        case LEFT:
-                            p.setSpeed(-p.getMoveSpeed());
-                            break;
-                        case SHOOT:
-                            shoot(p);
-                            break;
-                        default:
-                            break;
-                    }
-        		}
-        	}
-        }
+        setChanged();
+        notifyObservers(this.lastEvent);
     }
 
     /**
@@ -466,7 +395,7 @@ public class Level {
      */
     public static class Builder {
 
-        private Canvas canvas;
+        private BoundsTuple bounds;
         private ArrayList<Ball> balls;
         private ArrayList<Player> players;
         private ArrayList<Wall> walls;
@@ -474,11 +403,11 @@ public class Level {
 
         /**
          * Canvas setter.
-         * @param canvas canvas
+         * @param bounds level size
          * @return the Builder-object
          */
-        public Builder setCanvas(Canvas canvas) {
-            this.canvas = canvas;
+        public Builder setBounds(BoundsTuple bounds) {
+            this.bounds = bounds;
             return this;
         }
 
@@ -527,11 +456,11 @@ public class Level {
          * @return level
          */
         public Level build() {
-            Level level = new Level(canvas);
-            Wall right = new Wall((int) canvas.getWidth(), 0, 1, (int) canvas.getHeight());
-            Wall left = new Wall(0, 0, 1, (int) canvas.getHeight());
-            Wall ceiling = new Wall(0, 0, (int) canvas.getWidth(), 1);
-            Wall floor = new Wall(0, (int) canvas.getHeight(), (int) canvas.getWidth(), 1);
+            Level level = new Level(bounds);
+            Wall right = new Wall(bounds.getWidth().intValue(), 0, 1, bounds.getHeight().intValue());
+            Wall left = new Wall(0, 0, 1, bounds.getHeight().intValue());
+            Wall ceiling = new Wall(0, 0, bounds.getWidth().intValue(), 1);
+            Wall floor = new Wall(0, bounds.getHeight().intValue(), bounds.getWidth().intValue(), 1);
 
             level.setLeft(left);
             level.setRight(right);

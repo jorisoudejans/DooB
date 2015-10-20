@@ -39,24 +39,6 @@ public class SurvivalGame extends Game {
 	}
 	
 	@Override
-	public void newLevel() {
-		Player p = null;
-		if (level != null) {
-			level.stopTimer();
-			p = level.getPlayers().get(0);
-		}
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.addObserver(this);
-		if (p != null) {
-			int lives = p.getLives();
-			int score = p.getScore();
-			level.getPlayers().get(0).setLives(lives);
-			level.getPlayers().get(0).setScore(score);
-		}
-		readOptions();
-	}
-	
-	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/survivalhighscores.xml", "Surival Mode");

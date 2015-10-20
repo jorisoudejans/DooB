@@ -2,6 +2,9 @@ package doob.game;
 
 import java.util.ArrayList;
 
+import doob.controller.LevelController;
+import doob.level.LevelView;
+import doob.util.BoundsTuple;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
@@ -43,8 +46,13 @@ public class CoopGame extends Game {
 			level.stopTimer();
 			players = level.getPlayers();
 		}
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
+		BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
+		level = new LevelFactory(levelList.get(currentLevel), bounds).build();
 		level.addObserver(this);
+		LevelController levelController = new LevelController(level);
+		LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
+		levelView.setLevelController(levelController);
+		level.addObserver(levelView);
 		if (players != null) {
 			for (int i = 0; i < players.size(); i++) {
 				Player p = players.get(i);

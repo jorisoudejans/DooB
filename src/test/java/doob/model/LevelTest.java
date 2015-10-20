@@ -1,5 +1,6 @@
 package doob.model;
 
+import doob.util.BoundsTuple;
 import javafx.scene.canvas.Canvas;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,17 +14,17 @@ import java.util.ArrayList;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Tests for Level.
  * Created by hidde on 9/10/15.
  */
 public class LevelTest {
-
-    @Spy
-    private Canvas canvas;
 
     private Wall leftWall;
     private Wall rightWall;
     private Wall floor;
     private ArrayList<Wall> walls;
+
+    private BoundsTuple bounds;
 
     @Before
     public void setUp() {
@@ -33,14 +34,14 @@ public class LevelTest {
         walls.add(leftWall);
         walls.add(rightWall);
         floor = new Wall(0, 500, 1000, 20);
+        bounds = new BoundsTuple(1000.0, 1000.0);
 
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testBasic() {
-        new Level(canvas);
-        verify(canvas).requestFocus();
+        new Level(bounds);
     }
 
     /**
@@ -48,7 +49,7 @@ public class LevelTest {
      * @return Standard level
      */
     private Level basicLevel() {
-        Level level = new Level(canvas);
+        Level level = new Level(bounds);
         level.setLeft(leftWall);
         level.setRight(rightWall);
         level.setFloor(floor);
@@ -112,8 +113,7 @@ public class LevelTest {
     }
 
     public Level ballsSetup(){
-        Canvas canvas = new Canvas((double) 1000, (double) 500);
-        Level level = new Level(canvas);
+        Level level = new Level(new BoundsTuple(1000.0, 500.0));
 
         ArrayList<Ball> balls = new ArrayList<Ball>();
         level.setBalls(balls);
