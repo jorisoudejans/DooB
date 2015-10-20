@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import doob.App;
-import doob.controller.GameController.GameMode;
 import doob.model.Score;
 
 /**
@@ -38,7 +37,7 @@ public class HighscoreMenuController {
 	
 	private HighscoreController hsc;
 	private String source;
-	private GameMode gameMode;
+	private String labelText;
 	
 	private static final int BUTTON_WIDTH = 100;
 	private static final int TEXT_FIELD_WIDTH = 350;
@@ -48,12 +47,12 @@ public class HighscoreMenuController {
 	/**
 	 * Read the highscores file and insert the scores into the table.
 	 * @param source The path to the highscores file.
-	 * @param gameMode The gamemode which is chosen.
+	 * @param labelText The gamemode shown above the highscores.
 	 */
-	public void updateTable(String source, GameMode gameMode) {
+	public void updateTable(String source, String labelText) {
 		this.source = source;
-		this.gameMode = gameMode;
-		gameModeLabel.setText(gameMode.getName());
+		this.labelText = labelText;
+		gameModeLabel.setText(labelText);
 		hsc = new HighscoreController(source);
 		ArrayList<Score> scoreList = hsc.read();
 		nameCol.setCellValueFactory(new PropertyValueFactory<Score, String>(
@@ -73,14 +72,12 @@ public class HighscoreMenuController {
 	 */
 	public void insertScore(final int score, int player) {
 		if (hsc.highScoreIndex(score) == -1) {
-			return;	}
+			return;	
+		}
 		final Stage dialog = new Stage();
 		dialog.initOwner(App.getStage());		
 		Label l;
-		if (gameMode == GameMode.DUEL) {
-			l = new Label("Player " + player + " has a highscore! Enter your name");
-		} else {
-			l = new Label("You got a highscore! Enter your name");	}
+		l = new Label("Player " + player + " got a highscore! Enter your name");
 		l.setFont(new Font(FONT_SIZE));
 		final TextField tf = new TextField();
 		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
@@ -95,7 +92,7 @@ public class HighscoreMenuController {
 					dialog.close();
 					hsc.addScore(new Score(name, score), index);
 					hsc.write();
-					updateTable(source, gameMode);
+					updateTable(source, labelText);
 					scoreTable.getSelectionModel().select(index);
 				}
 			}

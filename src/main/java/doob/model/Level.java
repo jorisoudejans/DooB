@@ -424,7 +424,11 @@ public class Level {
         this.survival = survival;
     }
 
-    /**
+    public CollisionManager getCollisionManager() {
+		return collisionManager;
+	}
+
+	/**
      * Continues to next level immediately after event.
      */
     public void continueNextLevel() {

@@ -112,7 +112,11 @@ public class CollisionManager {
         return c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
     }
 
-    /**
+    public CollisionResolver getCollisionResolver() {
+		return collisionResolver;
+	}
+
+	/**
      * Interface to provide a callback.
      */
     private interface CollisionCallback {

@@ -2,12 +2,13 @@ package doob.model;
 
 import java.util.ArrayList;
 
-import doob.controller.GameController;
+import doob.game.Game;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
 import java.util.List;
 
 /**
@@ -71,11 +72,7 @@ public class Player implements Collidable, Drawable {
     this.speed = 0;
     this.moveSpeed = START_SPEED;
     this.score = 0;
-    if (GameController.gameMode == GameController.GameMode.COOP) {
-    	this.lives = DOUBLE_LIVES;
-    } else {
-    	this.lives = LIVES;
-    }
+    this.lives = LIVES;
     this.state = State.NORMAL;
     controlKeys = null;
     imageStand = imageS;
