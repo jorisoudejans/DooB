@@ -1,11 +1,16 @@
 package doob.level;
 
-import doob.model.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.List;
+
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.Wall;
 
 /**
  * Created on 16/10/15 by Joris.
@@ -13,8 +18,8 @@ import java.util.List;
 public class ObjectDrawer {
 
     private GraphicsContext gc;
-    Canvas canvas;
-    Level level;
+    private Canvas canvas;
+    private Level level;
 
     /**
      * Construct new ObjectDrawer.

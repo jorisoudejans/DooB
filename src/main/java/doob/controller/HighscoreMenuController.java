@@ -39,11 +39,18 @@ public class HighscoreMenuController {
 	private HighscoreController hsc;
 	private String source;
 	private GameMode gameMode;
+	private Label l;
+	private final TextField tf = new TextField();		
+	private Button b = new Button("OK");
+	private final Stage dialog = new Stage();
 	
 	private static final int BUTTON_WIDTH = 100;
 	private static final int TEXT_FIELD_WIDTH = 350;
 	private static final int CELL_SIZE = 70;
 	private static final int FONT_SIZE = 22;
+	private static final int VBOX_WIDTH = 10;
+	private static final int DIALOG_X = 500;
+	private static final int DIALOG_Y = 150;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
@@ -74,17 +81,13 @@ public class HighscoreMenuController {
 	public void insertScore(final int score, int player) {
 		if (hsc.highScoreIndex(score) == -1) {
 			return;	}
-		final Stage dialog = new Stage();
 		dialog.initOwner(App.getStage());		
-		Label l;
 		if (gameMode == GameMode.DUEL) {
 			l = new Label("Player " + player + " has a highscore! Enter your name");
 		} else {
 			l = new Label("You got a highscore! Enter your name");	}
 		l.setFont(new Font(FONT_SIZE));
-		final TextField tf = new TextField();
-		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
-		Button b = new Button("OK");
+		tf.setMaxWidth(TEXT_FIELD_WIDTH);
 		b.setPrefWidth(BUTTON_WIDTH);
 		b.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -100,14 +103,20 @@ public class HighscoreMenuController {
 				}
 			}
 		});
-		
-		VBox popUpVBox = new VBox(10);
+		initializeVbox();
+	}
+	
+	/**
+	 * Shows the Vbox.
+	 */
+	private void initializeVbox() {		
+		VBox popUpVBox = new VBox(VBOX_WIDTH);
 		popUpVBox.setAlignment(Pos.CENTER);
         popUpVBox.getChildren().add(l);
         popUpVBox.getChildren().add(tf);
         popUpVBox.getChildren().add(b);
 
-        Scene dialogScene = new Scene(popUpVBox, 500, 150);
+        Scene dialogScene = new Scene(popUpVBox, DIALOG_X, DIALOG_Y);
 		dialog.setScene(dialogScene);
 		dialog.show();
 	}
