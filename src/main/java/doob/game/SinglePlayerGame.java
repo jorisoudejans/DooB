@@ -16,9 +16,6 @@ public class SinglePlayerGame extends Game implements GameMode {
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}
 	
-	/**
-	 * Updates the amount of lives every gamestep.
-	 */
 	@Override
 	public void updateLives() {
 		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
@@ -30,18 +27,12 @@ public class SinglePlayerGame extends Game implements GameMode {
 		}
 	}
 
-	/**
-	 * Updates the score every gamestep.
-	 */
 	@Override
 	public void updateScore() {
 		score = level.getPlayers().get(0).getScore();
 		scoreTextView1.setText(score + "");
 	}
 	
-	/**
-	 * Resets the level depending on currentLevel. Only keeps amount of lives.
-	 */
 	@Override
 	public void newLevel() {
 		Player p = null;

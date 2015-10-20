@@ -30,14 +30,12 @@ import doob.controller.OptionsController;
 import doob.level.LevelObserver;
 import doob.model.Level;
 import doob.model.Player;
-import doob.model.powerup.LifePowerUp;
-import doob.model.powerup.TimePowerUp;
 
 
 /**
  * Controller for games.
  */
-public class Game implements LevelObserver {
+public abstract class Game implements LevelObserver {
 
 	@FXML
 	protected Canvas canvas;
@@ -278,12 +276,24 @@ public class Game implements LevelObserver {
 			}
 		});
 	}
-
-	public void newLevel() {}
 	
-	public void updateScore() {}
+	/**
+	 * Updates the amount of lives every gamestep.
+	 */
+	public abstract void updateLives();
 	
-	public void updateLives() {}
+	/**
+	 * Updates the score every gamestep.
+	 */
+	public abstract void updateScore();
 	
-	public void loadHighscores() {}
+	/**
+	 * Resets the level depending on currentLevel. Only keeps amount of lives.
+	 */
+	public abstract void newLevel();
+	
+	/**
+	 * Show the highscores.
+	 */
+	public abstract void loadHighscores();
 }

@@ -20,10 +20,7 @@ public class CoopGame extends Game implements GameMode {
 		level.getPlayers().get(0).setLives(Player.DOUBLE_LIVES);
 		level.getPlayers().get(1).setLives(Player.DOUBLE_LIVES);
 	}
-	
-	/**
-	 * Updates the amount of lives every gamestep.
-	 */
+
 	@Override
 	public void updateLives() {
 		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
@@ -34,19 +31,13 @@ public class CoopGame extends Game implements GameMode {
 					* HEART_SPACE, HEART_Y);
 		}
 	}
-
-	/**
-	 * Updates the score every gamestep.
-	 */
+	
 	@Override
 	public void updateScore() {
 		score = level.getPlayers().get(0).getScore() + level.getPlayers().get(1).getScore();
 		scoreTextView1.setText(score + "");
 	}
 	
-	/**
-	 * Resets the level depending on currentLevel. Only keeps amount of lives.
-	 */
 	@Override
 	public void newLevel() {
 		ArrayList<Player> players = null;
