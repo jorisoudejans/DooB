@@ -3,8 +3,9 @@ package doob.controller;
 
 import org.hamcrest.core.IsNot;
 import org.junit.Test;
-import doob.model.Level;
 
+import doob.game.Game;
+import doob.model.Level;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -56,7 +57,7 @@ public class GameControllerTest extends ControllerTest {
         assertEquals(level.getDuration(), level.getCurrentTime());*/
     }
 
-    private GameController getGameController() {
-        return (GameController)getController("/fxml/game.fxml");
+    private Game getGameController() {
+        return (Game)getController("/fxml/game.fxml");
     }
 }
