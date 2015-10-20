@@ -1,11 +1,10 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
 import doob.model.Level;
 import doob.model.Player;
 
 /**
- * Power-up that freezes all balls for a short period of time.
+ * Power-up that speeds the player up for a short period of time.
  */
 @PowerUpChance(chance = PowerUp.CHANCE_PLAYER_SPEED)
 public class PlayerSpeedPowerUp extends PowerUp {
@@ -14,7 +13,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
     public static final int SPEED_FACTOR = 2;
 
     /**
-     * Adds one life to player.
+     * Speeds the player up with a factor of SPEED_FACTOR.
      * @param level the level the power-up is in.
      * @param player the player that picked up the power-up.
      */
@@ -25,7 +24,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
     }
 
     /**
-     * Does nothing.
+     * Sets player speed back to initial value.
      * @param level the level the power-up is in.
      */
     @Override
@@ -34,8 +33,8 @@ public class PlayerSpeedPowerUp extends PowerUp {
     }
 
     /**
-     * Has no duration.
-     * @return 0
+     * Get duration of speed powerup.
+     * @return DURATION
      */
     @Override
     public int getDuration() {
@@ -43,7 +42,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
     }
 
     /**
-     * Path to heart icon.
+     * Path to fast-right icon.
      * @return path
      */
     @Override
