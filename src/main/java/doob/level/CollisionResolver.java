@@ -68,23 +68,6 @@ public class CollisionResolver {
 		}
 	}
 
-        switch (getHitDirection(player, wall)) {
-            case LEFT:
-                if (playerSpeed >= 0) {
-                    stopPlayer(player, wallX - playerWidth);
-                }
-                break;
-            case TOP:
-                killPlayer(player);
-                break;
-            case RIGHT:
-                if (playerSpeed <= 0) {
-                    stopPlayer(player, wallX + wallWidth);
-                }
-                break;
-        }
-    }
-
 	/**
 	 * Stop player from moving.
 	 * 
@@ -95,6 +78,14 @@ public class CollisionResolver {
 		player.setSpeed(0);
 		player.setX(x);
 	}
+
+    /**
+     * Kills player.
+     * @param player Player to be killed
+     */
+    private void killPlayer(Player player) {
+        player.die();
+    }
 
 	/**
 	 * Directions Player and Wall can collide.
@@ -125,20 +116,6 @@ public class CollisionResolver {
 		}
 	}
 
-	/**
-	 * Method called when a Player and a Ball collide.
-	 * 
-	 * @param player
-	 *            collider
-	 * @param ball
-	 *            collider
-	 */
-	public void playerVersusBall(Player player, Ball ball) {
-		if (player.getState() == Player.State.INVULNERABLE) {
-			return;
-		}
-		player.die();
-
     /**
      * Method called when a Player and a Ball collide.
      * @param player collider
@@ -152,20 +129,21 @@ public class CollisionResolver {
 
         boolean gameOver = true;
         for (Player p : level.getPlayers()) {
-        	if (GameController.gameMode == GameController.GameMode.COOP && p != player) {
-        		if (p.getLives() > 0) {
-        			p.die();
-        		}
-        	}
-        	if (p.getLives() > 0) {
-        		gameOver = false;
-        	}
+            if (false && p != player) {
+                if (p.getLives() > 0) {
+                    p.die();
+                }
+            }
+            if (p.getLives() > 0) {
+                gameOver = false;
+            }
         }
         if (gameOver) {
             level.onEvent(Level.Event.ZERO_LIVES);
         } else {
             level.onEvent(Level.Event.LOST_LIFE);
         }
+    }
 
 	/**
 	 * Method called when a Player and a PowerUp collide.
