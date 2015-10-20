@@ -28,7 +28,7 @@ public class TimePowerUp extends PowerUp {
      */
     @Override
     public void onDeactivate(Level level) {
-        // empty
+
     }
 
     /**

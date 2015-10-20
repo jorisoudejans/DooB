@@ -23,7 +23,7 @@ public class FreezeBallsPowerUp extends PowerUp {
     }
 
     /**
-     * Return to normal state.
+     * Return to initial state.
      * @param level the level the power-up is in.
      */
     @Override

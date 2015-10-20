@@ -24,7 +24,7 @@ public class PlayerSpeedPowerUp extends PowerUp {
     }
 
     /**
-     * Sets player speed back to initial value.
+     * Return to initial state.
      * @param level the level the power-up is in.
      */
     @Override

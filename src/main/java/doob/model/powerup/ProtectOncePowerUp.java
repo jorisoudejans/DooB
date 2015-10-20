@@ -23,7 +23,7 @@ public class ProtectOncePowerUp extends PowerUp {
     }
 
     /**
-     * Returns player state to normal.
+     * Return to initial state.
      * @param level the level the power-up is in.
      */
     @Override
