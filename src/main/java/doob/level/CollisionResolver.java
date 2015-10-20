@@ -2,7 +2,11 @@ package doob.level;
 
 import doob.DLog;
 import doob.controller.GameController;
-import doob.model.*;
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.Wall;
 import doob.model.powerup.PowerUp;
 import doob.util.TupleTwo;
 import javafx.concurrent.WorkerStateEvent;
@@ -56,6 +60,8 @@ public class CollisionResolver {
                 if (playerSpeed <= 0) {
                     stopPlayer(player, wallX + wallWidth);
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -115,7 +121,6 @@ public class CollisionResolver {
             return;
         }
         player.die();
-
         boolean gameOver = true;
         for (Player p : level.getPlayers()) {
         	if (GameController.gameMode == GameController.GameMode.COOP && p != player) {

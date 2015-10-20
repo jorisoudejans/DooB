@@ -226,7 +226,8 @@ public class GameController implements LevelObserver {
 					"src/main/resources/Options/OptionsPlayer" + (i + 1)
 							+ ".xml");
 			oc.read();
-			Player.ControlKeys keys = new Player.ControlKeys(oc.getLeft(), oc.getRight(), oc.getShoot());
+			Player.ControlKeys keys = new Player.ControlKeys(oc.getLeft(), 
+					oc.getRight(), oc.getShoot());
 			level.getPlayers().get(i).setControlKeys(keys);
 		}
 	}
