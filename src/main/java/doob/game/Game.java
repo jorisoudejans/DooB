@@ -301,23 +301,21 @@ public abstract class Game implements Observer {
 	 * Updates the score every gamestep.
 	 */
 	public abstract void updateScore();
+
+	public abstract void newLevel();
 	
 	/**
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
+	 * @param type the level type
 	 */
-	public void newLevel() {
+	public void newLevel(String type) {
 		ArrayList<Player> players = null;
 		if (level != null) {
 			level.stopTimer();
 			players = level.getPlayers();
 		}
-		BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
-		level = new LevelFactory(levelList.get(currentLevel), bounds).build();
+		level = new LevelFactory(levelList.get(currentLevel), canvas, type).build();
 		level.addObserver(this);
-		LevelController levelController = new LevelController(level);
-		LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
-		levelView.setLevelController(levelController);
-		level.addObserver(levelView);
 		if (players != null) {
 			for (int i = 0; i < players.size(); i++) {
 				Player p = players.get(i);

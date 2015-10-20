@@ -38,7 +38,12 @@ public class CoopGame extends Game {
 		score = level.getPlayers().get(0).getScore() + level.getPlayers().get(1).getScore();
 		scoreTextView1.setText(score + "");
 	}
-	
+
+	@Override
+	public void newLevel() {
+		super.newLevel("coop");
+	}
+
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();

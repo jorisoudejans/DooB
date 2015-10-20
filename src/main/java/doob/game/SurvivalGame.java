@@ -15,7 +15,6 @@ public class SurvivalGame extends Game {
 
 	public void initialize() {
 		initGame("src/main/resources/Level/SurvivalLevels.xml");
-		level.setSurvival(true);
 		level.getPlayers().get(0).setLives(1);
 		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
 		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
@@ -37,7 +36,12 @@ public class SurvivalGame extends Game {
 		score = level.getPlayers().get(0).getScore();
 		scoreTextView1.setText(score + "");
 	}
-	
+
+	@Override
+	public void newLevel() {
+		super.newLevel("survival");
+	}
+
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();

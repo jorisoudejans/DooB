@@ -34,6 +34,11 @@ public class SinglePlayerGame extends Game {
 	}
 
 	@Override
+	public void newLevel() {
+		super.newLevel("single");
+	}
+
+	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/highscores.xml", "SinglePlayer Mode");

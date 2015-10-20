@@ -1,9 +1,7 @@
 package doob.level;
 
-import doob.model.Ball;
-import doob.model.Level;
-import doob.model.Player;
-import doob.model.Wall;
+import doob.controller.LevelController;
+import doob.model.*;
 import doob.util.BoundsTuple;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -16,6 +14,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Class for parsing levels.
@@ -25,25 +25,29 @@ public class LevelFactory {
     public static final int NUMBER_OF_PLAYER_IMAGES = 3;
 
     private File file;
+    private Canvas canvas;
     private BoundsTuple bounds;
     private int time;
     private ArrayList<Player> playerList;
     private ArrayList<Ball> ballList;
     private ArrayList<Wall> wallList;
     private Image[] playerImages;
+    private String type;
 
     /**
      * Creates a LevelFactory object which all that is needed to build a level.
      *
      * @param path path to the XML-file
-     * @param bounds javaFX bounds
+     * @param canvas javaFX bounds
      */
-    public LevelFactory(String path, BoundsTuple bounds) {
+    public LevelFactory(String path, Canvas canvas, String type) {
         this.file = new File(path);
-        this.bounds = bounds;
+        this.canvas = canvas;
         this.playerList = new ArrayList<Player>();
         this.ballList = new ArrayList<Ball>();
         this.wallList = new ArrayList<Wall>();
+        this.type = type;
+        this.bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
 
         playerImages = new Image[1];
     }
@@ -202,24 +206,57 @@ public class LevelFactory {
      */
     public Level build() {
 
-        //XML parsing
         parseXML();
 
-        /*Level.Builder builder = new Level.Builder();
-        builder.setBalls(ballList);
-        builder.setCanvas(bounds);
-        builder.setPlayers(playerList);
-        builder.setWalls(wallList);
-        builder.setTime(time);*/
+        Level level = null;
+        if (type.equals("coop") || type.equals("duel") || type.equals("single")) {
+            level = new Level(bounds);
+        } else if (type.equals("survival")) {
+            level = new SurvivalLevel(bounds);
+        }
 
-        return new Level.Builder()
-                .setBalls(ballList)
-                .setBounds(bounds)
-                .setPlayers(playerList)
-                .setWalls(wallList)
-                .setTime(time)
-                .build();
+        return setup(level);
+    }
 
+    /**
+     * Builds up the given level.
+     * @param level the level to build
+     * @return the built level
+     */
+    private Level setup(Level level) {
+        LevelController levelController = new LevelController(level);
+        LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
+        levelView.setLevelController(levelController);
+        level.addObserver(levelView);
+        level.addObserver(levelController);
+
+        Wall right = new Wall(bounds.getWidth().intValue(), 0, 1, bounds.getHeight().intValue());
+        Wall left = new Wall(0, 0, 1, bounds.getHeight().intValue());
+        Wall ceiling = new Wall(0, 0, bounds.getWidth().intValue(), 1);
+        Wall floor = new Wall(0, bounds.getHeight().intValue(), bounds.getWidth().intValue(), 1);
+
+        level.setLeft(left);
+        level.setRight(right);
+        level.setCeiling(ceiling);
+        level.setFloor(floor);
+
+        Collections.sort(wallList, new Comparator<Wall>() {
+            @Override
+            public int compare(Wall w1, Wall w2) {
+                return Integer.compare(w1.getX(), w2.getX());
+            }
+        });
+
+        wallList.add(right);
+        wallList.add(0, left);
+        wallList.add(floor);
+        wallList.add(ceiling);
+        level.setBalls(ballList);
+        level.setPlayers(playerList);
+        level.setWalls(wallList);
+        level.setTime(time);
+        level.setCurrentTime(time);
+        return level;
     }
 
 }

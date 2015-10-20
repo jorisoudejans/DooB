@@ -45,7 +45,12 @@ public class DuelGame extends Game {
 		scoreTextView1.setText(score + "");
 		scoreTextView2.setText(score2 + "");
 	}
-	
+
+	@Override
+	public void newLevel() {
+		super.newLevel("duel");
+	}
+
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();

@@ -31,8 +31,7 @@ public class LevelFactoryTest {
     @Test
     public void testBuildLevelSimple() throws Exception {
 
-        BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
-        levelFactory = new LevelFactory(getClass().getResource("/level/simple.xml").getPath(), bounds);
+        levelFactory = new LevelFactory(getClass().getResource("/level/simple.xml").getPath(), canvas, "single");
         levelFactory.setPlayerImages(new Image[] { null, null, null });
         Level level = levelFactory.build();
 
@@ -42,8 +41,7 @@ public class LevelFactoryTest {
     @Test
     public void testBuildLevelBall1() throws Exception {
 
-        BoundsTuple bounds = new BoundsTuple(canvas.getWidth(), canvas.getHeight());
-        levelFactory = new LevelFactory(getClass().getResource("/level/ball1.xml").getPath(), bounds);
+        levelFactory = new LevelFactory(getClass().getResource("/level/ball1.xml").getPath(), canvas, "single");
         levelFactory.setPlayerImages(new Image[] { null, null, null });
         Level level = levelFactory.build();
 

@@ -76,7 +76,7 @@ public class LevelTest {
 
     @Test
     public void testSpawnSameSizeBalls1() {
-        Level level = ballsSetup();
+        SurvivalLevel level = survivalBallsSetup();
 
         level.spawnSameSizeBalls(3, 32);
 
@@ -86,7 +86,7 @@ public class LevelTest {
 
     @Test
     public void testSpawnSameSizeBalls2() {
-        Level level = ballsSetup();
+        SurvivalLevel level = survivalBallsSetup();
 
         level.spawnSameSizeBalls(2, 64);
 
@@ -96,7 +96,7 @@ public class LevelTest {
 
     @Test
     public void testSpawnBalls1(){
-        Level level = ballsSetup();
+        SurvivalLevel level = survivalBallsSetup();
 
         level.spawnBalls(98);
         assertEquals(3, level.getBalls().size());
@@ -105,15 +105,15 @@ public class LevelTest {
 
     @Test
     public void testSpawnBalls2() {
-        Level level = ballsSetup();
+        SurvivalLevel level = survivalBallsSetup();
 
         level.spawnBalls(100);
         assertEquals(2, level.getBalls().size());
         assertEquals(64, level.getBalls().get(0).getSize());
     }
 
-    public Level ballsSetup(){
-        Level level = new Level(new BoundsTuple(1000.0, 500.0));
+    public SurvivalLevel survivalBallsSetup(){
+        SurvivalLevel level = new SurvivalLevel(new BoundsTuple(1000.0, 500.0));
 
         ArrayList<Ball> balls = new ArrayList<Ball>();
         level.setBalls(balls);
