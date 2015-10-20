@@ -11,9 +11,8 @@ import doob.model.Player;
 /**
  * Class to play a singleplayer game.
  */
-public class DuelGame extends Game implements GameMode {
+public class DuelGame extends Game {
 
-	@Override
 	public void initialize() {
 		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
 	}

@@ -9,9 +9,8 @@ import doob.model.Player;
 /**
  * Class to play a singleplayer game.
  */
-public class SinglePlayerGame extends Game implements GameMode {
+public class SinglePlayerGame extends Game {
 
-	@Override
 	public void initialize() {
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}

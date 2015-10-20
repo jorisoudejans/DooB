@@ -11,9 +11,8 @@ import doob.model.powerup.TimePowerUp;
 /**
  * Class to play a singleplayer game.
  */
-public class SurvivalGame extends Game implements GameMode {
+public class SurvivalGame extends Game {
 
-	@Override
 	public void initialize() {
 		initGame("src/main/resources/Level/SurvivalLevels.xml");
 		level.setSurvival(true);

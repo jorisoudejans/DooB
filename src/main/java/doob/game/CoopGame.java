@@ -11,10 +11,8 @@ import doob.model.Player;
 /**
  * Class to play a singleplayer game.
  */
-public class CoopGame extends Game implements GameMode {
+public class CoopGame extends Game {
 	
-
-	@Override
 	public void initialize() {
 		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
 		level.getPlayers().get(0).setLives(Player.DOUBLE_LIVES);
@@ -56,7 +54,6 @@ public class CoopGame extends Game implements GameMode {
 				level.getPlayers().get(i).setScore(score);
 			}
 		}
-		level.getCollisionManager().getCollisionResolver().setcoopMode(true);
 		readOptions();
 	}
 	

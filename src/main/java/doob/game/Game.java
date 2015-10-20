@@ -83,7 +83,7 @@ public abstract class Game implements LevelObserver {
 	 *            The path of the levels to be read.
 	 */
 
-	public void initGame(String levelPath) {
+	protected void initGame(String levelPath) {
 		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
 		readLevels(levelPath);

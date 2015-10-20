@@ -19,7 +19,6 @@ import doob.util.TupleTwo;
 public class CollisionResolver {
 
 	private Level level;
-	private boolean coopMode;
 	private DLog dLog;
 
 	/**
@@ -135,7 +134,7 @@ public class CollisionResolver {
 
 		boolean gameOver = true;
 		for (Player p : level.getPlayers()) {
-			if (coopMode && p != player) {
+			if (false && p != player) {
 				if (p.getLives() > 0) {
 					p.die();
 				}
@@ -300,14 +299,6 @@ public class CollisionResolver {
 			}
 		}
 		return true;
-	}
-
-	public boolean iscoopMode() {
-		return coopMode;
-	}
-
-	public void setcoopMode(boolean coopMode) {
-		this.coopMode = coopMode;
 	}
 
 }
