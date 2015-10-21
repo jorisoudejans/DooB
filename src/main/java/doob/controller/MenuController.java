@@ -2,6 +2,7 @@ package doob.controller;
 
 import doob.App;
 import doob.controller.GameController.GameMode;
+import doob.levelBuilder.LevelBuilderController;
 import javafx.fxml.FXML;
 
 /**
@@ -94,6 +95,15 @@ public class MenuController {
 	public void playSurvivalMode() {
 		GameController gc = App.loadScene("/fxml/game.fxml").getController();
 		gc.initSurvival();
+	}
+	
+	/**
+	 * Navigate to the levelbuilder.
+	 */
+	@FXML
+	public void buildLevel() {
+		LevelBuilderController lbc = App.loadScene("/fxml/levelbuilder.fxml").getController();
+		lbc.initBuilder();
 	}
 	
 	/**

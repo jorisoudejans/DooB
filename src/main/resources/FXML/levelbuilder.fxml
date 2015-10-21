@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.levelBuilder.LevelBuilderController">
+   <children>
+      <Pane fx:id="pane" prefHeight="650.0" prefWidth="991.0" style="-fx-border-style: solid;" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Canvas fx:id="canvas" height="474.0" width="700" />
+         </children>
+      </Pane>	  
+      <Button focusTraversable="false" layoutX="333.0" layoutY="710.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="125.0" text="Back to Menu" />
+   </children>
+</AnchorPane>
