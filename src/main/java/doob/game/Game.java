@@ -1,17 +1,10 @@
-package doob.controller;
+package doob.game;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import doob.App;
-import doob.DLog;
-import doob.level.LevelFactory;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
-import doob.model.powerup.LifePowerUp;
-import doob.model.powerup.TimePowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -31,43 +24,49 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import doob.App;
+import doob.DLog;
+import doob.controller.OptionsController;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
+
 
 /**
  * Controller for games.
  */
-public class GameController implements LevelObserver {
+public abstract class Game implements LevelObserver {
 
 	@FXML
-	private Canvas canvas;
+	protected Canvas canvas;
 	@FXML
-	private Pane pane;
+	protected Pane pane;
 	@FXML
-	private Canvas lives1;
+	protected Canvas lives1;
 	@FXML
-	private Canvas lives2;
+	protected Canvas lives2;
 	@FXML
-	private Label scoreTextView1;
+	protected Label scoreTextView1;
 	@FXML
-	private Label scoreTextView2;
+	protected Label scoreTextView2;
 	@FXML
-	private ProgressBar progressBar;
+	protected ProgressBar progressBar;
 	@FXML
-	private Label levelLabel;
+	protected Label levelLabel;
 	@FXML
-	private Button playPauseButton;
+	protected Button playPauseButton;
 
 	// private GameState gameState;
-	public static GameMode gameMode;
-	private ArrayList<String> levelList;
-	private int currentLevel;
-	private Level level;
+	protected ArrayList<String> levelList;
+	protected int currentLevel;
+	protected Level level;
 	private AnimationTimer timer;
-	private GraphicsContext gc;
-	private GraphicsContext gc2;
+	protected GraphicsContext gc;
+	protected GraphicsContext gc2;
 	private double progress;
 	private boolean running;
-	private int score;
-	private int score2;
+	protected int score;
+	protected int score2;
 	public static final int HEART_SPACE = 40;
 	public static final int HEART_Y = 8;
 	private static final int TIME_BONUS = 3;
@@ -84,7 +83,7 @@ public class GameController implements LevelObserver {
 	 *            The path of the levels to be read.
 	 */
 
-	public void initGame(String levelPath) {
+	protected void initGame(String levelPath) {
 		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
 		readLevels(levelPath);
@@ -105,46 +104,7 @@ public class GameController implements LevelObserver {
 
 		dLog.setFile("DooB.log");
 		dLog.info("Game started.", DLog.Type.STATE);
-	}
-
-	/**
-	 * Initialize a duel mode multiplayergame.
-	 */
-	public void initDuelMode() {
-		gameMode = GameMode.DUEL;
-		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
-	}
-
-	/**
-	 * Initialize a coop mode multiplayergame.
-	 */
-	public void initCoopMode() {
-		gameMode = GameMode.COOP;
-		initGame("src/main/resources/Level/MultiPlayerLevels.xml");
-	}
-
-	/**
-	 * Initialize a singleplayergame.
-	 */
-	public void initSinglePlayer() {
-		gameMode = GameMode.SINGLEPLAYER;
-		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
-	}
-
-	/**
-	 * Initialize a survivalgame.
-	 */
-	public void initSurvival() {
-		gameMode = GameMode.SURVIVAL;
-		initGame("src/main/resources/Level/SurvivalLevels.xml");
-
-		level.setSurvival(true);
-		level.getPlayers().get(0).setLives(1);
-		level.getPowerUpManager().getAvailablePowerups().remove(LifePowerUp.class);
-		level.getPowerUpManager().getAvailablePowerups().remove(TimePowerUp.class);
-		//gameMode = GameMode.SURVIVAL;
-	}
-	
+	}	
 
 	/**
 	 * Navigate back to the menu.
@@ -226,29 +186,10 @@ public class GameController implements LevelObserver {
 					"src/main/resources/Options/OptionsPlayer" + (i + 1)
 							+ ".xml");
 			oc.read();
-			Player.ControlKeys keys = new Player.ControlKeys(oc.getLeft(), oc.getRight(), oc.getShoot());
+			Player.ControlKeys keys = new Player.ControlKeys(oc.getLeft(), 
+					oc.getRight(), oc.getShoot());
 			level.getPlayers().get(i).setControlKeys(keys);
 		}
-	}
-
-	/**
-	 * Updates the score every gamestep.
-	 */
-	public void updateScore() {
-		score = level.getPlayers().get(0).getScore();
-		int score2 = 0;
-		
-		switch (gameMode) {
-		case SINGLEPLAYER: break;
-		case DUEL: score2 = level.getPlayers().get(1).getScore();
-			scoreTextView2.setText(score2 + ""); break;
-		case COOP: score2 = level.getPlayers().get(1).getScore();
-			score = score + score2; break;
-		case SURVIVAL: break;
-		default: break;
-		}
-		
-		scoreTextView1.setText(score + "");
 	}
 
 	/**
@@ -291,58 +232,6 @@ public class GameController implements LevelObserver {
 		}.start();
 	}
 
-	/**
-	 * Updates the amount of lives every gamestep.
-	 */
-	public void updateLives() {
-		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
-		gc2.clearRect(0, 0, lives2.getWidth(), lives2.getHeight());
-		int lives = level.getPlayers().get(0).getLives();
-		int lives2 = 0; 
-		
-		switch (gameMode) {
-		case SINGLEPLAYER: break;
-		case DUEL: lives2 = level.getPlayers().get(1).getLives();
-			for (int i = 0; i < lives2; i++) {
-				gc2.drawImage(new Image("/image/heart.png"), i
-						* HEART_SPACE, HEART_Y);
-			} break;
-		case COOP: /*lives2 = level.getPlayers().get(1).getLives();
-			lives = lives + lives2;*/ break;
-		case SURVIVAL:  break;
-		default: break;
-		}
-		
-		for (int i = 0; i < lives; i++) {
-			gc.drawImage(new Image("/image/heart.png"), i
-					* HEART_SPACE, HEART_Y);
-		}
-	}
-
-	/**
-	 * Resets the level depending on currentLevel. Only keeps amount of lives.
-	 */
-	public void newLevel() {
-		ArrayList<Player> players = null;
-		if (level != null) {
-			players = level.getPlayers();
-			level.stopTimer();
-		}
-
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.addObserver(this);
-		if (players != null) {
-			for (int i = 0; i < players.size(); i++) {
-				Player p = level.getPlayers().get(i);
-				int lives = players.get(i).getLives();
-				int score = players.get(i).getScore();
-				p.setLives(lives);
-				p.setScore(score);
-			}
-		}
-		readOptions();
-	}
-
 	public Level getLevel() {
 		return level;
 	}
@@ -351,7 +240,7 @@ public class GameController implements LevelObserver {
 	public void onLevelStateChange(Level.Event event) {
 		switch (event) {
 		case ZERO_LIVES:
-			App.loadHighscoreScene(score, score2, gameMode);
+			loadHighscores();
 			break;
 		case ALL_BALLS_GONE:
 			onAllBallsGone();
@@ -383,40 +272,29 @@ public class GameController implements LevelObserver {
 				} else {
 					// gameState = GameState.WON;
 					dLog.info("Game won!", DLog.Type.STATE);
-					App.loadHighscoreScene(score, score2, gameMode);
+					loadHighscores();
 				}
 			}
 		});
 	}
-
-	/**
-	 * States the game can be in.
-	 */
-	public enum GameState {
-		PAUSED, RUNNING, WON, LOST
-	}
 	
 	/**
-	 * Game modes.
+	 * Updates the amount of lives every gamestep.
 	 */
-	public enum GameMode {
-		SINGLEPLAYER("SinglePlayer Mode"), 
-		DUEL("Duel Mode"), 
-		COOP("Coop Mode"), 
-		SURVIVAL("Survival Mode");
-		
-		private String outputName;
-		
-		/**
-		 * Constructor.
-		 * @param outputName The name that can be used as output.
-		 */
-		GameMode(String outputName) {
-			this.outputName = outputName;	
-		}
-		
-		public String getName() {
-			return outputName;
-		}
-	}
+	public abstract void updateLives();
+	
+	/**
+	 * Updates the score every gamestep.
+	 */
+	public abstract void updateScore();
+	
+	/**
+	 * Resets the level depending on currentLevel. Only keeps amount of lives.
+	 */
+	public abstract void newLevel();
+	
+	/**
+	 * Show the highscores.
+	 */
+	public abstract void loadHighscores();
 }

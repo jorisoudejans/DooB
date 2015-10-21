@@ -1,6 +1,11 @@
 package doob.level;
 
-import doob.model.*;
+import doob.model.Ball;
+import doob.model.Collidable;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.Wall;
 import doob.model.powerup.PowerUp;
 
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ public class CollisionManager {
     /**
      * Constructs a manager for current level.
      * @param level current level
+     * @param collisionResolver the collisionresolver
      */
     public CollisionManager(Level level, CollisionResolver collisionResolver) {
         this.level = level;
@@ -112,7 +118,7 @@ public class CollisionManager {
         return c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
     }
 
-    /**
+	/**
      * Interface to provide a callback.
      */
     private interface CollisionCallback {

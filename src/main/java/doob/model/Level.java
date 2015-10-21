@@ -1,7 +1,17 @@
 package doob.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+
 import doob.DLog;
-import doob.level.*;
+import doob.level.CollisionManager;
+import doob.level.CollisionResolver;
+import doob.level.LevelObserver;
+import doob.level.ObjectDrawer;
+import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
@@ -11,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 
-import java.util.*;
 
 
 /**
@@ -32,6 +41,8 @@ public class Level {
     public static final long FREEZE_TIME = 2000;
     public static final int PROJECTILE_WIDTH = 7;
     private static final int DIFFICULTY_TIME = 1000;
+    private static final int SMALLEST_BALL_SIZE = 16;
+    private static final int NUMBER_POSSIBLE_BALLS = 5;
 
     private AnimationTimer timer;
 
@@ -184,22 +195,9 @@ public class Level {
     public void spawnBalls(long seed) {
 
         Random generator = new Random(seed);
-        int i = generator.nextInt() % 5;
-        /*switch(i) {
-            case 0: spawnSameSizeBalls(6, 16);
-                break;
-            case 1: spawnSameSizeBalls(4, 32);
-                break;
-            case 2: spawnSameSizeBalls(3, 32);
-                break;
-            case 3: spawnSameSizeBalls(2, 64);
-                break;
-            case 4: spawnSameSizeBalls(1, 128);
-                break;
-            default:
-                break;
-        }*/
-        spawnSameSizeBalls(6 - i, (int) (8 * Math.pow(2, i)));
+        int i = Math.abs(generator.nextInt() % 4);
+
+        spawnSameSizeBalls(4 - i, (int) (8 * Math.pow(2, i + 1)));
     }
 
     /**
@@ -223,7 +221,7 @@ public class Level {
      * @return total sum of hitpoints
      */
     public static int ballHitpoints(int sum, int size) {
-        if (size <= 16) {
+        if (size <= SMALLEST_BALL_SIZE) {
             return sum + 1;
         }
         return 1 + 2 * ballHitpoints(sum, size / 2);
@@ -424,7 +422,11 @@ public class Level {
         this.survival = survival;
     }
 
-    /**
+    public CollisionManager getCollisionManager() {
+		return collisionManager;
+	}
+
+	/**
      * Continues to next level immediately after event.
      */
     public void continueNextLevel() {
@@ -439,7 +441,8 @@ public class Level {
         public void handle(KeyEvent key) {
         	for (Player p : players) {
         		if (p.isAlive()) {
-                    Player.ControlKeys.Action action = p.getControlKeys().determineAction(key.getCode());
+                    Player.ControlKeys.Action action = p.getControlKeys().determineAction(
+                    		key.getCode());
                     switch (action) {
                         case RIGHT:
                             p.setSpeed(p.getMoveSpeed());
@@ -546,7 +549,6 @@ public class Level {
             walls.add(0, left);
             walls.add(floor);
             walls.add(ceiling);
-
             level.setBalls(balls);
             level.setPlayers(players);
             level.setWalls(walls);

@@ -1,6 +1,5 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
 import doob.model.Level;
 import doob.model.Player;
 
@@ -13,7 +12,7 @@ public class FreezeBallsPowerUp extends PowerUp {
     public static final int DURATION = 500;
 
     /**
-     * Adds one life to player.
+     * Freezes all balls.
      * @param level the level the power-up is in.
      * @param player the player that picked up the power-up.
      */
@@ -24,7 +23,7 @@ public class FreezeBallsPowerUp extends PowerUp {
     }
 
     /**
-     * Does nothing.
+     * Return to initial state.
      * @param level the level the power-up is in.
      */
     @Override
@@ -33,8 +32,8 @@ public class FreezeBallsPowerUp extends PowerUp {
     }
 
     /**
-     * Has no duration.
-     * @return 0
+     * The duration of the FreezeBallsPowerUp.
+     * @return DURATION
      */
     @Override
     public int getDuration() {
@@ -42,7 +41,7 @@ public class FreezeBallsPowerUp extends PowerUp {
     }
 
     /**
-     * Path to heart icon.
+     * Path to ice icon.
      * @return path
      */
     @Override
