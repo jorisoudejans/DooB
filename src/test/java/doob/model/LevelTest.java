@@ -1,17 +1,17 @@
 package doob.model;
 
 import doob.util.BoundsTuple;
-import javafx.scene.canvas.Canvas;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for Level.
@@ -19,105 +19,72 @@ import static org.mockito.Mockito.verify;
  */
 public class LevelTest {
 
-    private Wall leftWall;
-    private Wall rightWall;
-    private Wall floor;
-    private ArrayList<Wall> walls;
+    @SuppressWarnings("CheckStyle")
+    protected Level level;
 
-    private BoundsTuple bounds;
+    private static final double CANVAS_DIMENSION = 1000;
 
+    /**
+     * Set up all objects.
+     */
     @Before
     public void setUp() {
-        leftWall = new Wall(0, 0, 50, 500);
-        rightWall = new Wall(1000, 0, 50, 500);
-        walls = new ArrayList<Wall>();
-        walls.add(leftWall);
-        walls.add(rightWall);
-        floor = new Wall(0, 500, 1000, 20);
-        bounds = new BoundsTuple(1000.0, 1000.0);
+        level = getLevel(new BoundsTuple(CANVAS_DIMENSION, CANVAS_DIMENSION));
+        Wall wall1 = mock(Wall.class);
+        Wall wall2 = mock(Wall.class);
+        List<Wall> walls = new ArrayList<Wall>();
+        walls.add(wall1);
+        walls.add(wall2);
 
-        MockitoAnnotations.initMocks(this);
-    }
+        Player player1 = mock(Player.class);
+        Player player2 = mock(Player.class);
+        List<Player> players = new ArrayList<Player>();
+        players.add(player1);
+        players.add(player2);
 
-    @Test
-    public void testBasic() {
-        new Level(bounds);
-    }
+        List<Ball> balls = new ArrayList<Ball>();
 
-    /**
-     * Generates a basic level with basic walls.
-     * @return Standard level
-     */
-    private Level basicLevel() {
-        Level level = new Level(bounds);
-        level.setLeft(leftWall);
-        level.setRight(rightWall);
-        level.setFloor(floor);
-        level.setWalls(walls);
-        return level;
-    }
-
-    /**
-     * Generates a level with one player and one ball.
-     * @return level with player and ball
-     */
-    private Level complicatedLevel() {
-        Level level = basicLevel();
-        Ball ball = new Ball(100, 0, 1, 1, 20);
-        ArrayList<Ball> balls = new ArrayList<Ball>();
-        balls.add(ball);
-        level.setBalls(balls);
-        Player player = new Player(100, 0, 20, 20, null, null, null);
-        ArrayList<Player> players = new ArrayList<Player>();
-        players.add(player);
         level.setPlayers(players);
-        return level;
-    }
-
-    @Test
-    public void testSpawnSameSizeBalls1() {
-        SurvivalLevel level = survivalBallsSetup();
-
-        level.spawnSameSizeBalls(3, 32);
-
-        assertEquals((double) 250, level.getBalls().get(0).getX(), 1);
-        assertEquals((double) 750, level.getBalls().get(2).getX(), 1);
-    }
-
-    @Test
-    public void testSpawnSameSizeBalls2() {
-        SurvivalLevel level = survivalBallsSetup();
-
-        level.spawnSameSizeBalls(2, 64);
-
-        assertEquals(2, level.getBalls().size());
-        assertEquals((double) 125, level.getBalls().get(0).getY(), 1);
-    }
-
-    @Test
-    public void testSpawnBalls1(){
-        SurvivalLevel level = survivalBallsSetup();
-
-        level.spawnBalls(98);
-        assertEquals(3, level.getBalls().size());
-        assertEquals(32, level.getBalls().get(0).getSize());
-    }
-
-    @Test
-    public void testSpawnBalls2() {
-        SurvivalLevel level = survivalBallsSetup();
-
-        level.spawnBalls(100);
-        assertEquals(2, level.getBalls().size());
-        assertEquals(64, level.getBalls().get(0).getSize());
-    }
-
-    public SurvivalLevel survivalBallsSetup(){
-        SurvivalLevel level = new SurvivalLevel(new BoundsTuple(1000.0, 500.0));
-
-        ArrayList<Ball> balls = new ArrayList<Ball>();
+        level.setWalls(walls);
         level.setBalls(balls);
+    }
 
-        return level;
+    protected Level getLevel(BoundsTuple bounds) {
+        return new Level(bounds);
+    }
+
+    private boolean called = false;
+
+    /**
+     * Tests freezing of the level.
+     */
+    @Test
+    public void testFreeze() {
+        level.freeze(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                called = true;
+            }
+        });
+        assertFalse(called);
+    }
+
+    /**
+     * Tests updating of level.
+     */
+    @Test
+    public void testUpdate() {
+        int beforeTime = (int) level.getCurrentTime();
+        level.update();
+        int afterTime = beforeTime + level.getTimeMutation();
+        assertEquals(afterTime, (int) level.getCurrentTime());
+    }
+
+    /**
+     * Tests time mutation of level.
+     */
+    @Test
+    public void testGetTimeMutation() {
+        assertEquals(level.getTimeMutation(), -1);
     }
 }

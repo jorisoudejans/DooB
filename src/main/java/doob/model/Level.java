@@ -1,11 +1,5 @@
 package doob.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Observable;
-import java.util.Random;
-
 import doob.DLog;
 import doob.level.CollisionManager;
 import doob.level.CollisionResolver;
@@ -17,6 +11,10 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
 
 
 /**
@@ -26,9 +24,9 @@ public class Level extends Observable {
 
     private DLog dLog;
 
-    private ArrayList<Ball> balls;
-    private ArrayList<Player> players;
-    private ArrayList<Wall> walls;
+    private List<Ball> balls;
+    private List<Player> players;
+    private List<Wall> walls;
     private double currentTime;
     private int time;
     public static final int PROJECTILE_START_SPEED = 12;
@@ -77,7 +75,6 @@ public class Level extends Observable {
 
         powerUpManager = new PowerUpManager(this);
         collisionManager = new CollisionManager(this, new CollisionResolver(this));
-
     }
 
     private void createTimer() {
@@ -228,11 +225,11 @@ public class Level extends Observable {
         this.floor = floor;
     }
 
-    public void setBalls(ArrayList<Ball> balls) {
+    public void setBalls(List<Ball> balls) {
         this.balls = balls;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
@@ -260,19 +257,19 @@ public class Level extends Observable {
         this.currentTime = currentTime;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public ArrayList<Ball> getBalls() {
+    public List<Ball> getBalls() {
         return balls;
     }
 
-    public ArrayList<Wall> getWalls() {
+    public List<Wall> getWalls() {
         return walls;
     }
 
-    public void setWalls(ArrayList<Wall> walls) {
+    public void setWalls(List<Wall> walls) {
         this.walls = walls;
     }
 
