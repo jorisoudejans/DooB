@@ -119,7 +119,11 @@ public class Ball implements Collidable, Drawable {
     return y;
   }
 
-  public void setY(double y) {
+  public double getSpeedY() {
+	return speedY;
+}
+
+public void setY(double y) {
     this.y = y;
   }
 

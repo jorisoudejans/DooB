@@ -12,4 +12,9 @@ public class BallElement extends Observable {
 	private int size;
 	private double speedX, speedY;	
 
+	@Override
+	public void notifyObservers() {
+		// TODO Auto-generated method stub
+		super.notifyObservers();
+	}
 }
