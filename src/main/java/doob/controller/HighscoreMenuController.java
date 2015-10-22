@@ -75,9 +75,8 @@ public class HighscoreMenuController {
 			return;	
 		}
 		final Stage dialog = new Stage();
-		dialog.initOwner(App.getStage());		
-		Label l;
-		l = new Label("Player " + player + " got a highscore! Enter your name");
+		dialog.initOwner(App.getStage());
+		Label l = new Label("Player " + player + " got a highscore! Enter your name");
 		l.setFont(new Font(FONT_SIZE));
 		final TextField tf = new TextField();
 		tf.setMaxWidth(TEXT_FIELD_WIDTH);		

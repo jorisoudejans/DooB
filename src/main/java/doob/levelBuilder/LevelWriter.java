@@ -34,6 +34,7 @@ public class LevelWriter {
 	private ArrayList<Player> players;
 	private String time;
 	private String name;
+	private Element we;
 
     private Document dom;
     private Element e = null;
@@ -111,34 +112,43 @@ public class LevelWriter {
 	}
 	
 	/**
+	 * Helper for the writeWalls() method. This method contains the shared data of both walls.
+	 * @param i
+	 */
+	private void walls(int i) {	
+		Wall w = walls.get(i);
+		we = dom.createElement("wall");
+		we.setAttribute("id", Integer.toString(i + 1));			
+		Element wx = dom.createElement("x");
+		wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
+		Element wy = dom.createElement("y");
+		wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
+		Element ww = dom.createElement("width");
+		ww.appendChild(dom.createTextNode(Integer.toString(w.getWidth())));
+		Element wh = dom.createElement("height");
+		wh.appendChild(dom.createTextNode(Integer.toString(w.getHeight())));
+		we.appendChild(wx);
+		we.appendChild(wy);
+		we.appendChild(ww);
+		we.appendChild(wh);
+	}
+	
+	/**
 	 * Writes the walls to the xml file.
 	 * @return
 	 */
 	private Element writeWalls() {
 		Element res = dom.createElement("wallList");
 		for (int i = 0; i < walls.size(); i++) {
-			Wall w = walls.get(i);			
-			Element we = dom.createElement("wall");
-			we.setAttribute("id", Integer.toString(i + 1));			
-			Element wx = dom.createElement("x");
-			wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
-			Element wy = dom.createElement("y");
-			wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
-			Element ww = dom.createElement("width");
-			ww.appendChild(dom.createTextNode(Integer.toString(w.getWidth())));
-			Element wh = dom.createElement("height");
-			wh.appendChild(dom.createTextNode(Integer.toString(w.getHeight())));
+			Wall w = walls.get(i);
+			walls(i);
 			Element wm = dom.createElement("moveable");
-			we.appendChild(wx);
-			we.appendChild(wy);
-			we.appendChild(ww);
-			we.appendChild(wh);
 			if (w.isMoveable()) {
 				wm.appendChild(dom.createTextNode("1"));
 				we.appendChild(wm);
-				Element wendx = dom.createElement("endX");
+				Element wendx = dom.createElement("endx");
 				wendx.appendChild(dom.createTextNode(Integer.toString(w.getEndx())));
-				Element wendy = dom.createElement("endY");
+				Element wendy = dom.createElement("endy");
 				wendy.appendChild(dom.createTextNode(Integer.toString(w.getEndy())));
 				Element wdur = dom.createElement("duration");
 				wdur.appendChild(dom.createTextNode(Integer.toString(w.getDuration())));
@@ -183,11 +193,11 @@ public class LevelWriter {
 	            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
 	            // send DOM to file
-	            String path = "src/main/resources/level/" + name + ".xml";
+	            String path = "src/main/resources/level/Custom/" + name + ".xml";
 	            tr.transform(new DOMSource(dom), 
 	                                 new StreamResult(new File(path))); }
 	        catch (TransformerException te) {
-	            System.out.println(te.getMessage());}
+	            System.out.println(te.getMessage()); }
 	    } catch (ParserConfigurationException pce) {
 	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce); }
 	}
