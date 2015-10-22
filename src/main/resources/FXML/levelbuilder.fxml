@@ -10,18 +10,18 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.levelBuilder.LevelBuilderController">
    <children>
-     <Pane prefHeight="650.0" prefWidth="960.0" style="-fx-border-style: solid;" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <Pane fx:id="pane" layoutX="170.0" layoutY="20.0" prefHeight="650.0" prefWidth="960.0" style="-fx-border-style: solid;" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
-            <Canvas fx:id="canvas" height="650.0" width="960.0" />
-         </children>
-      </Pane>	  
+            <Canvas fx:id="panelCanvas" height="650.0" width="960.0" />
+         </children></Pane>
+      <Canvas fx:id="canvas" height="830.0" width="1150.0" />	  
       <Button focusTraversable="false" layoutX="333.0" layoutY="710.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="125.0" text="Back to Menu" />
-      <Circle fx:id="ballButton" fill="#ff1f1f" layoutX="82.0" layoutY="70.0" onDragDetected="#pickupBall" onDragDropped="#dropBall" radius="50.0" stroke="RED" strokeType="INSIDE" />
-      <ChoiceBox fx:id="ballSizeChoice" layoutX="54.0" layoutY="136.0" prefHeight="31.0" prefWidth="57.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="50.0" layoutX="20.0" layoutY="210.0" onDragDetected="#pickupCeiling" onDragDropped="#dropCeiling" stroke="BLACK" strokeType="INSIDE" width="125.0" />
-      <CheckBox fx:id="isMovingDown" layoutX="23.0" layoutY="279.0" mnemonicParsing="false" text="Moving down" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="125.0" layoutX="58.0" layoutY="337.0" onDragDetected="#pickupWall" onDragDropped="#dropWall" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+      <Circle fx:id="ballButton" centerX="64.0" centerY="64.0" fill="#ff1f1f" layoutX="20.0" layoutY="20.0" radius="64.0" stroke="RED" strokeType="INSIDE" />
+      <ChoiceBox fx:id="ballSizeChoice" layoutX="55.0" layoutY="157.0" prefHeight="31.0" prefWidth="57.0" />
+      <Rectangle fx:id="ceilingButton" arcHeight="5.0" arcWidth="5.0" height="50.0" layoutX="21.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
+      <CheckBox fx:id="isMovingDown" layoutX="24.0" layoutY="286.0" mnemonicParsing="false" text="Moving down" />
+      <Rectangle fx:id="wallButton" arcHeight="5.0" arcWidth="5.0" height="125.0" layoutX="58.0" layoutY="337.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
       <CheckBox fx:id="canOpen" layoutX="23.0" layoutY="481.0" mnemonicParsing="false" text="Can Open" />
-      <ImageView fx:id="playerView" fitHeight="125.0" fitWidth="125.0" layoutX="21.0" layoutY="545.0" onDragDetected="#pickupPlayer" onDragDropped="#dropPlayer" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="playerView" fitHeight="72.0" fitWidth="50.0" layoutX="59.0" layoutY="574.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>
