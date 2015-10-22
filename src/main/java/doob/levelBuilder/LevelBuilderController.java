@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -24,6 +26,8 @@ import doob.levelBuilder.view.CeilingElementView;
 import doob.levelBuilder.view.PlayerElementView;
 import doob.levelBuilder.view.WallElementView;
 import doob.model.Ball;
+import doob.model.Player;
+import doob.model.Wall;
 
 /**
  * This class is used to controll the levelbuilder.
@@ -35,7 +39,7 @@ public class LevelBuilderController {
 	private CeilingElement ce;
 	private WallElement we;
 	private PlayerElement pe;
-	private ArrayList<Observable> elementList;
+	private ArrayList<DoobElement> elementList;
 
 	public static final int LAYOUT = 84;
 
@@ -56,10 +60,7 @@ public class LevelBuilderController {
 	@FXML
 	private Pane pane;
 	@FXML
-	private Canvas canvas;
-	@FXML
 	private Canvas panelCanvas;
-	private GraphicsContext gc;
 	private GraphicsContext panelgc;
 
 	/**
@@ -67,9 +68,8 @@ public class LevelBuilderController {
 	 */
 	@FXML
 	public void initialize() {
-		gc = canvas.getGraphicsContext2D();
 		panelgc = panelCanvas.getGraphicsContext2D();
-		elementList = new ArrayList<Observable>();
+		elementList = new ArrayList<DoobElement>();
 		initializeOptions();
 		initializePlayerView();
 		initializeEventHandlers();
@@ -162,11 +162,11 @@ public class LevelBuilderController {
 		ballButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				be = new BallElement(event.getSceneX()
-						- ballSizeChoice.getValue() / 2, event.getSceneY()
+				be = new BallElement(event.getSceneX() - pane.getLayoutX()
+						- ballSizeChoice.getValue() / 2, event.getSceneY() - pane.getLayoutY()
 						- ballSizeChoice.getValue() / 2, ballSizeChoice
 						.getValue(), Ball.START_SPEED_X, 0);
-				be.addObserver(new BallElementView(be, gc));
+				be.addObserver(new BallElementView(be, panelgc));
 				elementList.add(be);
 				event.consume();
 			}
@@ -182,10 +182,10 @@ public class LevelBuilderController {
 			@Override
 			public void handle(MouseEvent event) {
 				if (be != null && !be.isPlaced()) {
-					gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
 							.getCanvas().getHeight());
-					be.setX(event.getSceneX() - be.getSize() / 2);
-					be.setY(event.getSceneY() - be.getSize() / 2);
+					be.setX(event.getSceneX() - pane.getLayoutX() - be.getSize() / 2);
+					be.setY(event.getSceneY() - pane.getLayoutY() - be.getSize() / 2);
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -209,7 +209,7 @@ public class LevelBuilderController {
 					be = null;
 				} else if (be != null) {
 					elementList.remove(be);
-					gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
 							.getCanvas().getHeight());
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
@@ -353,10 +353,9 @@ public class LevelBuilderController {
 		playerView.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				pe = new PlayerElement(event.getSceneX()
-						- PlayerElement.PLAYER_WIDTH / 2, event.getSceneY()
-						- PlayerElement.PLAYER_HEIGHT / 2);
-				pe.addObserver(new PlayerElementView(pe, gc));
+				pe = new PlayerElement(event.getSceneX() - pane.getLayoutX()
+						- PlayerElement.PLAYER_WIDTH / 2);
+				pe.addObserver(new PlayerElementView(pe, panelgc));
 				elementList.add(pe);
 				event.consume();
 			}
@@ -364,18 +363,18 @@ public class LevelBuilderController {
 	}
 
 	/**
-	 * Initialize dragging functionality of the player element, i.e. draw the player
-	 * while dragging it.
+	 * Initialize dragging functionality of the player element, i.e. draw the
+	 * player while dragging it.
 	 */
 	public void setOnPlayerDragging() {
 		playerView.setOnMouseDragged(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				if (pe != null && !pe.isPlaced()) {
-					gc.clearRect(0, 0, gc.getCanvas().getWidth(),
-							gc.getCanvas().getHeight());
-					pe.setX(event.getSceneX() - PlayerElement.PLAYER_WIDTH / 2);
-					pe.setY(event.getSceneY() - PlayerElement.PLAYER_HEIGHT / 2);
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
+					pe.setX(event.getSceneX() - pane.getLayoutX()
+							- PlayerElement.PLAYER_WIDTH / 2);
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -394,13 +393,13 @@ public class LevelBuilderController {
 		playerView.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (withinBorders(event.getSceneX(), event.getSceneY())) {
+				if (withinBorders(event.getSceneX(), pane.getLayoutY())) {
 					pe.setPlaced(true);
 					pe = null;
 				} else if (pe != null) {
 					elementList.remove(pe);
-					gc.clearRect(0, 0, gc.getCanvas().getWidth(),
-							gc.getCanvas().getHeight());
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
+							.getCanvas().getHeight());
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -427,10 +426,53 @@ public class LevelBuilderController {
 
 	/**
 	 * Navigate back to the menu.
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
 	 */
 	@FXML
-	public void backToMenu() {
+	public void backToMenu() throws FileNotFoundException, UnsupportedEncodingException {
+		save();
 		App.loadScene("/FXML/Menu.fxml");
 	}
 
+	public void save() throws FileNotFoundException, UnsupportedEncodingException {
+		ArrayList<Ball> ballList = new ArrayList<Ball>();
+		ArrayList<Wall> wallList = new ArrayList<Wall>();
+		ArrayList<Player> playerList = new ArrayList<Player>();
+		for (DoobElement de : elementList) {
+			if (de instanceof BallElement) {
+				BallElement be = (BallElement) de;
+				ballList.add(new Ball(be.getX(), be.getY(), be.getSpeedX(), be
+						.getSpeedY(), be.getSize()));
+			} else if (de instanceof PlayerElement) {
+				PlayerElement pe = (PlayerElement) de;
+				playerList.add(new Player((int) pe.getX(), (int) pe.getY(), pe
+						.getWidth(), pe.getHeight(), new Image(
+						"/image/character0_stand.png"), new Image(
+						"/image/character0_left.gif"), new Image(
+						"/image/character0_right.gif")));
+			} else if (de instanceof WallElement) {
+				WallElement we = (WallElement) de;
+				if (canOpen.isSelected()) {
+					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
+							.getWidth(), we.getHeight(), (int) we.getX(),
+							(int) we.getHeight() - 100, 1000, 3, ""));
+				} else {
+					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
+							.getWidth(), we.getHeight()));
+				}
+			} else if (de instanceof CeilingElement) {
+				CeilingElement ce = (CeilingElement) de;
+				if (isMovingDown.isSelected()) {
+					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
+							.getWidth(), ce.getHeight(), (int) ce.getX(),
+							(int) pane.getHeight(), 1000, 1, ""));
+				} else {
+					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
+							.getWidth(), ce.getHeight()));
+				}
+			}
+		}
+		new LevelWriter(ballList, wallList, playerList, 2000, "TestLevel").saveToFXML();
+	}
 }

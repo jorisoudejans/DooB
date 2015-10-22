@@ -10,6 +10,7 @@ public class PlayerElement extends DoobElement {
 	
 	public static final int PLAYER_WIDTH = 50;
 	public static final int PLAYER_HEIGHT = 72;
+	public static final int PLAYER_Y = 575;
 	
 	private int width;
 	private int height;
@@ -17,10 +18,9 @@ public class PlayerElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
-	 * @param y Y coordinate.
-	 */
-	public PlayerElement(double x, double y) {
-		super(x, y);
+]	 */
+	public PlayerElement(double x) {
+		super(x, PLAYER_Y);
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
 	}
