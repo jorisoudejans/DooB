@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
-public class WallElement extends BuilderElement{
+import java.util.Observable;
+
+public class WallElement extends Observable {
 
 }

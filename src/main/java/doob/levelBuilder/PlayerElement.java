@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
-public class PlayerElement extends BuilderElement{
+import java.util.Observable;
+
+public class PlayerElement extends Observable {
 
 }
