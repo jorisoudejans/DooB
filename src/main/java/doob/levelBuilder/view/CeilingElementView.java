@@ -4,10 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import doob.levelBuilder.BallElement;
 import doob.levelBuilder.CeilingElement;
-import doob.model.Ball;
 
 /**
  * The view of the ball element class.
@@ -19,7 +16,7 @@ public class CeilingElementView extends BuilderElementView implements Observer {
 	
 	/**
 	 * Constructor.
-	 * @param ce BallElement that it observes.
+	 * @param ce CeilingElement that it observes.
 	 * @param gc GraphicsContext that can draw to the screen.
 	 */
 	public CeilingElementView(CeilingElement ce, GraphicsContext gc) {

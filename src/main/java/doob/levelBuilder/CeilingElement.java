@@ -10,7 +10,7 @@ public class CeilingElement extends DoobElement {
 	
 	public static final int CEILING_WIDTH = 960;
 	public static final int CEILING_HEIGHT = 100;
-	public static final int CEILING_X = 170;
+	public static final int CEILING_X = 0;
 	
 	private int width;
 	private int height;
