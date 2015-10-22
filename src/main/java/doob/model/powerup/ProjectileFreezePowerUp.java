@@ -1,11 +1,11 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
 import doob.model.Level;
 import doob.model.Player;
 
 /**
- * Power-up that freezes all balls for a short period of time.
+ * Power-up that freezes projectiles when
+ * they hit the ceiling for a short period of time.
  */
 @PowerUpChance(chance = PowerUp.CHANCE_PROJECTILE_FREEZE)
 public class ProjectileFreezePowerUp extends PowerUp {
@@ -13,7 +13,7 @@ public class ProjectileFreezePowerUp extends PowerUp {
     public static final int DURATION = 500;
 
     /**
-     * Adds one life to player.
+     * Freezes all projectiles.
      * @param level the level the power-up is in.
      * @param player the player that picked up the power-up.
      */
@@ -24,7 +24,7 @@ public class ProjectileFreezePowerUp extends PowerUp {
     }
 
     /**
-     * Does nothing.
+     * Return to normal state.
      * @param level the level the power-up is in.
      */
     @Override
@@ -33,8 +33,8 @@ public class ProjectileFreezePowerUp extends PowerUp {
     }
 
     /**
-     * Has no duration.
-     * @return duration
+     * Get duration.
+     * @return DURATION
      */
     @Override
     public int getDuration() {
@@ -42,7 +42,7 @@ public class ProjectileFreezePowerUp extends PowerUp {
     }
 
     /**
-     * Path to heart icon.
+     * Path to straight up icon.
      * @return path
      */
     @Override

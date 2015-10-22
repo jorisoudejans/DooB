@@ -17,10 +17,10 @@ import doob.levelBuilder.view.BallElementView;
  */
 public class LevelBuilderController {
 	
-	private BallElement be;
+	private BallElement be = new BallElement();
 	private WallElement we;
 	private PlayerElement pe;
-	private BallElementView bev;
+	private BallElementView bev = new BallElementView();
 	
 	@FXML
 	private Shape ballButton;
@@ -35,11 +35,6 @@ public class LevelBuilderController {
 	@FXML
 	private Canvas canvas;
 	private GraphicsContext gc;
-	
-	@FXML
-	final Text source = new Text(50, 100, "DRAG ME");
-	@FXML
-	final Text target = new Text(300, 100, "DROP HERE");
 	
 	/**
 	 * Initialize the builder.

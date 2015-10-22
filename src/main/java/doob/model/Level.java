@@ -195,22 +195,9 @@ public class Level {
     public void spawnBalls(long seed) {
 
         Random generator = new Random(seed);
-        int i = generator.nextInt() % NUMBER_POSSIBLE_BALLS;
-        /*switch(i) {
-            case 0: spawnSameSizeBalls(6, 16);
-                break;
-            case 1: spawnSameSizeBalls(4, 32);
-                break;
-            case 2: spawnSameSizeBalls(3, 32);
-                break;
-            case 3: spawnSameSizeBalls(2, 64);
-                break;
-            case 4: spawnSameSizeBalls(1, 128);
-                break;
-            default:
-                break;
-        }*/
-        spawnSameSizeBalls(6 - i, (int) (8 * Math.pow(2, i)));
+        int i = Math.abs(generator.nextInt() % 4);
+
+        spawnSameSizeBalls(4 - i, (int) (8 * Math.pow(2, i + 1)));
     }
 
     /**
@@ -435,7 +422,11 @@ public class Level {
         this.survival = survival;
     }
 
-    /**
+    public CollisionManager getCollisionManager() {
+		return collisionManager;
+	}
+
+	/**
      * Continues to next level immediately after event.
      */
     public void continueNextLevel() {
