@@ -6,7 +6,7 @@ package doob.levelBuilder;
  * This class represents the ball element, which can be added to a level in the levelbuilder.
  *
  */
-public class BallElement extends Element {
+public class BallElement extends DoobElement {
 	
 	private int size;
 	private double speedX, speedY;

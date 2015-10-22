@@ -127,8 +127,7 @@ public class LevelBuilderController {
 					be.setX(event.getX());
 					be.setY(event.getY());
 					for (Observable ov : elementList) {
-						((Element) ov).change();
-						ov.notifyObservers();
+						((DoobElement) ov).update();
 					}
 				}
 				event.consume();
@@ -148,14 +147,12 @@ public class LevelBuilderController {
 				if (withinBorders(event.getX(), event.getY())) {
 					be.setPlaced(true);
 					be = null;
-					System.out.println("placed");
 				} else if (be != null) {
 					elementList.remove(elementList.size() - 1);
 					gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc
 							.getCanvas().getHeight());
 					for (Observable ov : elementList) {
-						((Element) ov).change();
-						ov.notifyObservers();
+						((DoobElement) ov).update();
 					}
 				}
 			}

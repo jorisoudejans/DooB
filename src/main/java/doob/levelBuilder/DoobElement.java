@@ -5,7 +5,7 @@ import java.util.Observable;
 /**
  * Superclass of all drawingelements.
  */
-public abstract class Element extends Observable {
+public abstract class DoobElement extends Observable {
 
 	protected double x;
 	protected double y;
@@ -16,7 +16,7 @@ public abstract class Element extends Observable {
 	 * @param x X coordinate.
 	 * @param y Y coordinate.
 	 */
-	public Element(double x, double y) {
+	public DoobElement(double x, double y) {
 		this.x = x;
 		this.y = y;
 		placed = false;
@@ -25,8 +25,9 @@ public abstract class Element extends Observable {
 	/**
 	 * Pretend the element has changed to be able to notify the observers.
 	 */
-	public void change() {
+	public void update() {
 		setChanged();
+		notifyObservers();
 	}
 	
 	public double getX() {
