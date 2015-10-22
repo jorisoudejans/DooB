@@ -104,15 +104,17 @@ public class LevelWriter {
 		return res;
 	}
 	
+	/**
+	 * Writes the walls to the xml file.
+	 * @return
+	 */
 	private Element writeWalls() {
 		Element res = dom.createElement("wallList");
 		for (int i = 0; i < walls.size(); i++) {
 			Wall w = walls.get(i);			
 			Element we = dom.createElement("wall");
-			we.setAttribute("id", Integer.toString(i + 1));
-			
+			we.setAttribute("id", Integer.toString(i + 1));			
 			Element wx = dom.createElement("x");
-			//wx.appendChild(dom.createTextNode(Integer.toString(w.getX()));
 			wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
 			Element wy = dom.createElement("y");
 			wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
@@ -121,16 +123,29 @@ public class LevelWriter {
 			Element wh = dom.createElement("height");
 			wh.appendChild(dom.createTextNode(Integer.toString(w.getHeight())));
 			Element wm = dom.createElement("moveable");
-			if (w.isMoveable()) {
-				wm.appendChild(dom.createTextNode("1"));
-			} else {
-				wm.appendChild(dom.createTextNode("0"));
-			}
 			we.appendChild(wx);
 			we.appendChild(wy);
 			we.appendChild(ww);
 			we.appendChild(wh);
-			we.appendChild(wm);
+			if (w.isMoveable()) {
+				wm.appendChild(dom.createTextNode("1"));
+				we.appendChild(wm);
+				Element wendx = dom.createElement("endX");
+				wendx.appendChild(dom.createTextNode(Integer.toString(w.getEndx())));
+				Element wendy = dom.createElement("endY");
+				wendy.appendChild(dom.createTextNode(Integer.toString(w.getEndy())));
+				Element wdur = dom.createElement("duration");
+				wdur.appendChild(dom.createTextNode(Integer.toString(w.getDuration())));
+				Element wspeed = dom.createElement("speed");
+				wspeed.appendChild(dom.createTextNode(Integer.toString(w.getSpeed())));
+				we.appendChild(wendx);
+				we.appendChild(wendy);
+				we.appendChild(wdur);
+				we.appendChild(wspeed);
+			} else {
+				wm.appendChild(dom.createTextNode("0")); 
+				we.appendChild(wm);
+			}
 			res.appendChild(we);			
 		}
 		return res;
@@ -147,17 +162,13 @@ public class LevelWriter {
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        dom = db.newDocument();
 	        Element rootEle = dom.createElement("level");
-
 	        e = dom.createElement("time");
 	        e.appendChild(dom.createTextNode(time));
 	        rootEle.appendChild(e);
-
 	        rootEle.appendChild(writePlayers());
 	        rootEle.appendChild(writeBalls());
 	        rootEle.appendChild(writeWalls());
-
 	        dom.appendChild(rootEle);
-
 	        try {
 	            Transformer tr = TransformerFactory.newInstance().newTransformer();
 	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -169,15 +180,11 @@ public class LevelWriter {
 	            // send DOM to file
 	            String path = "src/main/resources/level/" + name + ".xml";
 	            tr.transform(new DOMSource(dom), 
-	                                 new StreamResult(new File(path))
-	                                		 /*new PrintWriter(path, "UTF-8"))*/);
-
-	        } catch (TransformerException te) {
-	            System.out.println(te.getMessage());
-	        }
+	                                 new StreamResult(new File(path))); }
+	        catch (TransformerException te) {
+	            System.out.println(te.getMessage());}
 	    } catch (ParserConfigurationException pce) {
-	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-	    }
+	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce); }
 	}
 
 }
