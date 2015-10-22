@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import doob.levelBuilder.CeilingElement;
 
 /**
- * The view of the ball element class.
+ * The view of the ceiling element class.
  *
  */
 public class CeilingElementView extends BuilderElementView implements Observer {

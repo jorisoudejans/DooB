@@ -3,7 +3,7 @@ package doob.levelBuilder;
 
 
 /**
- * This class represents the ball element, which can be added to a level in the levelbuilder.
+ * This class represents the wall element, which can be added to a level in the levelbuilder.
  *
  */
 public class WallElement extends DoobElement {

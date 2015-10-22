@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import doob.levelBuilder.WallElement;
 
 /**
- * The view of the ball element class.
+ * The view of the wall element class.
  *
  */
 public class WallElementView extends BuilderElementView implements Observer {

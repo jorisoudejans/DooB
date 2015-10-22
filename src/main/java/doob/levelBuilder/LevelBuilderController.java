@@ -12,6 +12,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -20,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import doob.App;
 import doob.levelBuilder.view.BallElementView;
 import doob.levelBuilder.view.CeilingElementView;
+import doob.levelBuilder.view.PlayerElementView;
 import doob.levelBuilder.view.WallElementView;
 import doob.model.Ball;
 
@@ -44,13 +46,13 @@ public class LevelBuilderController {
 	@FXML
 	private Rectangle wallButton;
 	@FXML
+	private ImageView playerView;
+	@FXML
 	private ChoiceBox<Integer> ballSizeChoice;
 	@FXML
 	private CheckBox isMovingDown;
 	@FXML
 	private CheckBox canOpen;
-	@FXML
-	private ImageView playerView;
 	@FXML
 	private Pane pane;
 	@FXML
@@ -69,6 +71,7 @@ public class LevelBuilderController {
 		panelgc = panelCanvas.getGraphicsContext2D();
 		elementList = new ArrayList<Observable>();
 		initializeOptions();
+		initializePlayerView();
 		initializeEventHandlers();
 	}
 
@@ -99,12 +102,20 @@ public class LevelBuilderController {
 	}
 
 	/**
+	 * The imageview displays the image of a player.
+	 */
+	public void initializePlayerView() {
+		playerView.setImage(new Image("/image/character0_stand.png"));
+	}
+
+	/**
 	 * Initialize all drag and drop functionality of all the elements.
 	 */
 	public void initializeEventHandlers() {
 		initializeBallButton();
 		initializeCeilingButton();
 		initializeWallButton();
+		initializePlayerButton();
 	}
 
 	/**
@@ -132,6 +143,15 @@ public class LevelBuilderController {
 		setOnWallDragDetected();
 		setOnWallDragging();
 		setOnWallDragDropped();
+	}
+
+	/**
+	 * Initialize all drag and drop functionality of the player element.
+	 */
+	public void initializePlayerButton() {
+		setOnPlayerDragDetected();
+		setOnPlayerDragging();
+		setOnPlayerDragDropped();
 	}
 
 	/**
@@ -225,10 +245,10 @@ public class LevelBuilderController {
 			@Override
 			public void handle(MouseEvent event) {
 				if (ce != null && !ce.isPlaced()) {
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
-							.getCanvas().getHeight());
-					ce.setY(event.getSceneY() - pane.getLayoutY() - CeilingElement.CEILING_HEIGHT
-							/ 2);
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
+					ce.setY(event.getSceneY() - pane.getLayoutY()
+							- CeilingElement.CEILING_HEIGHT / 2);
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -252,8 +272,8 @@ public class LevelBuilderController {
 					ce = null;
 				} else if (ce != null) {
 					elementList.remove(ce);
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
-							.getCanvas().getHeight());
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -270,7 +290,7 @@ public class LevelBuilderController {
 		wallButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				we = new WallElement(event.getSceneX() - pane.getLayoutX() 
+				we = new WallElement(event.getSceneX() - pane.getLayoutX()
 						- WallElement.WALL_WIDTH / 2);
 				we.addObserver(new WallElementView(we, panelgc));
 				elementList.add(we);
@@ -288,9 +308,10 @@ public class LevelBuilderController {
 			@Override
 			public void handle(MouseEvent event) {
 				if (we != null && !we.isPlaced()) {
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
-							.getCanvas().getHeight());
-					we.setX(event.getSceneX() - pane.getLayoutX() - WallElement.WALL_WIDTH / 2);
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
+					we.setX(event.getSceneX() - pane.getLayoutX()
+							- WallElement.WALL_WIDTH / 2);
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}
@@ -314,8 +335,72 @@ public class LevelBuilderController {
 					we = null;
 				} else if (we != null) {
 					elementList.remove(we);
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(), panelgc
-							.getCanvas().getHeight());
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
+					for (Observable ov : elementList) {
+						((DoobElement) ov).update();
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Initialize drag detection of the player element, i.e. create new player
+	 * element with observer.
+	 */
+	public void setOnPlayerDragDetected() {
+		playerView.setOnDragDetected(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				pe = new PlayerElement(event.getSceneX()
+						- PlayerElement.PLAYER_WIDTH / 2, event.getSceneY()
+						- PlayerElement.PLAYER_HEIGHT / 2);
+				pe.addObserver(new PlayerElementView(pe, gc));
+				elementList.add(pe);
+				event.consume();
+			}
+		});
+	}
+
+	/**
+	 * Initialize dragging functionality of the player element, i.e. draw the player
+	 * while dragging it.
+	 */
+	public void setOnPlayerDragging() {
+		playerView.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (pe != null && !pe.isPlaced()) {
+					gc.clearRect(0, 0, gc.getCanvas().getWidth(),
+							gc.getCanvas().getHeight());
+					pe.setX(event.getSceneX() - PlayerElement.PLAYER_WIDTH / 2);
+					pe.setY(event.getSceneY() - PlayerElement.PLAYER_HEIGHT / 2);
+					for (Observable ov : elementList) {
+						((DoobElement) ov).update();
+					}
+				}
+				event.consume();
+			}
+		});
+	}
+
+	/**
+	 * Initialize dropped detection of the player element, i.e. check if it is
+	 * within the borders of the game. If so than place it. If not delete it
+	 * from the element list.
+	 */
+	public void setOnPlayerDragDropped() {
+		playerView.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (withinBorders(event.getSceneX(), event.getSceneY())) {
+					pe.setPlaced(true);
+					pe = null;
+				} else if (pe != null) {
+					elementList.remove(pe);
+					gc.clearRect(0, 0, gc.getCanvas().getWidth(),
+							gc.getCanvas().getHeight());
 					for (Observable ov : elementList) {
 						((DoobElement) ov).update();
 					}

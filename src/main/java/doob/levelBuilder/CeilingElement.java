@@ -3,7 +3,7 @@ package doob.levelBuilder;
 
 
 /**
- * This class represents the ball element, which can be added to a level in the levelbuilder.
+ * This class represents the ceiling element, which can be added to a level in the levelbuilder.
  *
  */
 public class CeilingElement extends DoobElement {
