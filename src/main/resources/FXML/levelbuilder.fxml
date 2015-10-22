@@ -13,8 +13,7 @@
       <Pane fx:id="pane" layoutX="170.0" layoutY="20.0" prefHeight="650.0" prefWidth="960.0" style="-fx-border-style: solid;" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
             <Canvas fx:id="panelCanvas" height="650.0" width="960.0" />
-         </children></Pane>
-      <Canvas fx:id="canvas" height="830.0" width="1150.0" />	  
+         </children></Pane>	  
       <Button focusTraversable="false" layoutX="333.0" layoutY="710.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="125.0" text="Back to Menu" />
       <Button focusTraversable="false" layoutX="500.0" layoutY="710.0" mnemonicParsing="false" onAction="#saveLevel" prefHeight="50.0" prefWidth="125.0" text="Save" />
       <Circle fx:id="ballButton" centerX="64.0" centerY="64.0" fill="#ff1f1f" layoutX="20.0" layoutY="20.0" radius="64.0" stroke="RED" strokeType="INSIDE" />
@@ -24,5 +23,11 @@
       <Rectangle fx:id="wallButton" arcHeight="5.0" arcWidth="5.0" height="125.0" layoutX="58.0" layoutY="337.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
       <CheckBox fx:id="canOpen" layoutX="23.0" layoutY="481.0" mnemonicParsing="false" text="Can Open" />
       <ImageView fx:id="playerView" fitHeight="72.0" fitWidth="50.0" layoutX="59.0" layoutY="574.0" pickOnBounds="true" preserveRatio="true" />
+      <TextField layoutX="117.0" layoutY="720.0" text="2000" />
+      <Label layoutX="22.0" layoutY="711.0" prefHeight="31.0" prefWidth="74.0" text="Time">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
