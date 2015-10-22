@@ -102,8 +102,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void buildLevel() {
-		LevelBuilderController lbc = App.loadScene("/fxml/levelbuilder.fxml").getController();
-		lbc.initBuilder();
+		App.loadScene("/fxml/levelbuilder.fxml");
 	}
 	
 	/**

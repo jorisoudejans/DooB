@@ -3,6 +3,10 @@ package doob.levelBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import doob.App;
 import doob.levelBuilder.view.BallElementView;
@@ -19,6 +23,16 @@ public class LevelBuilderController {
 	private BallElementView bev;
 	
 	@FXML
+	private Shape ballButton;
+	@FXML
+	private ChoiceBox<Integer> ballSizeChoice;
+	@FXML
+	private CheckBox isMovingDown;
+	@FXML
+	private CheckBox canOpen;
+	@FXML
+	private ImageView playerView;
+	@FXML
 	private Canvas canvas;
 	private GraphicsContext gc;
 	
@@ -30,13 +44,49 @@ public class LevelBuilderController {
 	/**
 	 * Initialize the builder.
 	 */
-	public void initBuilder() {
+	@FXML
+	public void initialize() {
 		be.addObserver(bev);
-		drags();
 		gc = canvas.getGraphicsContext2D();
 	}
 	
-	public void drags() {
+	@FXML
+	public void pickupBall() {
+		
+	}
+	
+	@FXML
+	public void dropBall() {
+		
+	}
+	
+	@FXML
+	public void pickupCeiling() {
+		
+	}
+	
+	@FXML
+	public void dropCeiling() {
+		
+	}
+	
+	@FXML
+	public void pickupWall() {
+		
+	}
+	
+	@FXML
+	public void dropWall() {
+		
+	}
+	
+	@FXML
+	public void pickupPlayer() {
+		
+	}
+	
+	@FXML
+	public void dropPlayer() {
 		
 	}
 	
