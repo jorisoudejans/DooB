@@ -15,7 +15,6 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Tests for Level.
- * Created by hidde on 9/10/15.
  */
 public class LevelTest {
 
@@ -49,12 +48,16 @@ public class LevelTest {
         level.setBalls(balls);
     }
 
+    /**
+     * Get appropriate Level.
+     * @param bounds dimensions of Level
+     * @return level
+     */
     protected Level getLevel(BoundsTuple bounds) {
         return new Level(bounds);
     }
 
     private boolean called = false;
-
     /**
      * Tests freezing of the level.
      */

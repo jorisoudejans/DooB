@@ -6,11 +6,15 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for Level.
- * Created by hidde on 9/10/15.
+ * Tests for Survival Level.
  */
 public class SurvivalLevelTest extends LevelTest {
 
+    /**
+     * Get appropriate Level.
+     * @param bounds dimensions of Level
+     * @return survival level
+     */
     @Override
     protected SurvivalLevel getLevel(BoundsTuple bounds) {
         return new SurvivalLevel(bounds);
@@ -66,11 +70,9 @@ public class SurvivalLevelTest extends LevelTest {
         assertEquals(64, level.getBalls().get(0).getSize());
     }
 
-    @Test
-    public void testUpdate() {
-
-    }
-
+    /**
+     * Test time mutation of survival level.
+     */
     @Test
     public void testGetTimeMutation() {
         assertEquals(level.getTimeMutation(), 1);

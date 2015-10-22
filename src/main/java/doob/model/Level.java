@@ -77,6 +77,9 @@ public class Level extends Observable {
         collisionManager = new CollisionManager(this, new CollisionResolver(this));
     }
 
+    /**
+     * Create animation timer.
+     */
     private void createTimer() {
         timer = new AnimationTimer() {
             @Override
