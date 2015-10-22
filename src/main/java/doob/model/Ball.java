@@ -15,7 +15,6 @@ public class Ball implements Collidable, Drawable {
   private double speedX;
   private double speedY;
   private int size;
-  private int splitBounce;
   private Color color;
 
   public static final int SPLIT_BOUNCE = -4;
@@ -49,7 +48,6 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
-    this.splitBounce = SPLIT_BOUNCE;
     setColor();
   }
 
@@ -93,8 +91,8 @@ public class Ball implements Collidable, Drawable {
    * @return A list of new balls.
    */
   public Ball[] split() {
-    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, splitBounce, this.size / 2);
-    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, splitBounce, this.size / 2);
+    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
+    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
     Ball[] res = new Ball[2];
     res[0] = ball1;
     res[1] = ball2;

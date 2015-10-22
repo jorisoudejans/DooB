@@ -1,7 +1,8 @@
 package doob.controller;
 
-import javafx.fxml.FXML;
 import doob.App;
+import doob.levelBuilder.LevelBuilderController;
+import javafx.fxml.FXML;
 import doob.game.CoopGame;
 import doob.game.DuelGame;
 import doob.game.SinglePlayerGame;
@@ -97,6 +98,15 @@ public class MenuController {
 	@FXML
 	public void showOptions() {
 		App.loadScene("/FXML/OptionsMenu.fxml");
+	}
+	
+	/**
+	 * Navigate to the levelbuilder.
+	 */
+	@FXML
+	public void buildLevel() {
+		LevelBuilderController lbc = App.loadScene("/fxml/levelbuilder.fxml").getController();
+		lbc.initBuilder();
 	}
 	
 	/**
