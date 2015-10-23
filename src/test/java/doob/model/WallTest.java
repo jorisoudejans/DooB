@@ -31,8 +31,8 @@ public class WallTest {
 	 */
 	@Test
 	public void moveTest() {
-		Wall actual = new Wall(0, 0, 50, 800, 100, 100, 100, 1, "");
-		Wall expected = new Wall(100, 100, 50, 800, 100, 100, 0, 1, "");
+		Wall actual = new Wall(0, 0, 50, 800, 100, 100, 100, 1);
+		Wall expected = new Wall(100, 100, 50, 800, 100, 100, 0, 1);
 		while (actual.getDuration() > 0) {
 			actual.move();
 		}
@@ -54,8 +54,8 @@ public class WallTest {
 	 */
 	@Test
 	public void equalsTest2() {
-		Wall actual = new Wall(0, 0, 50, 800, 100, 100, 100, 1, "");
-		Wall expected = new Wall(0, 0, 50, 800, 100, 100, 100, 1, "");
+		Wall actual = new Wall(0, 0, 50, 800, 100, 100, 100, 1);
+		Wall expected = new Wall(0, 0, 50, 800, 100, 100, 100, 1);
 		assertEquals(expected, actual);
 	}
 }

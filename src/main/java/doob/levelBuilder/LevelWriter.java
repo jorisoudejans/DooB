@@ -34,6 +34,7 @@ public class LevelWriter {
 	private ArrayList<Player> players;
 	private String time;
 	private String name;
+	private Element we;
 
     private Document dom;
     private Element e = null;
@@ -110,33 +111,58 @@ public class LevelWriter {
 		return res;
 	}
 	
+	/**
+	 * Helper for the writeWalls() method. This method contains the shared data of both walls.
+	 * @param i
+	 */
+	private void walls(int i) {	
+		Wall w = walls.get(i);
+		we = dom.createElement("wall");
+		we.setAttribute("id", Integer.toString(i + 1));			
+		Element wx = dom.createElement("x");
+		wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
+		Element wy = dom.createElement("y");
+		wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
+		Element ww = dom.createElement("width");
+		ww.appendChild(dom.createTextNode(Integer.toString(w.getWidth())));
+		Element wh = dom.createElement("height");
+		wh.appendChild(dom.createTextNode(Integer.toString(w.getHeight())));
+		we.appendChild(wx);
+		we.appendChild(wy);
+		we.appendChild(ww);
+		we.appendChild(wh);
+	}
+	
+	/**
+	 * Writes the walls to the xml file.
+	 * @return
+	 */
 	private Element writeWalls() {
 		Element res = dom.createElement("wallList");
+		if (walls.size() == 0) {
+			res.appendChild(dom.createTextNode("")); }
 		for (int i = 0; i < walls.size(); i++) {
-			Wall w = walls.get(i);			
-			Element we = dom.createElement("wall");
-			we.setAttribute("id", Integer.toString(i + 1));
-			
-			Element wx = dom.createElement("x");
-			//wx.appendChild(dom.createTextNode(Integer.toString(w.getX()));
-			wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
-			Element wy = dom.createElement("y");
-			wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
-			Element ww = dom.createElement("width");
-			ww.appendChild(dom.createTextNode(Integer.toString(w.getWidth())));
-			Element wh = dom.createElement("height");
-			wh.appendChild(dom.createTextNode(Integer.toString(w.getHeight())));
+			Wall w = walls.get(i);
+			walls(i);
 			Element wm = dom.createElement("moveable");
 			if (w.isMoveable()) {
 				wm.appendChild(dom.createTextNode("1"));
+				we.appendChild(wm);
+				Element wendx = dom.createElement("endx");
+				wendx.appendChild(dom.createTextNode(Integer.toString(w.getEndx())));
+				Element wendy = dom.createElement("endy");
+				wendy.appendChild(dom.createTextNode(Integer.toString(w.getEndy())));
+				Element wdur = dom.createElement("duration");
+				wdur.appendChild(dom.createTextNode(Integer.toString(w.getDuration())));
+				Element wspeed = dom.createElement("speed");
+				wspeed.appendChild(dom.createTextNode(Integer.toString(w.getSpeed())));
+				we.appendChild(wendx);
+				we.appendChild(wendy);
+				we.appendChild(wdur);
+				we.appendChild(wspeed);
 			} else {
-				wm.appendChild(dom.createTextNode("0"));
-			}
-			we.appendChild(wx);
-			we.appendChild(wy);
-			we.appendChild(ww);
-			we.appendChild(wh);
-			we.appendChild(wm);
+				wm.appendChild(dom.createTextNode("0")); 
+				we.appendChild(wm); }
 			res.appendChild(we);			
 		}
 		return res;
@@ -153,36 +179,60 @@ public class LevelWriter {
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        dom = db.newDocument();
 	        Element rootEle = dom.createElement("level");
-
 	        e = dom.createElement("time");
 	        e.appendChild(dom.createTextNode(time));
 	        rootEle.appendChild(e);
-
-	        rootEle.appendChild(writePlayers());
-	        rootEle.appendChild(writeBalls());
-	        rootEle.appendChild(writeWalls());
-
+	        if (players.size() > 0) {
+	        rootEle.appendChild(writePlayers()); }
+	        if (balls.size() > 0) {
+	        rootEle.appendChild(writeBalls()); }
+	        if (walls.size() > 0) {
+	        rootEle.appendChild(writeWalls()); }
 	        dom.appendChild(rootEle);
-
 	        try {
 	            Transformer tr = TransformerFactory.newInstance().newTransformer();
 	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
 	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-	            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 	            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
 	            // send DOM to file
-	            String path = "src/main/resources/level/" + name + ".xml";
+	            String path = "src/main/resources/level/Custom/" + name + ".xml";
 	            tr.transform(new DOMSource(dom), 
-	                                 new StreamResult(new File(path))
-	                                		 /*new PrintWriter(path, "UTF-8"))*/);
-
-	        } catch (TransformerException te) {
-	            System.out.println(te.getMessage());
-	        }
+	                                 new StreamResult(new File(path))); }
+	        catch (TransformerException te) {
+	            System.out.println(te.getMessage()); }
 	    } catch (ParserConfigurationException pce) {
-	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-	    }
+	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce); }
 	}
+	
+	/**
+	 * Used by the LevelReader to make a list of all custom levels.
+	 * @param names the names of the custom levels.
+	 */
+	public static void writeCustomLevels(String[] names) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	    try {
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        Document dom = db.newDocument();
+	        Element rootEle = dom.createElement("Levels");
+	        for (int i = 0; i < names.length; i++) {
+		        Element e = dom.createElement("LevelName");
+		        e.appendChild(dom.createTextNode(names[i]));
+		        rootEle.appendChild(e);	        	
+	        }
+	        dom.appendChild(rootEle);
+	        try {
+	            Transformer tr = TransformerFactory.newInstance().newTransformer();
+	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
+	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
+	            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");	
+	            String path = "src/main/resources/level/CustomSPLevels.xml";
+	            tr.transform(new DOMSource(dom), 
+	                                 new StreamResult(new File(path))); }
+	        catch (TransformerException te) {
+	            System.out.println(te.getMessage()); }
+	    } catch (ParserConfigurationException pce) {
+	        System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce); }
+			
+		}
 
 }

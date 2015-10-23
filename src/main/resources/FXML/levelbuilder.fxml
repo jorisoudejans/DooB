@@ -15,6 +15,8 @@
             <Canvas fx:id="panelCanvas" height="650.0" width="960.0" />
          </children></Pane>	  
       <Button focusTraversable="false" layoutX="333.0" layoutY="710.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="125.0" text="Back to Menu" />
+      <Button focusTraversable="false" layoutX="500.0" layoutY="710.0" mnemonicParsing="false" onAction="#saveLevel" prefHeight="50.0" prefWidth="125.0" text="Save" />
+      <Button focusTraversable="false" layoutX="650.0" layoutY="710.0" mnemonicParsing="false" onAction="#discardChanges" prefHeight="50.0" prefWidth="125.0" text="Discard" />
       <Circle fx:id="ballButton" centerX="64.0" centerY="64.0" fill="#ff1f1f" layoutX="20.0" layoutY="20.0" radius="64.0" stroke="RED" strokeType="INSIDE" />
       <ChoiceBox fx:id="ballSizeChoice" layoutX="55.0" layoutY="157.0" prefHeight="31.0" prefWidth="57.0" />
       <Rectangle fx:id="ceilingButton" arcHeight="5.0" arcWidth="5.0" height="50.0" layoutX="21.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
@@ -22,7 +24,7 @@
       <Rectangle fx:id="wallButton" arcHeight="5.0" arcWidth="5.0" height="125.0" layoutX="58.0" layoutY="337.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
       <CheckBox fx:id="canOpen" layoutX="23.0" layoutY="481.0" mnemonicParsing="false" text="Can Open" />
       <ImageView fx:id="playerView" fitHeight="72.0" fitWidth="50.0" layoutX="59.0" layoutY="574.0" pickOnBounds="true" preserveRatio="true" />
-      <TextField layoutX="117.0" layoutY="720.0" text="2000" />
+      <TextField fx:id="timeField" layoutX="117.0" layoutY="720.0" text="2000" />
       <Label layoutX="22.0" layoutY="711.0" prefHeight="31.0" prefWidth="74.0" text="Time">
          <font>
             <Font size="33.0" />

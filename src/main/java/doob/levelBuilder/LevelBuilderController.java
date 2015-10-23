@@ -8,19 +8,28 @@ import java.util.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import doob.App;
 import doob.levelBuilder.view.BallElementView;
 import doob.levelBuilder.view.CeilingElementView;
@@ -41,7 +50,11 @@ public class LevelBuilderController {
 	private int players;
 	private int walls;
 	private int balls;
+	private String levelName;
 
+	private static final int BUTTON_WIDTH = 100;
+	private static final int TEXT_FIELD_WIDTH = 350;
+	private static final int FONT_SIZE = 22;
 	public static final int LAYOUT = 84;
 	public static final int PANE_X = 170;
 	public static final int PANE_Y = 20;
@@ -64,6 +77,8 @@ public class LevelBuilderController {
 	private Pane pane;
 	@FXML
 	private Canvas panelCanvas;
+	@FXML
+	private TextField timeField;
 	private GraphicsContext panelgc;
 
 	/**
@@ -311,21 +326,32 @@ public class LevelBuilderController {
 	/**
 	 * Navigate back to the menu.
 	 * 
-	 * @throws UnsupportedEncodingException
-	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException when the encoding is not supported
+	 * @throws FileNotFoundException if the file is not found.
 	 */
 	@FXML
-	public void backToMenu() throws FileNotFoundException,
-			UnsupportedEncodingException {
-		save();
+	public void backToMenu() throws FileNotFoundException, UnsupportedEncodingException {
 		App.loadScene("/FXML/Menu.fxml");
 	}
-
-	public void save() throws FileNotFoundException,
-			UnsupportedEncodingException {
-		ArrayList<Ball> ballList = new ArrayList<Ball>();
-		ArrayList<Wall> wallList = new ArrayList<Wall>();
-		ArrayList<Player> playerList = new ArrayList<Player>();
+	
+	/**
+	 * Discard the changes in the levelbuilder.
+	 */
+	@FXML
+	public void discardChanges() {
+		App.loadScene("/FXML/levelbuilder.fxml");
+	}
+	
+	/**
+	 * Save the level.
+	 * @throws FileNotFoundException when the file is not found.
+	 * @throws UnsupportedEncodingException when the encoding is not supported.
+	 */
+	@FXML
+	public void saveLevel() throws FileNotFoundException, UnsupportedEncodingException {
+		final ArrayList<Ball> ballList = new ArrayList<Ball>();
+		final ArrayList<Wall> wallList = new ArrayList<Wall>();
+		final ArrayList<Player> playerList = new ArrayList<Player>();
 		for (DoobElement de : elementList) {
 			if (de instanceof BallElement) {
 				BallElement be = (BallElement) de;
@@ -343,7 +369,7 @@ public class LevelBuilderController {
 				if (canOpen.isSelected()) {
 					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
 							.getWidth(), we.getHeight(), (int) we.getX(),
-							(int) we.getHeight() - 100, 1000, 3, ""));
+							(int) we.getHeight() - 100, 1000, 3));
 				} else {
 					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
 							.getWidth(), we.getHeight()));
@@ -353,14 +379,50 @@ public class LevelBuilderController {
 				if (isMovingDown.isSelected()) {
 					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
 							.getWidth(), ce.getHeight(), (int) ce.getX(),
-							(int) pane.getHeight(), 1000, 1, ""));
+							(int) pane.getHeight(), 1000, 1));
 				} else {
 					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
 							.getWidth(), ce.getHeight()));
 				}
 			}
 		}
-		new LevelWriter(ballList, wallList, playerList, 2000, "TestLevel")
-				.saveToFXML();
+		final Stage dialog = new Stage();
+		dialog.initOwner(App.getStage());
+		Label l = new Label("Please enter the name of the level: ");
+		l.setFont(new Font(FONT_SIZE));
+		final TextField tf = new TextField();
+		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
+		Button b = new Button("OK");
+		b.setPrefWidth(BUTTON_WIDTH);
+		b.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				String name = tf.getText();
+				if (name.length() > 0) {
+					levelName = name;
+					try {
+						new LevelWriter(ballList, wallList, playerList, 
+								Integer.parseInt(timeField.getText()), levelName).saveToFXML();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					dialog.close();
+				}
+			}
+		});
+		
+		VBox popUpVBox = new VBox(10);
+		popUpVBox.setAlignment(Pos.CENTER);
+        popUpVBox.getChildren().add(l);
+        popUpVBox.getChildren().add(tf);
+        popUpVBox.getChildren().add(b);
+
+        Scene dialogScene = new Scene(popUpVBox, 500, 150);
+		dialog.setScene(dialogScene);
+		dialog.show();
 	}
 }

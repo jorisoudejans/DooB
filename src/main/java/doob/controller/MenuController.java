@@ -101,6 +101,15 @@ public class MenuController {
 	}
 	
 	/**
+	 * Play the custom created levels.
+	 */
+	@FXML
+	public void playCustom() {
+		SinglePlayerGame spg = App.loadScene("/FXML/SinglePlayerGame.fxml").getController();
+		spg.initializeCustom();
+	}
+	
+	/**
 	 * Navigate to the levelbuilder.
 	 */
 	@FXML
