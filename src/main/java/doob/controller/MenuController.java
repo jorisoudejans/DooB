@@ -1,24 +1,26 @@
 package doob.controller;
 
-import javafx.fxml.FXML;
 import doob.App;
-import doob.game.CoopGame;
-import doob.game.DuelGame;
-import doob.game.SinglePlayerGame;
-import doob.game.SurvivalGame;
+import doob.game.GameFactory;
+import javafx.fxml.FXML;
 
 /**
  * Opening menu.
  */
 public class MenuController {
+
+	private GameFactory gameFactory;
+
+	public void initialize() {
+		gameFactory = new GameFactory();
+	}
 	
 	/**
 	 * Navigate to singleplayergame.
 	 */
 	@FXML
 	public void playSinglePlayer() {
-		SinglePlayerGame spg = App.loadScene("/FXML/SinglePlayerGame.fxml").getController();
-		spg.initialize();
+		gameFactory.getGame("singlePlayer").initialize();
 	}
 	
 	/**
@@ -26,8 +28,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playDuelMode() {
-		DuelGame dg = App.loadScene("/FXML/DuelGame.fxml").getController();
-		dg.initialize();
+		gameFactory.getGame("duelMode").initialize();
 	}
 	
 	/**
@@ -35,8 +36,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playCoopMode() {
-		CoopGame cg = App.loadScene("/FXML/CoopGame.fxml").getController();
-		cg.initialize();
+		gameFactory.getGame("coopMode").initialize();
 	}
 	
 	/**
@@ -44,8 +44,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playSurvivalMode() {
-		SurvivalGame sg = App.loadScene("/FXML/SurvivalGame.fxml").getController();
-		sg.initialize();
+		gameFactory.getGame("survivalMode").initialize();
 	}
 	
 	/**

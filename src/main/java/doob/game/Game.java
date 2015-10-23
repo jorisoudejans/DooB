@@ -1,10 +1,12 @@
 package doob.game;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import doob.App;
+import doob.DLog;
+import doob.controller.OptionsController;
+import doob.level.LevelObserver;
+import doob.model.Level;
+import doob.model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -16,20 +18,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import doob.App;
-import doob.DLog;
-import doob.controller.OptionsController;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -104,7 +101,12 @@ public abstract class Game implements LevelObserver {
 
 		dLog.setFile("DooB.log");
 		dLog.info("Game started.", DLog.Type.STATE);
-	}	
+	}
+
+	/**
+	 * Initialize method called by javafx.
+	 */
+	public abstract void initialize();
 
 	/**
 	 * Navigate back to the menu.
