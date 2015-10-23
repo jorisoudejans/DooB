@@ -74,6 +74,8 @@ public class LevelBuilderController {
 	private Pane pane;
 	@FXML
 	private Canvas panelCanvas;
+	@FXML
+	private TextField timeField;
 	private GraphicsContext panelgc;
 
 	/**
@@ -518,12 +520,20 @@ public class LevelBuilderController {
 	/**
 	 * Navigate back to the menu.
 	 * 
-	 * @throws UnsupportedEncodingException
-	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException when the encoding is not supported
+	 * @throws FileNotFoundException if the file is not found.
 	 */
 	@FXML
 	public void backToMenu() throws FileNotFoundException, UnsupportedEncodingException {
 		App.loadScene("/FXML/Menu.fxml");
+	}
+	
+	/**
+	 * Discard the changes in the levelbuilder.
+	 */
+	@FXML
+	public void discardChanges() {
+		App.loadScene("/FXML/levelbuilder.fxml");
 	}
 	
 	/**
@@ -585,8 +595,8 @@ public class LevelBuilderController {
 				if (name.length() > 0) {
 					levelName = name;
 					try {
-						new LevelWriter(ballList, wallList, playerList, 2000, 
-								levelName).saveToFXML();
+						new LevelWriter(ballList, wallList, playerList, 
+								Integer.parseInt(timeField.getText()), levelName).saveToFXML();
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

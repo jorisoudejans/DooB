@@ -101,6 +101,14 @@ public class MenuController {
 	}
 	
 	/**
+	 * Play the custom created levels.
+	 */
+	@FXML
+	public void playCustom() {
+		
+	}
+	
+	/**
 	 * Navigate to the levelbuilder.
 	 */
 	@FXML
