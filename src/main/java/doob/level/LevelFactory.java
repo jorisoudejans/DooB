@@ -259,4 +259,23 @@ public class LevelFactory {
         return level;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public ArrayList<Ball> getBallList() {
+        return ballList;
+    }
+
+    public ArrayList<Wall> getWallList() {
+        return wallList;
+    }
+
+    public Image[] getPlayerImages() {
+        return playerImages;
+    }
 }
