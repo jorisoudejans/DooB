@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<level>
+	<time>453</time>
+    <ballList>
+        <ball id="1">
+            <x>400</x>
+            <y>153</y>
+            <speedX>-2</speedX>
+            <speedY>0</speedY>
+            <size>32</size>
+        </ball>
+        <ball id="2">
+            <x>520</x>
+            <y>546</y>
+            <speedX>2</speedX>
+            <speedY>2</speedY>
+            <size>64</size>
+        </ball>
+    </ballList>
+    <wallList>
+        <wall>
+            <x>0</x>
+            <y>0</y>
+            <width>960</width>
+            <height>50</height>
+            <moveable>1</moveable>
+            <endx>0</endx>
+            <endy>650</endy>
+            <duration>1000</duration>
+            <speed>1</speed>
+            <condition></condition>
+        </wall>
+        <wall id="1">
+            <x>440</x>
+            <y>0</y>
+            <width>80</width>
+            <height>650</height>
+            <moveable>0</moveable>
+        </wall>
+    </wallList>
+</level>
