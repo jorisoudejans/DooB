@@ -115,7 +115,7 @@ public class CollisionManager {
     }
 
     private boolean collides(Collidable c1, Collidable c2) {
-        return c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
+        return c1 != null && c2 != null && c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
     }
 
 	/**
