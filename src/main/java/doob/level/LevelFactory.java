@@ -63,7 +63,7 @@ public class LevelFactory {
      * @param eElement The XML-Element to parse from
      * @return The parsed int
      */
-    public int parseInt(String s, Element eElement) {
+    private int parseInt(String s, Element eElement) {
         return Integer.parseInt(eElement.getElementsByTagName(s)
                 .item(0)
                 .getTextContent());
@@ -75,7 +75,7 @@ public class LevelFactory {
      *
      * @param doc Document build from the XML
      */
-    public void parsePlayers(Document doc) {
+    private void parsePlayers(Document doc) {
         NodeList nListPlayer = doc.getElementsByTagName("player");
         for (int i = 0; i < nListPlayer.getLength(); i++) {
             Node nNode = nListPlayer.item(i);
@@ -106,7 +106,7 @@ public class LevelFactory {
      * Sets the playerImages to the corresponding images.
      * @param i Images for the i-th player
      */
-    public void setPlayerImages(int i) {
+    private void setPlayerImages(int i) {
             playerImages = new Image[] { new Image("/image/character" + i + "_stand.png"),
                     new Image("/image/character" + i + "_left.gif"),
                     new Image("/image/character" + i + "_right.gif") };
@@ -117,7 +117,7 @@ public class LevelFactory {
      *
      * @param doc Document build from the XML
      */
-    public void parseBalls(Document doc) {
+    private void parseBalls(Document doc) {
         NodeList nListBall = doc.getElementsByTagName("ball");
         for (int i = 0; i < nListBall.getLength(); i++) {
             Node nNode = nListBall.item(i);
@@ -140,7 +140,7 @@ public class LevelFactory {
      *
      * @param doc Document build from the XML
      */
-    public void parseWalls(Document doc) {
+    private void parseWalls(Document doc) {
         NodeList nListBall = doc.getElementsByTagName("wall");
         for (int i = 0; i < nListBall.getLength(); i++) {
             Node nNode = nListBall.item(i);
@@ -172,7 +172,7 @@ public class LevelFactory {
      * Parse the level from a document.
      * @param doc Document to be read.
      */
-    public void parseLevel(Document doc) {
+    private void parseLevel(Document doc) {
     	NodeList nListBall = doc.getElementsByTagName("time");	
         Node nNode = nListBall.item(0);
         time = Integer.parseInt(nNode.getTextContent());
@@ -181,7 +181,7 @@ public class LevelFactory {
     /**
      * Parses the XML and adds all parsed objects to their respective lists.
      */
-    public void parseXML() {
+    private void parseXML() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
@@ -259,23 +259,4 @@ public class LevelFactory {
         return level;
     }
 
-    public int getTime() {
-        return time;
-    }
-
-    public ArrayList<Player> getPlayerList() {
-        return playerList;
-    }
-
-    public ArrayList<Ball> getBallList() {
-        return ballList;
-    }
-
-    public ArrayList<Wall> getWallList() {
-        return wallList;
-    }
-
-    public Image[] getPlayerImages() {
-        return playerImages;
-    }
 }

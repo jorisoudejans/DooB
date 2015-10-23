@@ -6,6 +6,7 @@ import doob.model.Level;
 import doob.model.Player;
 import doob.model.Wall;
 import doob.util.BoundsTuple;
+import org.junit.Assert;
 import org.w3c.dom.Document;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -41,22 +42,6 @@ public class LevelFactoryTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    public Document buildDoc(String file) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = factory.newDocumentBuilder();
-
-            Document doc = dBuilder.parse(file);
-            doc.getDocumentElement().normalize();
-
-            return doc;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     @Test
     public void testBuildLevelSimple() throws Exception {
 
@@ -71,7 +56,7 @@ public class LevelFactoryTest {
     public void testBuildLevelBall1() throws Exception {
 
         levelFactory = new LevelFactory(getClass().getResource("/level/ball1.xml").getPath(), canvas, "single");
-        levelFactory.setPlayerImages(new Image[] { null, null, null });
+        levelFactory.setPlayerImages(new Image[]{null, null, null});
         Level level = levelFactory.build();
 
         assertNotNull(level);
@@ -79,21 +64,20 @@ public class LevelFactoryTest {
 
     @Test
     public void testParseLevel() {
-        levelFactory = new LevelFactory(getClass().getResource("/level/parseLevel.xml").getPath(), canvas, "single");
-        Document doc = buildDoc(getClass().getResource("/level/parseLevel.xml").getPath());
+        levelFactory = new LevelFactory(getClass().getResource("/level/singlePlayer.xml").getPath(), canvas, "single");
+        levelFactory.setPlayerImages(new Image[] { null, null, null });
 
-        levelFactory.parseLevel(doc);
+        Level level = levelFactory.build();
 
-        assertEquals(453, levelFactory.getTime());
-
+        assertEquals(453, level.getTime());
     }
 
     @Test
     public void testParseBalls() {
-        levelFactory = new LevelFactory(getClass().getResource("/level/parseBalls.xml").getPath(), canvas, "single");
-        Document doc = buildDoc(getClass().getResource("/level/parseBalls.xml").getPath());
+        levelFactory = new LevelFactory(getClass().getResource("/level/singlePlayer.xml").getPath(), canvas, "single");
+        levelFactory.setPlayerImages(new Image[] { null, null, null });
 
-        levelFactory.parseBalls(doc);
+        Level level = levelFactory.build();
 
         Ball ball1 = new Ball(400, 153, -2, 0, 32);
         Ball ball2 = new Ball(520, 546, 2, 2, 64);
@@ -102,26 +86,22 @@ public class LevelFactoryTest {
         balls.add(ball1);
         balls.add(ball2);
 
-        assertEquals(balls, levelFactory.getBallList());
-
+        assertEquals(balls, level.getBalls());
     }
+
 
     @Test
     public void testParseWalls() {
-        levelFactory = new LevelFactory(getClass().getResource("/level/parseWalls.xml").getPath(), canvas, "single");
-        Document doc = buildDoc(getClass().getResource("/level/parseWalls.xml").getPath());
+        levelFactory = new LevelFactory(getClass().getResource("/level/singlePlayer.xml").getPath(), canvas, "single");
+        levelFactory.setPlayerImages(new Image[]{null, null, null});
 
-        levelFactory.parseWalls(doc);
+        Level level = levelFactory.build();
 
         Wall wall1 = new Wall(0, 0, 960, 50, 0, 650, 1000, 1, "");
         Wall wall2 = new Wall(440, 0, 80, 650);
-        ArrayList<Wall> walls =  new ArrayList<Wall>();
 
-        walls.add(wall1);
-        walls.add(wall2);
-
-        assertEquals(walls, levelFactory.getWallList());
-
+        assertEquals(wall1, level.getWalls().get(1));
+        assertEquals(wall2, level.getWalls().get(2));
     }
 
     //TODO: Figure out a way to test parsePlayers without initializing graphics.
