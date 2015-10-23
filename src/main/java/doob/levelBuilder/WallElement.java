@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import javafx.scene.input.MouseEvent;
+
 
 
 /**
@@ -11,6 +13,7 @@ public class WallElement extends DoobElement {
 	public static final int WALL_WIDTH = 100;
 	public static final int WALL_HEIGHT = 650;
 	public static final int WALL_Y = 0;
+	public static final int MAX_WALLS = 2;
 	
 	private int width;
 	private int height;
@@ -23,6 +26,11 @@ public class WallElement extends DoobElement {
 		super(x, WALL_Y);
 		width = WALL_WIDTH;
 		height = WALL_HEIGHT;
+	}
+	
+	@Override
+	public void handleDrag(MouseEvent event) {
+		setX(event.getSceneX() - LevelBuilderController.PANE_X - WallElement.WALL_WIDTH / 2);
 	}
 
 	public int getWidth() {

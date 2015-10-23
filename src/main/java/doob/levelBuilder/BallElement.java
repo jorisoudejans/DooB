@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import javafx.scene.input.MouseEvent;
+
 
 
 /**
@@ -8,6 +10,7 @@ package doob.levelBuilder;
  */
 public class BallElement extends DoobElement {
 	
+	public static final int MAX_BALLS = 3;
 	private int size;
 	private double speedX, speedY;
 	
@@ -24,6 +27,12 @@ public class BallElement extends DoobElement {
 		this.size = size;
 		this.speedX = speedX;
 		this.speedY = speedY;
+	}
+	
+	@Override
+	public void handleDrag(MouseEvent event) {
+		setX(event.getSceneX() - LevelBuilderController.PANE_X - size / 2);
+		setY(event.getSceneY() - LevelBuilderController.PANE_Y - size / 2);
 	}
 
 	public int getSize() {

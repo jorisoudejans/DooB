@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import javafx.scene.input.MouseEvent;
+
 
 
 /**
@@ -11,6 +13,7 @@ public class PlayerElement extends DoobElement {
 	public static final int PLAYER_WIDTH = 50;
 	public static final int PLAYER_HEIGHT = 72;
 	public static final int PLAYER_Y = 575;
+	public static final int MAX_PLAYERS = 2;
 	
 	private int width;
 	private int height;
@@ -23,6 +26,11 @@ public class PlayerElement extends DoobElement {
 		super(x, PLAYER_Y);
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
+	}
+	
+	@Override
+	public void handleDrag(MouseEvent event) {
+		setX(event.getSceneX() - LevelBuilderController.PANE_X - PlayerElement.PLAYER_WIDTH / 2);
 	}
 
 	public int getWidth() {

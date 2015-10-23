@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import javafx.scene.input.MouseEvent;
+
 
 
 /**
@@ -23,6 +25,11 @@ public class CeilingElement extends DoobElement {
 		super(CEILING_X, y);
 		width = CEILING_WIDTH;
 		height = CEILING_HEIGHT;
+	}
+	
+	@Override
+	public void handleDrag(MouseEvent event) {
+		setY(event.getSceneY() - LevelBuilderController.PANE_Y - CeilingElement.CEILING_HEIGHT / 2);
 	}
 
 	public int getWidth() {
