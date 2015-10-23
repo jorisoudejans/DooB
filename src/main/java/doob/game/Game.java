@@ -88,11 +88,41 @@ public abstract class Game implements Observer {
 	 * @param levelPath
 	 *            The path of the levels to be read.
 	 */
-
 	protected void initGame(String levelPath) {
 		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
 		readLevels(levelPath);
+		levelLabel.setText((currentLevel + 1) + "");
+		// gameState = GameState.RUNNING;
+		createTimer();
+		newLevel();
+		readOptions();
+		gc = lives1.getGraphicsContext2D();
+		gc2 = lives2.getGraphicsContext2D();
+		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
+		GraphicsContext gcBg = background.getGraphicsContext2D();
+		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0,
+				canvas.getWidth(), canvas.getHeight());
+		pane.getChildren().add(background);
+		background.toBack();
+		running = true;
+
+		dLog.setFile("DooB.log");
+		dLog.info("Game started.", DLog.Type.STATE);
+	}
+	
+	/**
+	 * Initialization of the custom game pane.
+	 * 
+	 * @throws IOException
+	 *             it DooB.log can't be accessed.
+	 * @param levelPath
+	 *            The path of the levels to be read.
+	 */
+	protected void initCustomGame(String levelPath) {
+		dLog = DLog.getInstance();
+		levelList = new ArrayList<String>();
+		readCustomLevels(levelPath);
 		levelLabel.setText((currentLevel + 1) + "");
 		// gameState = GameState.RUNNING;
 		createTimer();
@@ -156,6 +186,35 @@ public abstract class Game implements Observer {
 			}
 		};
 		timer.start();
+	}
+	
+	/**
+	 * Reads all levels out of the levelsfile as a string and puts them in a
+	 * list of strings with all levels.
+	 * 
+	 * @param levelPath
+	 *            The path to the levels that have to be read.
+	 */
+	public void readCustomLevels(String levelPath) {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = factory.newDocumentBuilder();
+
+			Document doc = dBuilder.parse(new File(levelPath));
+			doc.getDocumentElement().normalize();
+
+			NodeList levels = doc.getElementsByTagName("LevelName");
+			for (int i = 0; i < levels.getLength(); i++) {
+				Node n = levels.item(i);
+				String s = "src/main/resources/level/Custom/" + n.getTextContent();
+				levelList.add(s);
+			}
+			currentLevel = 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -1,7 +1,8 @@
 package doob;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.io.UnsupportedEncodingException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,7 +18,7 @@ public class App extends Application {
 	private static AnchorPane pane;
 
 	@Override
-	public void start(Stage stageIn) {
+	public void start(Stage stageIn) throws UnsupportedEncodingException, FileNotFoundException {
 		stage = stageIn;
 		stage.setTitle("DooB");
 		loadScene("/FXML/Menu.fxml");

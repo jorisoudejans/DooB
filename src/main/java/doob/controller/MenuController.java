@@ -3,6 +3,12 @@ package doob.controller;
 import doob.App;
 import doob.game.GameFactory;
 import javafx.fxml.FXML;
+import doob.levelBuilder.LevelBuilderController;
+import javafx.fxml.FXML;
+import doob.game.CoopGame;
+import doob.game.DuelGame;
+import doob.game.SinglePlayerGame;
+import doob.game.SurvivalGame;
 
 /**
  * Opening menu.
@@ -96,6 +102,23 @@ public class MenuController {
 	@FXML
 	public void showOptions() {
 		App.loadScene("/FXML/OptionsMenu.fxml");
+	}
+	
+	/**
+	 * Play the custom created levels.
+	 */
+	@FXML
+	public void playCustom() {
+		SinglePlayerGame spg = App.loadScene("/FXML/SinglePlayerGame.fxml").getController();
+		spg.initializeCustom();
+	}
+	
+	/**
+	 * Navigate to the levelbuilder.
+	 */
+	@FXML
+	public void buildLevel() {
+		App.loadScene("/fxml/levelbuilder.fxml");
 	}
 	
 	/**

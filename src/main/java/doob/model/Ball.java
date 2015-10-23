@@ -15,7 +15,6 @@ public class Ball implements Collidable, Drawable {
   private double speedX;
   private double speedY;
   private int size;
-  private int splitBounce;
   private Color color;
 
   public static final int SPLIT_BOUNCE = -4;
@@ -24,10 +23,10 @@ public class Ball implements Collidable, Drawable {
   public static final int MIN_SIZE = 32;
   public static final int SCORE = 100;
   
-  private static final int MEGA = 128;
-  private static final int BIG = 64;
-  private static final int MEDIUM = 32;
-  private static final int SMALL = 16;
+  public static final int MEGA = 128;
+  public static final int BIG = 64;
+  public static final int MEDIUM = 32;
+  public static final int SMALL = 16;
 
   /**
    * Constructor.
@@ -49,20 +48,21 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
-    this.splitBounce = SPLIT_BOUNCE;
-    setColor();
+    this.color = getColor(size);
   }
 
   /**
    * Sets the value of the color variable dependent of the size of the ball.
+   * @param size The size of the ball.
+   * @return The color of the ball.
    */
-  public void setColor() {
+  public static Color getColor(int size) {
 	  switch (size) {
-	  case MEGA : color = Color.RED; break;
-	  case BIG : color = Color.GREEN; break;
-	  case MEDIUM : color = Color.BLUE; break;
-	  case SMALL : color = Color.PURPLE; break;
-	  default : color = Color.BLACK;
+	  case MEGA : return Color.RED; 
+	  case BIG : return Color.GREEN; 
+	  case MEDIUM : return Color.BLUE; 
+	  case SMALL : return Color.PURPLE; 
+	  default : return Color.BLACK;
 	  }
   }
 
@@ -93,8 +93,8 @@ public class Ball implements Collidable, Drawable {
    * @return A list of new balls.
    */
   public Ball[] split() {
-    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, splitBounce, this.size / 2);
-    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, splitBounce, this.size / 2);
+    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
+    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
     Ball[] res = new Ball[2];
     res[0] = ball1;
     res[1] = ball2;
@@ -121,7 +121,11 @@ public class Ball implements Collidable, Drawable {
     return y;
   }
 
-  public void setY(double y) {
+  public double getSpeedY() {
+	return speedY;
+}
+
+public void setY(double y) {
     this.y = y;
   }
 

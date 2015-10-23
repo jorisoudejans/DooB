@@ -155,10 +155,8 @@ public class LevelFactory {
                     int endy = parseInt("endy", eElement);
                     int duration = parseInt("duration", eElement);
                     int speed = parseInt("speed", eElement);
-                    String condition = eElement.getElementsByTagName("condition")
-                    		.item(0).getTextContent();
                     Wall wall = new Wall(x, y, width, height, endx, endy, 
-                    		duration, speed, condition);
+                    		duration, speed);
                     wallList.add(wall);
                 } else {
                     Wall wall = new Wall(x, y, width, height);

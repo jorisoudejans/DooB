@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
 import doob.level.LevelFactory;
+import doob.levelBuilder.LevelReader;
 import doob.model.Player;
 
 /**
@@ -12,8 +13,19 @@ import doob.model.Player;
  */
 public class SinglePlayerGame extends Game {
 
+	/**
+	 * Load the list of single-player levels.
+	 */
 	public void initialize() {
 		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
+	}
+	
+	/**
+	 * Load the list of custom made levels.
+	 */
+	public void initializeCustom() {
+		LevelReader lr = new LevelReader();
+		initCustomGame(lr.makeCustomLevelList());		
 	}
 	
 	@Override

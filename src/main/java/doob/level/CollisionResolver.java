@@ -125,11 +125,6 @@ public class CollisionResolver {
 
         boolean gameOver = true;
         for (Player p : level.getPlayers()) {
-            if (false && p != player) {
-                if (p.getLives() > 0) {
-                    p.die();
-                }
-            }
             if (p.getLives() > 0) {
                 gameOver = false;
             }
@@ -139,6 +134,15 @@ public class CollisionResolver {
         } else {
             level.onEvent(Level.Event.LOST_LIFE);
         }
+        
+        level.freeze(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                level.continueNextLevel();
+                dLog.info("Lost a life", DLog.Type.STATE);
+            }
+        });
+
     }
 
 	/**
