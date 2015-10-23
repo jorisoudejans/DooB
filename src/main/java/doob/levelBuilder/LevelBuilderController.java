@@ -318,24 +318,7 @@ public class LevelBuilderController {
 	}
 
 	private boolean withinBorders(double x, double y, DoobElement de) {
-		if (de instanceof BallElement) {
-			BallElement be = (BallElement) de;
-			return (x >= be.getX() && x < be.getX() + be.getSize()
-					&& y >= be.getY() && y < be.getY() + be.getSize());
-		} else if (de instanceof WallElement) {
-			WallElement we = (WallElement) de;
-			return (x >= we.getX() && x < we.getX() + we.getWidth()
-					&& y >= we.getY() && y < we.getY() + we.getHeight());
-		} else if (de instanceof CeilingElement) {
-			CeilingElement ce = (CeilingElement) de;
-			return (x >= ce.getX() && x < ce.getX() + ce.getWidth()
-					&& y >= ce.getY() && y < ce.getY() + ce.getHeight());
-		} else if (de instanceof PlayerElement) {
-			PlayerElement pe = (PlayerElement) de;
-			return (x >= pe.getX() && x < pe.getX() + pe.getWidth()
-					&& y >= pe.getY() && y < pe.getY() + pe.getHeight());
-		}
-		return false;
+		return de.liesInside(x, y);
 	}
 
 	private DoobElement getElement(double x, double y) {

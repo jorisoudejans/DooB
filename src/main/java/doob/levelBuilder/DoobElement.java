@@ -37,6 +37,14 @@ public abstract class DoobElement extends Observable {
 	public abstract void handleDrag(MouseEvent event);
 
 	/**
+	 * Determines if shape lies within border if it was to be dropped at location x,y.
+	 * @param x location x
+	 * @param y location y
+	 * @return whether it lies inside
+	 */
+	public abstract boolean liesInside(double x, double y);
+
+	/**
 	 * Pretend the element has changed to be able to notify the observers.
 	 */
 	public void update() {

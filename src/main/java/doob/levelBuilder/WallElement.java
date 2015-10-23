@@ -37,6 +37,12 @@ public class WallElement extends DoobElement {
 		return width;
 	}
 
+	@Override
+	public boolean liesInside(double x, double y) {
+		return (x >= this.x && x < this.x + this.width
+				&& y >= this.y && y < this.y + this.height);
+	}
+
 	public void setWidth(int width) {
 		this.width = width;
 	}

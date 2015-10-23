@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import doob.util.TupleTwo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,8 +38,7 @@ public class LevelWriter {
 	private Element we;
 
     private Document dom;
-    private Element e = null;
-	
+
 	/**
 	 * Basic constructor.
 	 * @param ballList the balls to be added to the level
@@ -86,34 +86,15 @@ public class LevelWriter {
 	private Element writeBalls() {
 		Element res = dom.createElement("ballList");
 		for (int i = 0; i < balls.size(); i++) {
-			Ball b = balls.get(i);			
-			Element be = dom.createElement("ball");
-			be.setAttribute("id", Integer.toString(i + 1));
-			
-			Element bx = dom.createElement("x");
-			bx.appendChild(dom.createTextNode(Integer.toString((int) b.getX())));
-			Element by = dom.createElement("y");
-			by.appendChild(dom.createTextNode(Integer.toString((int) b.getY())));
-			Element bsX = dom.createElement("speedX");
-			bsX.appendChild(dom.createTextNode(Integer.toString((int) b.getSpeedX())));
-			Element bsY = dom.createElement("speedY");
-			bsY.appendChild(dom.createTextNode(Integer.toString((int) b.getSpeedY())));
-			Element bs = dom.createElement("size");
-			bs.appendChild(dom.createTextNode(Integer.toString(b.getSize())));
-			
-			be.appendChild(bx);
-			be.appendChild(by);
-			be.appendChild(bsX);
-			be.appendChild(bsY);
-			be.appendChild(bs);
-			res.appendChild(be);
+			Ball b = balls.get(i);
+			res.appendChild(b.getDomRepresentation(dom, i));
 		}
 		return res;
 	}
 	
 	/**
 	 * Helper for the writeWalls() method. This method contains the shared data of both walls.
-	 * @param i
+	 * @param i wall id
 	 */
 	private void walls(int i) {	
 		Wall w = walls.get(i);
@@ -135,7 +116,7 @@ public class LevelWriter {
 	
 	/**
 	 * Writes the walls to the xml file.
-	 * @return
+	 * @return walls element
 	 */
 	private Element writeWalls() {
 		Element res = dom.createElement("wallList");
@@ -179,7 +160,7 @@ public class LevelWriter {
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        dom = db.newDocument();
 	        Element rootEle = dom.createElement("level");
-	        e = dom.createElement("time");
+	        Element e = dom.createElement("time");
 	        e.appendChild(dom.createTextNode(time));
 	        rootEle.appendChild(e);
 	        if (players.size() > 0) {

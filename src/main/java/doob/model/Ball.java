@@ -1,8 +1,11 @@
 package doob.model;
 
+import doob.util.TupleTwo;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Class to represent a ball.
@@ -153,6 +156,36 @@ public void setY(double y) {
 
   public void setSpeedY(double speedY) {
     this.speedY = speedY;
+  }
+
+  /**
+   * Gives the representation as DOM for this ball.
+   * @param dom the current context Document
+   * @param id current ball id
+   * @return DOM element containing the data
+   */
+  public Element getDomRepresentation(Document dom, int id) {
+
+    Element be = dom.createElement("ball");
+    be.setAttribute("id", Integer.toString(id));
+
+    Element bx = dom.createElement("x");
+    bx.appendChild(dom.createTextNode(Integer.toString((int) x)));
+    Element by = dom.createElement("y");
+    by.appendChild(dom.createTextNode(Integer.toString((int) y)));
+    Element bsX = dom.createElement("speedX");
+    bsX.appendChild(dom.createTextNode(Integer.toString((int) speedX)));
+    Element bsY = dom.createElement("speedY");
+    bsY.appendChild(dom.createTextNode(Integer.toString((int) speedY)));
+    Element bs = dom.createElement("size");
+    bs.appendChild(dom.createTextNode(Integer.toString(size)));
+
+    be.appendChild(bx);
+    be.appendChild(by);
+    be.appendChild(bsX);
+    be.appendChild(bsY);
+    be.appendChild(bs);
+    return be;
   }
 
   /**
