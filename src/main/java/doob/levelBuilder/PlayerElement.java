@@ -14,7 +14,7 @@ public class PlayerElement extends DoobElement {
 	public static final int PLAYER_HEIGHT = 72;
 	public static final int PLAYER_Y = 575;
 	public static final int MAX_PLAYERS = 2;
-	
+
 	private int width;
 	private int height;
 	
@@ -47,5 +47,11 @@ public class PlayerElement extends DoobElement {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	@Override
+	public boolean liesInside(double x, double y) {
+		return (x >= this.x && x < this.x + this.width
+				&& y >= this.y && y < this.y + this.height);
 	}
 }

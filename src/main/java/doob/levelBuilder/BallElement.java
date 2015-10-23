@@ -35,27 +35,21 @@ public class BallElement extends DoobElement {
 		setY(event.getSceneY() - LevelBuilderController.PANE_Y - size / 2);
 	}
 
-	public int getSize() {
-		return size;
+	@Override
+	public boolean liesInside(double x, double y) {
+		return (x >= this.x && x < this.x + this.size
+				&& y >= this.y && y < this.y + this.size);
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public int getSize() {
+		return size;
 	}
 
 	public double getSpeedX() {
 		return speedX;
 	}
 
-	public void setSpeedX(double speedX) {
-		this.speedX = speedX;
-	}
-
 	public double getSpeedY() {
 		return speedY;
-	}
-
-	public void setSpeedY(double speedY) {
-		this.speedY = speedY;
 	}
 }

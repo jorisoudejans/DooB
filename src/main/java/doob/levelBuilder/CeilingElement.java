@@ -32,6 +32,12 @@ public class CeilingElement extends DoobElement {
 		setY(event.getSceneY() - LevelBuilderController.PANE_Y - CeilingElement.CEILING_HEIGHT / 2);
 	}
 
+	@Override
+	public boolean liesInside(double x, double y) {
+		return (x >= this.x && x < this.x + this.width
+				&& y >= this.y && y < this.y + this.height);
+	}
+
 	public int getWidth() {
 		return width;
 	}
