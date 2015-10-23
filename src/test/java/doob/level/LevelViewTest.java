@@ -10,11 +10,11 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 /**
- * Class to test ObjectDrawer. Can not test Draw because of Graphics.
+ * Class to test LevelView. Can not test Draw because of Graphics.
  */
-public class ObjectDrawerTest {
+public class LevelViewTest {
 
-    ObjectDrawer objectDrawer;
+    LevelView levelView;
 
     private Level level;
 
@@ -40,7 +40,7 @@ public class ObjectDrawerTest {
     @Before
     public void setUp() {
         level = mock(Level.class);
-        objectDrawer = new ObjectDrawer(null, level);
+        levelView = new LevelView(null, level);
 
         setUpPlayers();
         setUpBalls();
@@ -98,7 +98,7 @@ public class ObjectDrawerTest {
      */
     @Test
     public void testMove() {
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(ball1).move();
         verify(ball2).move();
     }
@@ -110,7 +110,7 @@ public class ObjectDrawerTest {
     public void testPlayerMoveAlive() {
         when(player1.isAlive()).thenReturn(true);
         when(player2.isAlive()).thenReturn(true);
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(player1).move();
         verify(player2).move();
     }
@@ -121,7 +121,7 @@ public class ObjectDrawerTest {
     @Test
     public void testPlayerMoveDead() {
         when(player1.isAlive()).thenReturn(false);
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(player1, never()).move();
     }
 
@@ -132,7 +132,7 @@ public class ObjectDrawerTest {
     public void testWallMoveMoveable() {
         when(wall1.isMoveable()).thenReturn(true);
         when(wall2.isMoveable()).thenReturn(true);
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(wall1).move();
         verify(wall2).move();
     }
@@ -143,7 +143,7 @@ public class ObjectDrawerTest {
     @Test
     public void testWallMoveNotMoveable() {
         when(wall1.isMoveable()).thenReturn(false);
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(wall1, never()).move();
     }
 
@@ -157,7 +157,7 @@ public class ObjectDrawerTest {
         when(projectile2.getState()).thenReturn(Projectile.State.NORMAL);
         when(player1.isAlive()).thenReturn(true);
         when(player2.isAlive()).thenReturn(true);
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         verify(projectile1).move();
         verify(projectile2).move();
     }
@@ -167,7 +167,7 @@ public class ObjectDrawerTest {
      */
     @Test
     public void testProjectileFrozen() {
-        objectDrawer.move(players, balls, walls);
+        levelView.move(players, balls, walls);
         when(level.isProjectileFreeze()).thenReturn(true);
         when(projectile1.getState()).thenReturn(Projectile.State.FROZEN);
         when(projectile2.getState()).thenReturn(Projectile.State.FROZEN);

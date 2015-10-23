@@ -1,13 +1,9 @@
 package doob.level;
 
+import doob.model.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import doob.DLog;
-import doob.model.Ball;
-import doob.model.Level;
-import doob.model.Player;
-import doob.model.Projectile;
-import doob.model.Wall;
 import doob.model.powerup.PowerUp;
 import doob.util.TupleTwo;
 
@@ -235,7 +231,7 @@ public class CollisionResolver {
 		}
 
 		if (walls.t0 == level.getLeft() && walls.t1 == level.getRight()
-				&& !level.isSurvival()) {
+				&& !(level instanceof SurvivalLevel)) {
 			level.onEvent(Level.Event.ALL_BALLS_GONE);
 			level.stopTimer();
 			level.continueNextLevel();

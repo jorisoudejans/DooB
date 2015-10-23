@@ -1,10 +1,12 @@
 package doob.game;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import doob.App;
+import doob.DLog;
+import doob.controller.OptionsController;
+import doob.level.LevelFactory;
+import doob.model.Level;
+import doob.model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -16,26 +18,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import doob.App;
-import doob.DLog;
-import doob.controller.OptionsController;
-import doob.level.LevelObserver;
-import doob.model.Level;
-import doob.model.Player;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * Controller for games.
  */
-public abstract class Game implements LevelObserver {
+public abstract class Game implements Observer {
 
 	@FXML
 	protected Canvas canvas;
@@ -204,7 +204,7 @@ public abstract class Game implements LevelObserver {
 					player.die();
 				}
 			}
-			onLevelStateChange(Level.Event.LOST_LIFE);
+			update(null, Level.Event.LOST_LIFE);
 			return;
 		}
 		progressBar.setProgress(progress);
@@ -232,24 +232,33 @@ public abstract class Game implements LevelObserver {
 		}.start();
 	}
 
+
 	public Level getLevel() {
 		return level;
 	}
 
+	/**
+	 * On update of level.
+	 * @param o the level
+	 * @param arg an object
+	 */
 	@Override
-	public void onLevelStateChange(Level.Event event) {
-		switch (event) {
-		case ZERO_LIVES:
-			loadHighscores();
-			break;
-		case ALL_BALLS_GONE:
-			onAllBallsGone();
-			break;
-		case LOST_LIFE:
-			newLevel();
-			break;
-		default:
-			break;
+	public void update(Observable o, Object arg) {
+		if (arg instanceof Level.Event) {
+			Level.Event event = (Level.Event) arg;
+			switch (event) {
+				case ZERO_LIVES:
+					//App.loadHighscoreScene(score, score2, gameMode);
+					break;
+				case ALL_BALLS_GONE:
+					onAllBallsGone();
+					break;
+				case LOST_LIFE:
+					newLevel();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -287,11 +296,32 @@ public abstract class Game implements LevelObserver {
 	 * Updates the score every gamestep.
 	 */
 	public abstract void updateScore();
+
+	public abstract void newLevel();
 	
 	/**
 	 * Resets the level depending on currentLevel. Only keeps amount of lives.
+	 * @param type the level type
 	 */
-	public abstract void newLevel();
+	public void newLevel(String type) {
+		List<Player> players = null;
+		if (level != null) {
+			level.stopTimer();
+			players = level.getPlayers();
+		}
+		level = new LevelFactory(levelList.get(currentLevel), canvas, type).build();
+		level.addObserver(this);
+		if (players != null) {
+			for (int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				int lives = p.getLives();
+				int score = p.getScore();
+				level.getPlayers().get(i).setLives(lives);
+				level.getPlayers().get(i).setScore(score);
+			}
+		}
+		readOptions();
+	}
 	
 	/**
 	 * Show the highscores.

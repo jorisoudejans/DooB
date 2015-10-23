@@ -1,5 +1,6 @@
 package doob.game;
 
+import doob.util.BoundsTuple;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
@@ -31,25 +32,12 @@ public class SinglePlayerGame extends Game {
 		score = level.getPlayers().get(0).getScore();
 		scoreTextView1.setText(score + "");
 	}
-	
+
 	@Override
 	public void newLevel() {
-		Player p = null;
-		if (level != null) {
-			level.stopTimer();
-			p = level.getPlayers().get(0);
-		}
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.addObserver(this);
-		if (p != null) {
-			int lives = p.getLives();
-			int score = p.getScore();
-			level.getPlayers().get(0).setLives(lives);
-			level.getPlayers().get(0).setScore(score);
-		}
-		readOptions();
+		super.newLevel("single");
 	}
-	
+
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();

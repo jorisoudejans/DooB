@@ -1,48 +1,35 @@
 package doob.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-
 import doob.DLog;
 import doob.level.CollisionManager;
 import doob.level.CollisionResolver;
-import doob.level.LevelObserver;
-import doob.level.ObjectDrawer;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
+import doob.util.BoundsTuple;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 /**
  * Level class, created from LevelFactory.
  */
-public class Level {
+public abstract class Level extends Observable {
 
     private DLog dLog;
 
-    private Canvas canvas;
-
-    private ArrayList<Ball> balls;
-    private ArrayList<Player> players;
-    private ArrayList<Wall> walls;
+    private List<Ball> balls;
+    private List<Player> players;
+    private List<Wall> walls;
     private double currentTime;
     private int time;
     public static final int PROJECTILE_START_SPEED = 12;
     public static final long FREEZE_TIME = 2000;
     public static final int PROJECTILE_WIDTH = 7;
-    private static final int DIFFICULTY_TIME = 1000;
-    private static final int SMALLEST_BALL_SIZE = 16;
-    private static final int NUMBER_POSSIBLE_BALLS = 5;
 
     private AnimationTimer timer;
 
@@ -53,19 +40,15 @@ public class Level {
     private Wall ceiling;
     private Wall floor;
 
+    private BoundsTuple bounds;
+
     private boolean ballFreeze;
     private boolean projectileFreeze;
 
     private PowerUpManager powerUpManager;
     private CollisionManager collisionManager;
-    private ObjectDrawer objectDrawer;
-
-    private List<LevelObserver> observers;
 
     private Event lastEvent = Event.NULL;
-
-    private boolean survival = false;
-    private int nextWaveHP = 0;
 
     /**
      * States the Level can have.
@@ -78,42 +61,23 @@ public class Level {
     }
 
     /**
-     * Initialize javaFx.
-     *
-     * @param canvas
-     *          the canvas to be drawn upon.
+     * Init new level with size bounds.
+     * @param bounds width and height
      */
-    public Level(Canvas canvas) {
+    public Level(BoundsTuple bounds) {
         dLog = DLog.getInstance();
-        this.canvas = canvas;
+        this.bounds = bounds;
         createTimer();
         ballFreeze = false;
         projectileFreeze = false;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        canvas.setFocusTraversable(true);
-        canvas.setOnKeyPressed(new KeyPressHandler());
-
-        observers = new ArrayList<LevelObserver>();
 
         powerUpManager = new PowerUpManager(this);
         collisionManager = new CollisionManager(this, new CollisionResolver(this));
-        objectDrawer = new ObjectDrawer(gc, this);
-
-        canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent key) {
-            	for (Player p : players) {
-            		if (p.isAlive()) {
-	            		if (p.getControlKeys().isMoveKey(key.getCode())) {
-	                    	p.setSpeed(0);
-	                	}
-            		}
-            	}
-            }
-        });
-
-        canvas.requestFocus();
     }
 
+    /**
+     * Create animation timer.
+     */
     private void createTimer() {
         timer = new AnimationTimer() {
             @Override
@@ -133,7 +97,7 @@ public class Level {
     public void shoot(Player player) {
         if (player.getProjectiles().size() < 1) {
         	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2 
-            		 - PROJECTILE_WIDTH, canvas.getHeight(), PROJECTILE_START_SPEED));
+            		 - PROJECTILE_WIDTH, bounds.getHeight(), PROJECTILE_START_SPEED));
             dLog.info(player.toString() + " shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }
     }
@@ -165,86 +129,16 @@ public class Level {
     public void update() {
         collisionManager.detectCollisions();
         powerUpManager.onUpdate(currentTime);
-        objectDrawer.draw(players, balls, walls, powerUpManager, lastEvent);
-        objectDrawer.move(players, balls, walls);
-        if (survival) {
-            updateSurvival();
-        } else {
-            currentTime -= 1;
-        }
+        setChanged();
+        notifyObservers(this.lastEvent);
+        currentTime += getTimeMutation();
     }
 
     /**
-     * Update level when in survival mode.
+     * Time mutation for the cycle in this level.
+     * @return int the time should be mutated with
      */
-    private void updateSurvival() {
-        currentTime += 1;
-        if (currentTime > DIFFICULTY_TIME) {
-            currentTime -= DIFFICULTY_TIME;
-            nextWaveHP++;
-        }
-        if (totalBallHitpoints() <= nextWaveHP) {
-            spawnBalls(System.currentTimeMillis());
-        }
-    }
-
-    /**
-     * Spawns a randomly selected set of balls.
-     * @param seed the random seed
-     */
-    public void spawnBalls(long seed) {
-
-        Random generator = new Random(seed);
-        int i = Math.abs(generator.nextInt() % 4);
-
-        spawnSameSizeBalls(4 - i, (int) (8 * Math.pow(2, i + 1)));
-    }
-
-    /**
-     * calculates the amount of time you would need to hit all the
-     * balls in order for them to all be gone.
-     * @return the sum of hitpoints the balls have
-     */
-    public int totalBallHitpoints() {
-        int sum = 0;
-        for (Ball b: balls) {
-            sum += ballHitpoints(0, b.getSize());
-        }
-        return sum;
-    }
-
-    /**
-     * Calculates the amount of times a ball would
-     * need to be hit to be gone.
-     * @param sum current sum of hitpoints
-     * @param size current size of ball
-     * @return total sum of hitpoints
-     */
-    public static int ballHitpoints(int sum, int size) {
-        if (size <= SMALLEST_BALL_SIZE) {
-            return sum + 1;
-        }
-        return 1 + 2 * ballHitpoints(sum, size / 2);
-    }
-
-    /**
-     * Spawns an amount of balls of the same size equally spaced out.
-     * @param amount The amount of balls to spawn
-     * @param size The size of the balls
-     */
-    public void spawnSameSizeBalls(int amount, int size) {
-        double y = canvas.getHeight() / 4;
-        for (int i = 0; i < amount; i++) {
-            int direction;
-            direction = (int) (Math.pow(
-                    -1,
-                    (int) Math.round(Math.random() * 10)) * 2
-            );
-            double x = canvas.getWidth() / (amount + 1) * (i + 1);
-            Ball ball = new Ball(x, y, direction, 0, size);
-            this.balls.add(ball);
-        }
-    }
+    abstract int getTimeMutation();
 
     /**
      * Stop timer.
@@ -283,22 +177,6 @@ public class Level {
      */
     public void addBall(Ball ball) {
         balls.add(ball);
-    }
-    
-    /**
-     * Add an observer to level.
-     * @param observer to add.
-     */
-    public void addObserver(LevelObserver observer) {
-        observers.add(observer);
-    }
-    /**
-     * Notify all observers of an event.
-     */
-    private void notifyObservers() {
-        for (LevelObserver observer : observers) {
-            observer.onLevelStateChange(lastEvent);
-        }
     }
     
     /**
@@ -346,11 +224,11 @@ public class Level {
         this.floor = floor;
     }
 
-    public void setBalls(ArrayList<Ball> balls) {
+    public void setBalls(List<Ball> balls) {
         this.balls = balls;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
@@ -378,19 +256,19 @@ public class Level {
         this.currentTime = currentTime;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public ArrayList<Ball> getBalls() {
+    public List<Ball> getBalls() {
         return balls;
     }
 
-    public ArrayList<Wall> getWalls() {
+    public List<Wall> getWalls() {
         return walls;
     }
 
-    public void setWalls(ArrayList<Wall> walls) {
+    public void setWalls(List<Wall> walls) {
         this.walls = walls;
     }
 
@@ -414,148 +292,12 @@ public class Level {
         return powerUpManager.getCollidables();
     }
 
-    public boolean isSurvival() {
-        return survival;
-    }
-
-    public void setSurvival(boolean survival) {
-        this.survival = survival;
-    }
-
-    public CollisionManager getCollisionManager() {
-		return collisionManager;
-	}
-
 	/**
      * Continues to next level immediately after event.
      */
     public void continueNextLevel() {
-        notifyObservers();
-    }
-
-    /**
-     * Handler for key presses.
-     */
-    private class KeyPressHandler implements EventHandler<KeyEvent> {
-
-        public void handle(KeyEvent key) {
-        	for (Player p : players) {
-        		if (p.isAlive()) {
-                    Player.ControlKeys.Action action = p.getControlKeys().determineAction(
-                    		key.getCode());
-                    switch (action) {
-                        case RIGHT:
-                            p.setSpeed(p.getMoveSpeed());
-                            break;
-                        case LEFT:
-                            p.setSpeed(-p.getMoveSpeed());
-                            break;
-                        case SHOOT:
-                            shoot(p);
-                            break;
-                        default:
-                            break;
-                    }
-        		}
-        	}
-        }
-    }
-
-    /**
-     * Class that assists in building level.
-     */
-    public static class Builder {
-
-        private Canvas canvas;
-        private ArrayList<Ball> balls;
-        private ArrayList<Player> players;
-        private ArrayList<Wall> walls;
-        private int time;
-
-        /**
-         * Canvas setter.
-         * @param canvas canvas
-         * @return the Builder-object
-         */
-        public Builder setCanvas(Canvas canvas) {
-            this.canvas = canvas;
-            return this;
-        }
-
-        /**
-         * Time setter.
-         * @param time time
-         * @return the Builder-object
-         */
-        public Builder setTime(int time) {
-            this.time = time;
-            return this;
-        }
-
-        /**
-         * Balls setter.
-         * @param balls balls
-         * @return the Builder-object
-         */
-        public Builder setBalls(ArrayList<Ball> balls) {
-            this.balls = balls;
-            return this;
-        }
-
-        /**
-         * Walls setter.
-         * @param walls walls
-         * @return the Builder-object
-         */
-        public Builder setWalls(ArrayList<Wall> walls) {
-            this.walls = walls;
-            return this;
-        }
-
-        /**
-         * Player setter.
-         * @param players players
-         * @return the Builder-object
-         */
-        public Builder setPlayers(ArrayList<Player> players) {
-            this.players = players;
-            return this;
-        }
-
-        /**
-         * Builds the level.
-         * @return level
-         */
-        public Level build() {
-            Level level = new Level(canvas);
-            Wall right = new Wall((int) canvas.getWidth(), 0, 1, (int) canvas.getHeight());
-            Wall left = new Wall(0, 0, 1, (int) canvas.getHeight());
-            Wall ceiling = new Wall(0, 0, (int) canvas.getWidth(), 1);
-            Wall floor = new Wall(0, (int) canvas.getHeight(), (int) canvas.getWidth(), 1);
-
-            level.setLeft(left);
-            level.setRight(right);
-            level.setCeiling(ceiling);
-            level.setFloor(floor);
-
-            Collections.sort(walls, new Comparator<Wall>() {
-                @Override
-                public int compare(Wall w1, Wall w2) {
-                    return Integer.compare(w1.getX(), w2.getX());
-                }
-            });
-
-            walls.add(right);
-            walls.add(0, left);
-            walls.add(floor);
-            walls.add(ceiling);
-            level.setBalls(balls);
-            level.setPlayers(players);
-            level.setWalls(walls);
-            level.setTime(time);
-            level.setCurrentTime(time);
-            return level;
-        }
+        setChanged();
+        notifyObservers(this.lastEvent);
     }
 
 }

@@ -1,6 +1,7 @@
 package doob.model;
 
 import doob.level.LevelFactory;
+import doob.util.BoundsTuple;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class LevelFactoryTest {
     @Test
     public void testBuildLevelSimple() throws Exception {
 
-        levelFactory = new LevelFactory(getClass().getResource("/level/simple.xml").getPath(), canvas);
+        levelFactory = new LevelFactory(getClass().getResource("/level/simple.xml").getPath(), canvas, "single");
         levelFactory.setPlayerImages(new Image[] { null, null, null });
         Level level = levelFactory.build();
 
@@ -40,7 +41,7 @@ public class LevelFactoryTest {
     @Test
     public void testBuildLevelBall1() throws Exception {
 
-        levelFactory = new LevelFactory(getClass().getResource("/level/ball1.xml").getPath(), canvas);
+        levelFactory = new LevelFactory(getClass().getResource("/level/ball1.xml").getPath(), canvas, "single");
         levelFactory.setPlayerImages(new Image[] { null, null, null });
         Level level = levelFactory.build();
 

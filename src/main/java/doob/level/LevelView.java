@@ -1,10 +1,15 @@
 package doob.level;
 
+import doob.controller.LevelController;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import doob.model.Ball;
 import doob.model.Level;
@@ -15,23 +20,47 @@ import doob.model.Wall;
 /**
  * Created on 16/10/15 by Joris.
  */
-public class ObjectDrawer {
+public class LevelView implements Observer {
 
     private GraphicsContext gc;
     private Canvas canvas;
     private Level level;
 
     /**
-     * Construct new ObjectDrawer.
+     * Construct new LevelView.
      * @param gc graphicsContext to draw upon
      * @param level level
      */
-    public ObjectDrawer(GraphicsContext gc, Level level) {
+    public LevelView(GraphicsContext gc, final Level level) {
         this.gc = gc;
         if (gc != null) {
             this.canvas = gc.getCanvas();
+            this.canvas.setFocusTraversable(true);
+
+
+            canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                public void handle(KeyEvent key) {
+                    for (Player p : level.getPlayers()) {
+                        if (p.isAlive()) {
+                            if (p.getControlKeys().isMoveKey(key.getCode())) {
+                                p.setSpeed(0);
+                            }
+                        }
+                    }
+                }
+            });
+
+            canvas.requestFocus();
         }
         this.level = level;
+    }
+
+    /**
+     * Adds the given controller as a listener for user input. (key presses)
+     * @param controller the level controller
+     */
+    public void setLevelController(LevelController controller) {
+        this.canvas.setOnKeyPressed(controller);
     }
 
     /**
@@ -169,4 +198,19 @@ public class ObjectDrawer {
                 canvas.getHeight() / 2 - i.getHeight());
     }
 
+    /**
+     * Updates the level view.
+     * @param o the level object
+     * @param arg optional argument Level.Event
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        Level level = (Level) o;
+        Level.Event event = Level.Event.NULL;
+        if (arg instanceof Level.Event) {
+            event = (Level.Event) arg;
+        }
+        draw(level.getPlayers(), level.getBalls(), level.getWalls(), level.getPowerUpManager(), event);
+        move(level.getPlayers(), level.getBalls(), level.getWalls());
+    }
 }

@@ -2,6 +2,9 @@ package doob.game;
 
 import java.util.ArrayList;
 
+import doob.controller.LevelController;
+import doob.level.LevelView;
+import doob.util.BoundsTuple;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
@@ -35,28 +38,12 @@ public class CoopGame extends Game {
 		score = level.getPlayers().get(0).getScore() + level.getPlayers().get(1).getScore();
 		scoreTextView1.setText(score + "");
 	}
-	
+
 	@Override
 	public void newLevel() {
-		ArrayList<Player> players = null;
-		if (level != null) {
-			level.stopTimer();
-			players = level.getPlayers();
-		}
-		level = new LevelFactory(levelList.get(currentLevel), canvas).build();
-		level.addObserver(this);
-		if (players != null) {
-			for (int i = 0; i < players.size(); i++) {
-				Player p = players.get(i);
-				int lives = p.getLives();
-				int score = p.getScore();
-				level.getPlayers().get(i).setLives(lives);
-				level.getPlayers().get(i).setScore(score);
-			}
-		}
-		readOptions();
+		super.newLevel("coop");
 	}
-	
+
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
