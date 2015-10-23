@@ -13,7 +13,6 @@ public class SurvivalLevel extends Level {
     private int nextWaveHP = 0;
     private static final int DIFFICULTY_TIME = 1000;
     private static final int SMALLEST_BALL_SIZE = 16;
-    private static final int NUMBER_POSSIBLE_BALLS = 5;
     private BoundsTuple bounds;
 
     /**

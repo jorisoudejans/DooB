@@ -15,12 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-
-
 /**
  * Level class, created from LevelFactory.
  */
-public class Level extends Observable {
+public abstract class Level extends Observable {
 
     private DLog dLog;
 
@@ -140,9 +138,7 @@ public class Level extends Observable {
      * Time mutation for the cycle in this level.
      * @return int the time should be mutated with
      */
-    protected int getTimeMutation() {
-        return -1;
-    }
+    abstract int getTimeMutation();
 
     /**
      * Stop timer.

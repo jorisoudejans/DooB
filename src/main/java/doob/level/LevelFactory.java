@@ -210,7 +210,7 @@ public class LevelFactory {
 
         Level level = null;
         if (type.equals("coop") || type.equals("duel") || type.equals("single")) {
-            level = new Level(bounds);
+            level = new CampaignLevel(bounds);
         } else if (type.equals("survival")) {
             level = new SurvivalLevel(bounds);
         }

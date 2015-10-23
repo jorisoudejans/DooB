@@ -3,29 +3,43 @@ package doob.model;
 import doob.util.BoundsTuple;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for Survival Level.
  */
+// Lots of numbers needed for integer testing.
+@SuppressWarnings("magicnumber")
 public class SurvivalLevelTest extends LevelTest {
 
-    /**
-     * Get appropriate Level.
-     * @param bounds dimensions of Level
-     * @return survival level
-     */
-    @Override
-    protected SurvivalLevel getLevel(BoundsTuple bounds) {
-        return new SurvivalLevel(bounds);
-    }
+    private SurvivalLevel level;
 
     /**
-     * Test constructor for errors.
+     * Set up testable level.
      */
-    @Test
-    public void testBasic() {
+    public void setUp() {
+        level = new SurvivalLevel(new BoundsTuple(CANVAS_DIMENSION, CANVAS_DIMENSION));
+        Wall wall1 = mock(Wall.class);
+        Wall wall2 = mock(Wall.class);
+        List<Wall> walls = new ArrayList<Wall>();
+        walls.add(wall1);
+        walls.add(wall2);
 
+        Player player1 = mock(Player.class);
+        Player player2 = mock(Player.class);
+        List<Player> players = new ArrayList<Player>();
+        players.add(player1);
+        players.add(player2);
+
+        List<Ball> balls = new ArrayList<Ball>();
+
+        level.setPlayers(players);
+        level.setWalls(walls);
+        level.setBalls(balls);
     }
 
     /**
@@ -33,7 +47,7 @@ public class SurvivalLevelTest extends LevelTest {
      */
     @Test
     public void testSpawnSameSizeBalls1() {
-        ((SurvivalLevel) level).spawnSameSizeBalls(3, 32);
+        level.spawnSameSizeBalls(3, 32);
 
         assertEquals((double) 250, level.getBalls().get(0).getX(), 1);
         assertEquals((double) 750, level.getBalls().get(2).getX(), 1);
@@ -44,7 +58,7 @@ public class SurvivalLevelTest extends LevelTest {
      */
     @Test
     public void testSpawnSameSizeBalls2() {
-        ((SurvivalLevel) level).spawnSameSizeBalls(2, 64);
+        level.spawnSameSizeBalls(2, 64);
 
         assertEquals(2, level.getBalls().size());
         assertEquals((double) 250, level.getBalls().get(0).getY(), 1);
@@ -55,7 +69,7 @@ public class SurvivalLevelTest extends LevelTest {
      */
     @Test
     public void testSpawnBalls1() {
-        ((SurvivalLevel) level).spawnBalls(98);
+        level.spawnBalls(98);
         assertEquals(3, level.getBalls().size());
         assertEquals(32, level.getBalls().get(0).getSize());
     }
@@ -65,7 +79,7 @@ public class SurvivalLevelTest extends LevelTest {
      */
     @Test
     public void testSpawnBalls2() {
-        ((SurvivalLevel) level).spawnBalls(100);
+        level.spawnBalls(100);
         assertEquals(2, level.getBalls().size());
         assertEquals(64, level.getBalls().get(0).getSize());
     }
@@ -76,6 +90,14 @@ public class SurvivalLevelTest extends LevelTest {
     @Test
     public void testGetTimeMutation() {
         assertEquals(level.getTimeMutation(), 1);
+    }
+
+    /**
+     * Get tested level.
+     * @return level
+     */
+    public Level getLevel() {
+        return level;
     }
 
 }
