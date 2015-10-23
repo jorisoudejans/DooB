@@ -3,7 +3,7 @@
     <time>2000</time>
     <playerList>
         <player id="1">
-            <x>267</x>
+            <x>65</x>
             <y>575</y>
             <width>50</width>
             <height>72</height>
@@ -11,16 +11,23 @@
     </playerList>
     <ballList>
         <ball id="1">
-            <x>659</x>
-            <y>148</y>
+            <x>71</x>
+            <y>69</y>
             <speedX>2</speedX>
             <speedY>0</speedY>
             <size>128</size>
         </ball>
+        <ball id="2">
+            <x>646</x>
+            <y>143</y>
+            <speedX>2</speedX>
+            <speedY>0</speedY>
+            <size>32</size>
+        </ball>
     </ballList>
     <wallList>
         <wall id="1">
-            <x>85</x>
+            <x>433</x>
             <y>0</y>
             <width>100</width>
             <height>650</height>

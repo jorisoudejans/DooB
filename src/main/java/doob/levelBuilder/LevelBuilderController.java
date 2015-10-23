@@ -170,10 +170,16 @@ public class LevelBuilderController {
 		setOnPlayerDragDropped();
 	}
 
+	/**
+	 * Initialize dragging on the canvas.
+	 */
 	public void initializeCanvasDrag() {
 		setOnCanvasDragDetected();
 	}
 
+	/**
+	 * Function to trigger when a drag on the canvas is detected.
+	 */
 	public void setOnCanvasDragDetected() {
 		panelCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
@@ -430,6 +436,10 @@ public class LevelBuilderController {
 		});
 	}
 	
+	/**
+	 * When a ball is dragged.
+	 * @param event the event of the dragging.
+	 */
 	public void handleOnBallDrag(MouseEvent event) {
 		panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
 				panelgc.getCanvas().getHeight());
@@ -442,6 +452,10 @@ public class LevelBuilderController {
 		}
 	}
 	
+	/**
+	 * When a wall is dragged.
+	 * @param event the event of the dragging.
+	 */
 	public void handleOnWallDrag(MouseEvent event) {
 		panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
 				panelgc.getCanvas().getHeight());
@@ -452,6 +466,10 @@ public class LevelBuilderController {
 		}
 	}
 	
+	/**
+	 * When a ceiling is dragged.
+	 * @param event the dragging of the ceiling.
+	 */
 	public void handleOnCeilingDrag(MouseEvent event) {
 		panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
 				panelgc.getCanvas().getHeight());
@@ -462,6 +480,10 @@ public class LevelBuilderController {
 		}
 	}
 	
+	/**
+	 * When a player is dragged.
+	 * @param event the drag of the player.
+	 */
 	public void handleOnPlayerDrag(MouseEvent event) {
 		panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
 				panelgc.getCanvas().getHeight());

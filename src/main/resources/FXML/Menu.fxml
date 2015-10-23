@@ -12,7 +12,7 @@
       <Button layoutX="351.0" layoutY="234.0" mnemonicParsing="false" onAction="#playCoopMode" prefHeight="60.0" prefWidth="300.0" text="Coop mode" />
       <Button layoutX="351.0" layoutY="305.0" mnemonicParsing="false" onAction="#playSurvivalMode" prefHeight="60.0" prefWidth="300.0" text="Survival mode" />
 	  
-	  <Button layoutX="351.0" layoutY="518.0" mnemonicParsing="false" onAction="#playCustom" prefHeight="60.0" prefWidth="300.0" text="Play the custom levels." />
+	  <Button layoutX="351.0" layoutY="518.0" mnemonicParsing="false" onAction="#playCustom" prefHeight="60.0" prefWidth="300.0" text="Play the custom levels" />
       <Button layoutX="351.0" layoutY="587.0" mnemonicParsing="false" onAction="#buildLevel" prefHeight="60.0" prefWidth="300.0" text="Levelbuilder" />
       <Button layoutX="351.0" layoutY="656.0" mnemonicParsing="false" onAction="#showOptions" prefHeight="60.0" prefWidth="300.0" text="Options" />
    </children>

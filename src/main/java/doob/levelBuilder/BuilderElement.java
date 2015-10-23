@@ -8,6 +8,11 @@ public class BuilderElement {
 	
 	private double x, y;
 
+	/**
+	 * Create a builder element.
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 */
 	public BuilderElement(double x, double y) {
 		this.x = x;
 		this.y = y;

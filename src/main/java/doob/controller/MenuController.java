@@ -105,7 +105,8 @@ public class MenuController {
 	 */
 	@FXML
 	public void playCustom() {
-		
+		SinglePlayerGame spg = App.loadScene("/FXML/SinglePlayerGame.fxml").getController();
+		spg.initializeCustom();
 	}
 	
 	/**
