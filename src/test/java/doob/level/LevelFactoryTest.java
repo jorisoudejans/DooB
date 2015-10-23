@@ -97,7 +97,7 @@ public class LevelFactoryTest {
 
         Level level = levelFactory.build();
 
-        Wall wall1 = new Wall(0, 0, 960, 50, 0, 650, 1000, 1, "");
+        Wall wall1 = new Wall(0, 0, 960, 50, 0, 650, 1000, 1);
         Wall wall2 = new Wall(440, 0, 80, 650);
 
         assertEquals(wall1, level.getWalls().get(1));
