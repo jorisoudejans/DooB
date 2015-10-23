@@ -135,6 +135,7 @@ public class LevelBuilderController {
 		setOnCeilingDragDetected();
 		setOnWallDragDetected();
 		setOnPlayerDragDetected();
+		setOnRedrag();
 		setOnDragged(ballButton);
 		setOnDragged(ceilingButton);
 		setOnDragged(wallButton);
@@ -143,6 +144,29 @@ public class LevelBuilderController {
 		setOnDragDropped(ceilingButton);
 		setOnDragDropped(wallButton);
 		setOnDragDropped(playerView);
+		setOnDragDropped(panelCanvas);
+	}
+	
+	/**
+	 * Initialize how to handle when an element is dragged again.
+	 */
+	public void setOnRedrag() {
+		panelCanvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (getElement(event.getX(), event.getY()) != null) {
+					de = getElement(event.getX(), event.getY());
+					de.setPlaced(false);
+					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
+							panelgc.getCanvas().getHeight());
+					de.handleDrag(event);
+					for (Observable ov : elementList) {
+						((DoobElement) ov).update();
+					}
+				}
+				event.consume();
+			}
+		});
 	}
 
 	/**
@@ -154,7 +178,6 @@ public class LevelBuilderController {
 			@Override
 			public void handle(MouseEvent event) {
 				if (de != null) {
-					de.setPlaced(false);
 					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
 							panelgc.getCanvas().getHeight());
 					de.handleDrag(event);
@@ -219,6 +242,7 @@ public class LevelBuilderController {
 			if (balls == BallElement.MAX_BALLS) {
 				ballButton.setOnMouseDragged(null);
 				ballButton.setVisible(false);
+				ballSizeChoice.setVisible(false);
 			}
 		}
 	}
