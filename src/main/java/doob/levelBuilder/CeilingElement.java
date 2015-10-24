@@ -1,6 +1,8 @@
 package doob.levelBuilder;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
 
 
 
@@ -13,6 +15,7 @@ public class CeilingElement extends DoobElement {
 	public static final int CEILING_WIDTH = 960;
 	public static final int CEILING_HEIGHT = 100;
 	public static final int CEILING_X = 0;
+	public static final String IMAGE_PATH = "/image/ceiling.png";
 	
 	private int width;
 	private int height;
@@ -20,16 +23,25 @@ public class CeilingElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param y Y coordinate.
+	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public CeilingElement(double y) {
-		super(CEILING_X, y);
+	public CeilingElement(double y, GraphicsContext gc) {
+		super(CEILING_X, y, gc);
 		width = CEILING_WIDTH;
 		height = CEILING_HEIGHT;
+		image = new Image(IMAGE_PATH);
 	}
 	
 	@Override
-	public void handleDrag(MouseEvent event) {
-		setY(event.getSceneY() - LevelBuilderController.PANE_Y - CeilingElement.CEILING_HEIGHT / 2);
+	public void drop(DragEvent event) {
+		setY(event.getY() - image.getHeight() / 2);
+		setX(0);
+		draw();
+	}
+	
+	@Override
+	public void draw() {
+		gc.drawImage(image, x, y);
 	}
 
 	@Override

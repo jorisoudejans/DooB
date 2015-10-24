@@ -1,6 +1,8 @@
 package doob.levelBuilder;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
 
 
 
@@ -11,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 public class BallElement extends DoobElement {
 	
 	public static final int MAX_BALLS = 3;
+
 	private int size;
 	private double speedX, speedY;
 	
@@ -21,18 +24,26 @@ public class BallElement extends DoobElement {
 	 * @param size Size of the ball.
 	 * @param speedX Horizontal speed of the ball.
 	 * @param speedY Initial Vertical speed of the ball.
+	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public BallElement(double x, double y, int size, int speedX, int speedY) {
-		super(x, y);
+	public BallElement(double x, double y, int size, int speedX, int speedY, GraphicsContext gc) {
+		super(x, y, gc);
 		this.size = size;
 		this.speedX = speedX;
 		this.speedY = speedY;
+		image = new Image("/image/balls/ball" + size + ".png");
 	}
 	
 	@Override
-	public void handleDrag(MouseEvent event) {
-		setX(event.getSceneX() - LevelBuilderController.PANE_X - size / 2);
-		setY(event.getSceneY() - LevelBuilderController.PANE_Y - size / 2);
+	public void drop(DragEvent event) {
+		setX(event.getX() - image.getWidth() / 2);
+		setY(event.getY() - image.getHeight() / 2);
+		draw();
+	}
+	
+	@Override
+	public void draw() {
+		gc.drawImage(image, x, y);
 	}
 
 	@Override

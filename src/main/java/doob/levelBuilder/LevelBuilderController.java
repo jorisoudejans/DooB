@@ -3,7 +3,6 @@ package doob.levelBuilder;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Observable;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,8 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,7 +22,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -31,10 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import doob.App;
-import doob.levelBuilder.view.BallElementView;
-import doob.levelBuilder.view.CeilingElementView;
-import doob.levelBuilder.view.PlayerElementView;
-import doob.levelBuilder.view.WallElementView;
 import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
@@ -58,6 +57,7 @@ public class LevelBuilderController {
 	public static final int LAYOUT = 84;
 	public static final int PANE_X = 170;
 	public static final int PANE_Y = 20;
+	public static final int PANE_HEIGHT = 650;
 
 	@FXML
 	private Circle ballButton;
@@ -67,6 +67,8 @@ public class LevelBuilderController {
 	private Rectangle wallButton;
 	@FXML
 	private ImageView playerView;
+	@FXML
+	private ImageView discardView;
 	@FXML
 	private ChoiceBox<Integer> ballSizeChoice;
 	@FXML
@@ -79,18 +81,18 @@ public class LevelBuilderController {
 	private Canvas panelCanvas;
 	@FXML
 	private TextField timeField;
-	private GraphicsContext panelgc;
+	private GraphicsContext gc;
 
 	/**
 	 * Initialize the builder.
 	 */
 	@FXML
 	public void initialize() {
-		panelgc = panelCanvas.getGraphicsContext2D();
+		gc = panelCanvas.getGraphicsContext2D();
 		elementList = new ArrayList<DoobElement>();
 		players = 0;
 		initializeOptions();
-		initializePlayerView();
+		initializeImages();
 		initializeEventHandlers();
 	}
 
@@ -123,8 +125,9 @@ public class LevelBuilderController {
 	/**
 	 * The imageview displays the image of a player.
 	 */
-	public void initializePlayerView() {
+	public void initializeImages() {
 		playerView.setImage(new Image("/image/character0_stand.png"));
+		discardView.setImage(new Image("/image/binclosed.png"));
 	}
 
 	/**
@@ -135,116 +138,96 @@ public class LevelBuilderController {
 		setOnCeilingDragDetected();
 		setOnWallDragDetected();
 		setOnPlayerDragDetected();
-		setOnRedrag();
-		setOnDragged(ballButton);
-		setOnDragged(ceilingButton);
-		setOnDragged(wallButton);
-		setOnDragged(playerView);
-		setOnDragDropped(ballButton);
-		setOnDragDropped(ceilingButton);
-		setOnDragDropped(wallButton);
-		setOnDragDropped(playerView);
-		setOnDragDropped(panelCanvas);
+		setCanvasHandler();
+		setDiscardHandler();
 	}
 	
 	/**
 	 * Initialize how to handle when an element is dragged again.
 	 */
-	public void setOnRedrag() {
-		panelCanvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	public void setCanvasHandler() {
+		panelCanvas.setOnDragOver(new EventHandler<DragEvent>() {
 			@Override
-			public void handle(MouseEvent event) {
-				if (getElement(event.getX(), event.getY()) != null) {
-					de = getElement(event.getX(), event.getY());
-					de.setPlaced(false);
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
-							panelgc.getCanvas().getHeight());
-					de.handleDrag(event);
-					for (Observable ov : elementList) {
-						((DoobElement) ov).update();
-					}
-				}
+			public void handle(DragEvent event) {
+				event.acceptTransferModes(TransferMode.ANY);
 				event.consume();
 			}
-		});
-	}
-
-	/**
-	 * Initialize drag detection, i.e. draw a moving Element.
-	 * @param n The Node where is dragged from.
-	 */
-	public void setOnDragged(final Node n) {
-		n.setOnMouseDragged(new EventHandler<MouseEvent>() {
+		});	
+		panelCanvas.setOnDragDropped(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				de.drop(event);
+				elementList.add(de);
+				event.setDropCompleted(true);
+				event.consume();
+			}
+		});	
+		panelCanvas.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				de = getElement(event.getX(), event.getY());
 				if (de != null) {
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
-							panelgc.getCanvas().getHeight());
-					de.handleDrag(event);
-					for (Observable ov : elementList) {
-						((DoobElement) ov).update();
+					gc.clearRect(0, 0, panelCanvas.getWidth(), panelCanvas.getHeight());
+					de.setPlaced(false);
+					elementList.remove(de);
+					giveContent(panelCanvas, de.getImage());
+					for (DoobElement de : elementList) {
+						de.draw();
 					}
-				} else if (getElement(event.getX(), event.getY()) != null) {
-					de = getElement(event.getX(), event.getY());
-					handle(event);
+					if (de instanceof PlayerElement) {
+						players--;
+					} else if (de instanceof WallElement) {
+						walls--;
+					} else if (de instanceof BallElement) {
+						balls--;
+					}
 				}
+			}
+		});
+	}
+	
+	/**
+	 * Initialize how to handle the bin where elements can be deleted.
+	 */
+	public void setDiscardHandler() {
+		discardView.setOnDragOver(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				event.acceptTransferModes(TransferMode.ANY);
 				event.consume();
 			}
 		});
-	}
-
-	/**
-	 * Initialize dropped detection of the ball element, i.e. check if it is
-	 * within the borders of the game. If so than place it. If not delete it
-	 * from the element list.
-	 */
-	public void setOnDragDropped(final Node n) {
-		n.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+		discardView.setOnDragEntered(new EventHandler<DragEvent>() {
 			@Override
-			public void handle(MouseEvent event) {
-				if (de != null && de.withinBorders(pane)) {
-					de.setPlaced(true);
-					de = null;
-				} else if (de != null) {
-					elementList.remove(de);
-					panelgc.clearRect(0, 0, panelgc.getCanvas().getWidth(),
-							panelgc.getCanvas().getHeight());
-					for (Observable ov : elementList) {
-						((DoobElement) ov).update();
-					}
-				}
-				checkMaxElements(n);
+			public void handle(DragEvent event) {
+				discardView.setImage(new Image("/image/binopen.png"));
+			}
+		});
+		discardView.setOnDragExited(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				discardView.setImage(new Image("/image/binclosed.png"));
+			}
+		});
+		discardView.setOnDragDropped(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				elementList.remove(de);
+				de = null;
 			}
 		});
 	}
-
+	
 	/**
-	 * Check if the maximum of certain elements has been reached.
-	 * Max of 3 balls, 2 walls and 2 players.
-	 * @param n The Node that is dropped from.
+	 * Add the image of the element to the drag event.
+	 * @param n The element to be displayed while dragging.
+	 * @param image The image representing the element.
 	 */
-	public void checkMaxElements(Node n) {
-		if (n.equals(playerView)) {
-			players++;
-			if (players == PlayerElement.MAX_PLAYERS) {
-				playerView.setOnMouseDragged(null);
-				playerView.setVisible(false);
-			}
-		} else if (n.equals(wallButton)) {
-			walls++;
-			if (walls == WallElement.MAX_WALLS) {
-				wallButton.setOnMouseDragged(null);
-				wallButton.setVisible(false);
-				canOpen.setVisible(false);
-			}
-		} else if (n.equals(ballButton)) {
-			balls++;
-			if (balls == BallElement.MAX_BALLS) {
-				ballButton.setOnMouseDragged(null);
-				ballButton.setVisible(false);
-				ballSizeChoice.setVisible(false);
-			}
-		}
+	public void giveContent(Node n, Image image) {
+		Dragboard db = n.startDragAndDrop(TransferMode.ANY);
+		ClipboardContent c = new ClipboardContent();
+		c.putImage(image);
+		db.setContent(c);
 	}
 
 	/**
@@ -255,12 +238,12 @@ public class LevelBuilderController {
 		ballButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				de = new BallElement(event.getSceneX() - pane.getLayoutX()
-						- ballSizeChoice.getValue() / 2, event.getSceneY()
-						- pane.getLayoutY() - ballSizeChoice.getValue() / 2,
-						ballSizeChoice.getValue(), Ball.START_SPEED_X, 0);
-				de.addObserver(new BallElementView((BallElement) de, panelgc));
-				elementList.add(de);
+				if (balls >= BallElement.MAX_BALLS) {
+					return;
+				}
+				balls++;
+				de = new BallElement(0, 0, ballSizeChoice.getValue(), Ball.START_SPEED_X, 0, gc);
+				giveContent(ballButton, de.getImage());
 				event.consume();
 			}
 		});
@@ -274,10 +257,8 @@ public class LevelBuilderController {
 		ceilingButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				de = new CeilingElement(event.getSceneY() - pane.getLayoutY()
-						- CeilingElement.CEILING_HEIGHT / 2);
-				de.addObserver(new CeilingElementView((CeilingElement) de, panelgc));
-				elementList.add(de);
+				de = new CeilingElement(0, gc);
+				giveContent(ceilingButton, de.getImage());
 				event.consume();
 			}
 		});
@@ -291,10 +272,12 @@ public class LevelBuilderController {
 		wallButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				de = new WallElement(event.getSceneX() - pane.getLayoutX()
-						- WallElement.WALL_WIDTH / 2);
-				de.addObserver(new WallElementView((WallElement) de, panelgc));
-				elementList.add(de);
+				if (walls >= WallElement.MAX_WALLS) {
+					return;
+				}
+				walls++;
+				de = new WallElement(0, gc);
+				giveContent(wallButton, de.getImage());
 				event.consume();
 			}
 		});
@@ -308,10 +291,12 @@ public class LevelBuilderController {
 		playerView.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				de = new PlayerElement(event.getSceneX() - pane.getLayoutX()
-						- PlayerElement.PLAYER_WIDTH / 2);
-				de.addObserver(new PlayerElementView((PlayerElement) de, panelgc));
-				elementList.add(de);
+				if (players >= PlayerElement.MAX_PLAYERS) {
+					return;
+				}
+				de = new PlayerElement(0, players, gc);
+				players++;
+				giveContent(playerView, de.getImage());
 				event.consume();
 			}
 		});

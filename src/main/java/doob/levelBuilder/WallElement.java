@@ -1,6 +1,8 @@
 package doob.levelBuilder;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
 
 
 
@@ -14,6 +16,7 @@ public class WallElement extends DoobElement {
 	public static final int WALL_HEIGHT = 650;
 	public static final int WALL_Y = 0;
 	public static final int MAX_WALLS = 2;
+	public static final String IMAGE_PATH = "/image/wall.png";
 	
 	private int width;
 	private int height;
@@ -21,16 +24,25 @@ public class WallElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
+	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public WallElement(double x) {
-		super(x, WALL_Y);
+	public WallElement(double x, GraphicsContext gc) {
+		super(x, WALL_Y, gc);
 		width = WALL_WIDTH;
 		height = WALL_HEIGHT;
+		image = new Image(IMAGE_PATH);
 	}
 	
 	@Override
-	public void handleDrag(MouseEvent event) {
-		setX(event.getSceneX() - LevelBuilderController.PANE_X - WallElement.WALL_WIDTH / 2);
+	public void drop(DragEvent event) {
+		setX(event.getX() - image.getWidth() / 2);
+		setY(0);
+		draw();
+	}
+	
+	@Override
+	public void draw() {
+		gc.drawImage(image, x, y);
 	}
 
 	public int getWidth() {
