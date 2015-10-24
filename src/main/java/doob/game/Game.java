@@ -275,6 +275,14 @@ public abstract class Game implements Observer {
 				}
 			}
 			update(null, Level.Event.LOST_LIFE);
+			level.freeze(new EventHandler<WorkerStateEvent>() {
+	            @Override
+	            public void handle(WorkerStateEvent event) {
+	                level.continueNextLevel();
+	                dLog.info("Lost a life", DLog.Type.STATE);
+	                level.startTimer();
+	            }
+	        });
 			return;
 		}
 		progressBar.setProgress(progress);
