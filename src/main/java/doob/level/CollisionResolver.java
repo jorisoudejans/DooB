@@ -1,9 +1,14 @@
 package doob.level;
 
-import doob.model.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import doob.DLog;
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.SurvivalLevel;
+import doob.model.Wall;
 import doob.model.powerup.PowerUp;
 import doob.util.TupleTwo;
 
@@ -48,20 +53,22 @@ public class CollisionResolver {
 		}
 
 		switch (getHitDirection(player, wall)) {
-		case LEFT:
-			if (playerSpeed >= 0) {
-				stopPlayer(player, wallX - playerWidth);
+			case LEFT:
+				if (playerSpeed >= 0) {
+					stopPlayer(player, wallX - playerWidth);
+				}
+				break;
+			case TOP:
+				killPlayer(player);
+				break;
+			case RIGHT:
+				if (playerSpeed <= 0) {
+					stopPlayer(player, wallX + wallWidth);
+				}
+				break;
+			default: 
+				break;
 			}
-			break;
-		case TOP:
-			killPlayer(player);
-			break;
-		case RIGHT:
-			if (playerSpeed <= 0) {
-				stopPlayer(player, wallX + wallWidth);
-			}
-			break;
-		}
 	}
 
 	/**
@@ -242,7 +249,7 @@ public class CollisionResolver {
 			dLog.info("All balls gone", DLog.Type.STATE);
 		} else if (walls.t0 == level.getLeft()) {
 			walls.t1.setOpen(true);
-		} else if (walls.t1 == level.getLeft()) {
+		} else if (walls.t1 == level.getRight()) {
 			walls.t0.setOpen(true);
 		}
 

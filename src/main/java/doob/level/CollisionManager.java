@@ -7,6 +7,7 @@ import doob.model.Player;
 import doob.model.Projectile;
 import doob.model.Wall;
 import doob.model.powerup.PowerUp;
+import javafx.geometry.Bounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,9 @@ public class CollisionManager {
     }
 
     private boolean collides(Collidable c1, Collidable c2) {
-        return c1 != null && c2 != null && c1.getBounds().getBoundsInParent().intersects(c2.getBounds().getBoundsInParent());
+    	Bounds b = c2.getBounds().getBoundsInParent();
+        return c1 != null && c2 != null 
+        		&& c1.getBounds().getBoundsInParent().intersects(b);
     }
 
 	/**
