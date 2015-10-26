@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<level>
+    <time>2000</time>
+    <playerList>
+        <player id="1">
+            <x>505</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+    </playerList>
+    <ballList>
+    </ballList>
+    <wallList>
+        <wall id="1">
+            <x>0</x>
+            <y>79</y>
+            <width>960</width>
+            <height>100</height>
+            <moveable>1</moveable>
+            <endx>0</endx>
+            <endy>650</endy>
+            <duration>1000</duration>
+            <speed>1</speed>
+        </wall>
+    </wallList>
+</level>

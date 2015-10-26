@@ -88,6 +88,25 @@ public class CollisionResolver {
      */
     private void killPlayer(Player player) {
         player.die();
+        boolean gameOver = true;
+        for (Player p : level.getPlayers()) {
+            if (p.getLives() > 0) {
+                gameOver = false;
+            }
+        }
+        if (gameOver) {
+            level.onEvent(Level.Event.ZERO_LIVES);
+        } else {
+            level.onEvent(Level.Event.LOST_LIFE);
+        }
+        
+        level.freeze(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                level.continueNextLevel();
+                dLog.info("Lost a life", DLog.Type.STATE);
+            }
+        });
     }
 
 	/**
