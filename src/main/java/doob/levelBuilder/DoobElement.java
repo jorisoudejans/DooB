@@ -11,8 +11,8 @@ import javafx.scene.input.DragEvent;
  */
 public abstract class DoobElement extends Observable {
 
-	protected double x;
-	protected double y;
+	protected double xCoord;
+	protected double yCoord;
 	protected boolean placed;
 	protected GraphicsContext gc;
 	protected Image image;
@@ -20,15 +20,15 @@ public abstract class DoobElement extends Observable {
 	/**
 	 * Constructor.
 	 * 
-	 * @param x
+	 * @param xCoord
 	 *            X coordinate.
-	 * @param y
+	 * @param yCoord
 	 *            Y coordinate.
 	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public DoobElement(double x, double y, GraphicsContext gc) {
-		this.x = x;
-		this.y = y;
+	public DoobElement(double xCoord, double yCoord, GraphicsContext gc) {
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
 		this.gc = gc;
 		placed = false;
 	}
@@ -40,12 +40,7 @@ public abstract class DoobElement extends Observable {
 	 *            The drag event that caused the call to this method.
 	 */
 	public abstract void drop(DragEvent event);
-
-	/**
-	 * Draws the element to the canvas.
-	 */
-	public abstract void draw();
-	
+		
 	/**
 	 * Determines if shape lies within border if it was to be dropped at location x,y.
 	 * @param x location x
@@ -53,29 +48,29 @@ public abstract class DoobElement extends Observable {
 	 * @return whether it lies inside
 	 */
 	public abstract boolean liesInside(double x, double y);
-
+	
 	/**
-	 * Pretend the element has changed to be able to notify the observers.
+	 * Pretend the object is changed and notify all observers.
 	 */
-	public void update() {
+	public void change() {
 		setChanged();
 		notifyObservers();
 	}
 	
 	public double getX() {
-		return x;
+		return xCoord;
 	}
 
 	public double getY() {
-		return y;
+		return yCoord;
 	}
 
 	public void setX(double x) {
-		this.x = x;
+		this.xCoord = x;
 	}
 
 	public void setY(double y) {
-		this.y = y;
+		this.yCoord = y;
 	}
 
 	public boolean isPlaced() {

@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
@@ -31,25 +33,35 @@ public class BallElement extends DoobElement {
 		this.size = size;
 		this.speedX = speedX;
 		this.speedY = speedY;
-		image = new Image("/image/balls/ball" + size + ".png");
+		this.image = new Image("/image/balls/ball" + size + ".png");
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
 		setX(event.getX() - image.getWidth() / 2);
 		setY(event.getY() - image.getHeight() / 2);
-		draw();
-	}
-	
-	@Override
-	public void draw() {
-		gc.drawImage(image, x, y);
+		change();
 	}
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.x && x < this.x + this.size
-				&& y >= this.y && y < this.y + this.size);
+		return (x >= this.xCoord && x < this.xCoord + this.size
+				&& y >= this.yCoord && y < this.yCoord + this.size);
+	}
+
+	/**
+	 * Return the amount of elements of this class in the given list.
+	 * @param elementList The list where to check the amount of elements from.
+	 * @return The amount of elements of this class in the list.
+	 */
+	public static int getAmount(ArrayList<DoobElement> elementList) {
+		int res = 0;
+		for (DoobElement el : elementList) {
+			if (el instanceof BallElement) {
+				res++;
+			}
+		}
+		return res;
 	}
 
 	public int getSize() {

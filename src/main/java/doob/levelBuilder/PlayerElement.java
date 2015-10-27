@@ -1,5 +1,7 @@
 package doob.levelBuilder;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
@@ -19,32 +21,40 @@ public class PlayerElement extends DoobElement {
 
 	private int width;
 	private int height;
-	private int player;
 	
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
-	 * @param player Indicates whether this is player 1 or 2.
 	 * @param gc The graphics object that can draw to the canvas.
+	 * @param elementList The list of elements on the canvas.
 ]	 */
-	public PlayerElement(double x, int player, GraphicsContext gc) {
+	public PlayerElement(double x, GraphicsContext gc, ArrayList<DoobElement> elementList) {
 		super(x, PLAYER_Y, gc);
-		this.player = player;
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
-		image = new Image("/image/character" + player + "_stand.png");
+		image = new Image("/image/character" + getAmount(elementList) + "_stand.png");
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
 		setX(event.getX() - image.getWidth() / 2);
 		setY(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
-		draw();
+		change();
 	}
 	
-	@Override
-	public void draw() {
-		gc.drawImage(image, x, y);
+	/**
+	 * Return the amount of elements of this class in the given list.
+	 * @param elementList The list where to check the amount of elements from.
+	 * @return The amount of elements of this class in the list.
+	 */
+	public static int getAmount(ArrayList<DoobElement> elementList) {
+		int res = 0;
+		for (DoobElement el : elementList) {
+			if (el instanceof BallElement) {
+				res++;
+			}
+		}
+		return res;
 	}
 
 	public int getWidth() {
@@ -63,17 +73,9 @@ public class PlayerElement extends DoobElement {
 		this.height = height;
 	}
 
-	public int getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(int player) {
-		this.player = player;
-	}
-
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.x && x < this.x + this.width
-				&& y >= this.y && y < this.y + this.height);
+		return (x >= this.xCoord && x < this.xCoord + this.width
+				&& y >= this.yCoord && y < this.yCoord + this.height);
 	}
 }

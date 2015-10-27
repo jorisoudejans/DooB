@@ -1,7 +1,8 @@
 package doob.levelBuilder;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 
 
@@ -16,7 +17,6 @@ public class WallElement extends DoobElement {
 	public static final int WALL_HEIGHT = 650;
 	public static final int WALL_Y = 0;
 	public static final int MAX_WALLS = 2;
-	public static final String IMAGE_PATH = "/image/wall.png";
 	
 	private int width;
 	private int height;
@@ -30,19 +30,13 @@ public class WallElement extends DoobElement {
 		super(x, WALL_Y, gc);
 		width = WALL_WIDTH;
 		height = WALL_HEIGHT;
-		image = new Image(IMAGE_PATH);
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
 		setX(event.getX() - image.getWidth() / 2);
 		setY(0);
-		draw();
-	}
-	
-	@Override
-	public void draw() {
-		gc.drawImage(image, x, y);
+		change();
 	}
 
 	public int getWidth() {
@@ -51,8 +45,23 @@ public class WallElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.x && x < this.x + this.width
-				&& y >= this.y && y < this.y + this.height);
+		return (x >= this.xCoord && x < this.xCoord + this.width
+				&& y >= this.yCoord && y < this.yCoord + this.height);
+	}
+	
+	/**
+	 * Return the amount of elements of this class in the given list.
+	 * @param elementList The list where to check the amount of elements from.
+	 * @return The amount of elements of this class in the list.
+	 */
+	public static int getAmount(ArrayList<DoobElement> elementList) {
+		int res = 0;
+		for (DoobElement el : elementList) {
+			if (el instanceof BallElement) {
+				res++;
+			}
+		}
+		return res;
 	}
 
 	public void setWidth(int width) {

@@ -46,9 +46,6 @@ public class LevelBuilderController {
 
 	private DoobElement de;
 	private ArrayList<DoobElement> elementList;
-	private int players;
-	private int walls;
-	private int balls;
 	private String levelName;
 
 	private static final int BUTTON_WIDTH = 100;
@@ -90,7 +87,6 @@ public class LevelBuilderController {
 	public void initialize() {
 		gc = panelCanvas.getGraphicsContext2D();
 		elementList = new ArrayList<DoobElement>();
-		players = 0;
 		initializeOptions();
 		initializeImages();
 		initializeEventHandlers();
@@ -143,9 +139,15 @@ public class LevelBuilderController {
 	}
 	
 	/**
-	 * Initialize how to handle when an element is dragged again.
+	 * Initialize the drag and drop functionality of the canvas.
 	 */
 	public void setCanvasHandler() {
+		canvasDragOver();
+		canvasDragDropped();
+		canvasDragDetected();
+	}
+	
+	public void canvasDragOver() {
 		panelCanvas.setOnDragOver(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(DragEvent event) {
@@ -153,6 +155,9 @@ public class LevelBuilderController {
 				event.consume();
 			}
 		});	
+	}
+	
+	public void canvasDragDropped() {
 		panelCanvas.setOnDragDropped(new EventHandler<DragEvent>() {
 			@Override
 			public void handle(DragEvent event) {
@@ -162,6 +167,9 @@ public class LevelBuilderController {
 				event.consume();
 			}
 		});	
+	}
+	
+	public void canvasDragDetected() {
 		panelCanvas.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -172,14 +180,7 @@ public class LevelBuilderController {
 					elementList.remove(de);
 					giveContent(panelCanvas, de.getImage());
 					for (DoobElement de : elementList) {
-						de.draw();
-					}
-					if (de instanceof PlayerElement) {
-						players--;
-					} else if (de instanceof WallElement) {
-						walls--;
-					} else if (de instanceof BallElement) {
-						balls--;
+						de.change();
 					}
 				}
 			}
@@ -187,7 +188,7 @@ public class LevelBuilderController {
 	}
 	
 	/**
-	 * Initialize how to handle the bin where elements can be deleted.
+	 * Initialize drag and drop functionality of the bin.
 	 */
 	public void setDiscardHandler() {
 		discardView.setOnDragOver(new EventHandler<DragEvent>() {
@@ -237,12 +238,12 @@ public class LevelBuilderController {
 	public void setOnBallDragDetected() {
 		ballButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent event) {
-				if (balls >= BallElement.MAX_BALLS) {
+			public void handle(MouseEvent event) { 
+				if (BallElement.getAmount(elementList) >= BallElement.MAX_BALLS) {
 					return;
 				}
-				balls++;
 				de = new BallElement(0, 0, ballSizeChoice.getValue(), Ball.START_SPEED_X, 0, gc);
+				de.addObserver(new DoobElementView(de, gc));
 				giveContent(ballButton, de.getImage());
 				event.consume();
 			}
@@ -258,6 +259,7 @@ public class LevelBuilderController {
 			@Override
 			public void handle(MouseEvent event) {
 				de = new CeilingElement(0, gc);
+				de.addObserver(new DoobElementView(de, gc));
 				giveContent(ceilingButton, de.getImage());
 				event.consume();
 			}
@@ -272,11 +274,11 @@ public class LevelBuilderController {
 		wallButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (walls >= WallElement.MAX_WALLS) {
+				if (WallElement.getAmount(elementList) >= WallElement.MAX_WALLS) {
 					return;
 				}
-				walls++;
 				de = new WallElement(0, gc);
+				de.addObserver(new DoobElementView(de, gc));
 				giveContent(wallButton, de.getImage());
 				event.consume();
 			}
@@ -291,11 +293,11 @@ public class LevelBuilderController {
 		playerView.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (players >= PlayerElement.MAX_PLAYERS) {
+				if (PlayerElement.getAmount(elementList) >= PlayerElement.MAX_PLAYERS) {
 					return;
 				}
-				de = new PlayerElement(0, players, gc);
-				players++;
+				de = new PlayerElement(0, gc, elementList);
+				de.addObserver(new DoobElementView(de, gc));
 				giveContent(playerView, de.getImage());
 				event.consume();
 			}
