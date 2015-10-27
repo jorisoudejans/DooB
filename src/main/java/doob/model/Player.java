@@ -187,7 +187,7 @@ public class Player implements Collidable, Drawable {
 	return projectiles;
 }
 
-/**
+  /**
    * Decreases lives by one.
    */
   public void die() {
