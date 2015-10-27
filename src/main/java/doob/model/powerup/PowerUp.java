@@ -1,7 +1,7 @@
 package doob.model.powerup;
 
 import doob.model.Collidable;
-import doob.model.Level;
+import doob.model.level.Level;
 import doob.model.Player;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

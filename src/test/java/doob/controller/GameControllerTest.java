@@ -1,16 +1,14 @@
 package doob.controller;
 
 
-import org.hamcrest.core.IsNot;
 import org.junit.Test;
 
 import doob.game.Game;
-import doob.model.Level;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
