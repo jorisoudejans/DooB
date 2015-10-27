@@ -3,8 +3,6 @@ package doob.game;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
-import doob.level.LevelFactory;
-import doob.model.Player;
 import doob.model.powerup.LifePowerUp;
 import doob.model.powerup.TimePowerUp;
 

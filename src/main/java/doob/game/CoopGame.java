@@ -1,14 +1,8 @@
 package doob.game;
 
-import java.util.ArrayList;
-
-import doob.controller.LevelController;
-import doob.level.LevelView;
-import doob.util.BoundsTuple;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
-import doob.level.LevelFactory;
 import doob.model.Player;
 
 /**

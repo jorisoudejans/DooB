@@ -1,7 +1,6 @@
 package doob.model.powerup;
 
-import doob.model.Level;
-import doob.model.Player;
+import doob.model.level.Level;
 import org.junit.Assert;
 import org.junit.Test;
 

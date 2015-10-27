@@ -1,12 +1,9 @@
 package doob.game;
 
-import doob.util.BoundsTuple;
 import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
-import doob.level.LevelFactory;
-import doob.levelBuilder.LevelReader;
-import doob.model.Player;
+import doob.model.levelbuilder.LevelReader;
 
 /**
  * Class to play a singleplayer game.

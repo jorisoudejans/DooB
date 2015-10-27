@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import doob.controller.LevelController;
-import doob.level.LevelFactory;
-import doob.level.LevelView;
-import doob.util.BoundsTuple;
+import doob.model.level.LevelFactory;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -34,7 +31,7 @@ import org.w3c.dom.NodeList;
 import doob.App;
 import doob.DLog;
 import doob.controller.OptionsController;
-import doob.model.Level;
+import doob.model.level.Level;
 import doob.model.Player;
 
 
