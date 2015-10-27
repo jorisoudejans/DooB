@@ -409,7 +409,7 @@ public class LevelBuilderController {
 					levelName = name;
 					try {
 						new LevelWriter(ballList, wallList, playerList, 
-								Integer.parseInt(timeField.getText()), levelName).saveToFXML();
+								Integer.parseInt(timeField.getText()), levelName).saveToXML();
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

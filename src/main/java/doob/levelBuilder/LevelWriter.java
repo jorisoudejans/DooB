@@ -150,11 +150,11 @@ public class LevelWriter {
 	}
 	
 	/**
-	 * Save the created level to an fxml file.
+	 * Save the created level to an xml file.
 	 * @throws UnsupportedEncodingException 
 	 * @throws FileNotFoundException 
 	 */
-	public void saveToFXML() throws FileNotFoundException, UnsupportedEncodingException {
+	public void saveToXML() throws FileNotFoundException, UnsupportedEncodingException {
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    try {
 	        DocumentBuilder db = dbf.newDocumentBuilder();
