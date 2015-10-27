@@ -22,7 +22,6 @@
       <Rectangle fx:id="ceilingButton" arcHeight="5.0" arcWidth="5.0" height="50.0" layoutX="21.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
       <CheckBox fx:id="isMovingDown" layoutX="24.0" layoutY="286.0" mnemonicParsing="false" text="Moving down" />
       <Rectangle fx:id="wallButton" arcHeight="5.0" arcWidth="5.0" height="125.0" layoutX="58.0" layoutY="337.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
-      <CheckBox fx:id="canOpen" layoutX="23.0" layoutY="481.0" mnemonicParsing="false" text="Can Open" />
       <ImageView fx:id="playerView" fitHeight="72.0" fitWidth="50.0" layoutX="59.0" layoutY="574.0" pickOnBounds="true" preserveRatio="true" />
       <TextField fx:id="timeField" layoutX="117.0" layoutY="720.0" text="2000" />
       <Label layoutX="22.0" layoutY="711.0" prefHeight="31.0" prefWidth="74.0" text="Time">

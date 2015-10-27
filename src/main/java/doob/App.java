@@ -3,6 +3,7 @@ package doob;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -55,6 +56,34 @@ public class App extends Application {
 
 	public static Stage getStage() {
 		return stage;
+	}
+	
+	/**
+	 * Loads a given scene as a popup.
+	 * @param path
+	 *            Location of the fxml file
+	 * @param dialog The stage where to put the popup on.
+	 * @return The FXMLLoader.
+	 */
+	public static FXMLLoader popup(Stage dialog, String path) {
+		try {
+			// Load the anchor pane
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(App.class.getResource(path));
+			pane = loader.load();
+
+			// Set the pane onto the scene
+			Scene scene = new Scene(pane);
+			dialog.initOwner(stage);
+			dialog.setScene(scene);
+			dialog.show();
+			System.out.println(path + " loaded on the stage");
+			return loader;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong while loading the fxml file");
+		}
+		return null;
 	}
 
 	/**
