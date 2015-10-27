@@ -262,7 +262,7 @@ public class CollisionResolver {
 				&& !(level instanceof SurvivalLevel)) {
 			level.onEvent(Level.Event.ALL_BALLS_GONE);
 			level.stopTimer();
-			level.continueNextLevel();
+			//level.continueNextLevel();
 			dLog.info("All balls gone", DLog.Type.STATE);
 		} else if (walls.t0 == level.getLeft()) {
 			walls.t1.setOpen(true);
