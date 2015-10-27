@@ -1,6 +1,6 @@
 package doob.controller;
 
-import doob.model.Level;
+import doob.model.level.Level;
 import doob.model.Player;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;

@@ -3,12 +3,7 @@ package doob.controller;
 import doob.App;
 import doob.game.GameFactory;
 import javafx.fxml.FXML;
-import doob.levelBuilder.LevelBuilderController;
-import javafx.fxml.FXML;
-import doob.game.CoopGame;
-import doob.game.DuelGame;
 import doob.game.SinglePlayerGame;
-import doob.game.SurvivalGame;
 
 /**
  * Opening menu.
