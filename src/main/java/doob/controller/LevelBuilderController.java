@@ -5,7 +5,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import doob.model.levelbuilder.*;
+import doob.model.levelbuilder.BallElement;
+import doob.model.levelbuilder.CeilingElement;
+import doob.model.levelbuilder.DoobElement;
+import doob.model.levelbuilder.LevelWriter;
+import doob.model.levelbuilder.PlayerElement;
+import doob.model.levelbuilder.WallElement;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
