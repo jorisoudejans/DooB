@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.popup.DisplayPopup">
+   <children>
+      <Label fx:id="text" alignment="CENTER" layoutX="16.0" layoutY="14.0" prefHeight="35.0" prefWidth="470.0" text="&lt;Text&gt;">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="popupOKButton" layoutX="199.0" layoutY="80.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="104.0" text="OK" />
+   </children>
+</AnchorPane>

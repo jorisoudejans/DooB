@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -30,6 +31,8 @@ import doob.App;
 import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
+import doob.popup.DisplayPopup;
+import doob.popup.InputPopup;
 
 /**
  * This class is used to controll the levelbuilder.
@@ -404,13 +407,33 @@ public class LevelBuilderController {
 	@FXML
 	public void saveLevel() throws FileNotFoundException,
 			UnsupportedEncodingException {
-		ArrayList<Ball> ballList = parseBalls();
-		ArrayList<Wall> wallList = parseWalls();
-		ArrayList<Player> playerList = parsePlayers();
-		Stage dialog = new Stage();
-		LevelBuilderPopupController popup = App.popup(dialog,
-				"/FXML/LevelBuilderPopup.fxml").getController();
-		popup.initPopup(dialog, timeField, ballList, wallList, playerList);
+		if (!validLevel()) {
+			return;
+		}
+		final ArrayList<Ball> ballList = parseBalls();
+		final ArrayList<Wall> wallList = parseWalls();
+		final ArrayList<Player> playerList = parsePlayers();
+		final Stage dialog = new Stage();
+		final InputPopup popup = App.popup(dialog,
+				"/FXML/InputPopup.fxml").getController();
+		String text = "Please enter the name of the level:";
+		popup.setText(text);
+		popup.setOnOK(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				String name = popup.getInput();
+				if (name.length() > 0) {
+					try {
+						new LevelWriter(ballList, wallList, playerList,
+								Integer.parseInt(timeField.getText()), name)
+								.saveToFXML();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					dialog.close();
+				}
+			}
+		});
 	}
 
 	/**
@@ -428,6 +451,25 @@ public class LevelBuilderController {
 			}
 		}
 		return ballList;
+	}
+	
+	/**
+	 * Check if all constraints for the level are met.
+	 * If not show a message popup with the constraint failure.
+	 * @return True if the level is valid, False else.
+	 */
+	public boolean validLevel() {
+		if (PlayerElement.getAmount(elementList) <= 0) {
+			final Stage dialog = new Stage();
+			final DisplayPopup popup = App.popup(dialog,
+					"/FXML/DisplayPopup.fxml").getController();
+			String text = "Add at least one player!";
+			popup.setText(text);
+			popup.setDefaultOnOK(dialog);
+			return false;
+		}
+		// Possibly more constraints
+		return true;
 	}
 
 	/**
