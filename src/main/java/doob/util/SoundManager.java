@@ -20,13 +20,14 @@ public final class SoundManager {
 	
 	private SoundManager() {
 	}
+	
 	/**
 	 * Play the parameter tune on the background.
 	 * @param path The path to the tune to play.
 	 */
 	public static void playTune(String path) {
 		tune = new MediaPlayer(new Media(SoundManager.class.getResource(path).toString()));
-		tune.setVolume(0.1 * (volume));
+		tune.setVolume(volume);
 		tune.play();
 	}
 	
@@ -35,6 +36,7 @@ public final class SoundManager {
 	 * @param path The path to the tune to play.
 	 */
 	public static void playSound(String path) {
+		System.out.println(volume);
 		soundEffect = new MediaPlayer(new Media(SoundManager.class.getResource(path).toString()));
 		soundEffect.setVolume(volume);
 		soundEffect.play();
