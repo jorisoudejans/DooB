@@ -155,7 +155,7 @@ public abstract class Game implements Observer {
 				Node n = levels.item(i);
 				String custom;
 				if (isCustom) {
-					custom = "/Custom";
+					custom = "Custom/";
 				} else {
 					custom = "";
 				}
