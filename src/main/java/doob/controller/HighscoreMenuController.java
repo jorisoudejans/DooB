@@ -70,7 +70,7 @@ public class HighscoreMenuController {
 		final Stage dialog = new Stage();
 		final InputPopup popup = App.popup(dialog,
 				"/FXML/InputPopup.fxml").getController();
-		String text = " Please enter the name of the level:";
+		String text = "Player " + player + " has a highscore! Enter your name:";
 		popup.setText(text);
 		popup.setOnOK(new EventHandler<ActionEvent>() {
 			@Override
