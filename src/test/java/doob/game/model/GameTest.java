@@ -33,18 +33,6 @@ public class GameTest {
         verify(ui).setPlayPauseButton("Pause");
     }
 
-    @Test
-    public void testBackToMenu() {
-        Game game = mock(Game.class);
-        doCallRealMethod().when(game).backToMenu();
-
-        Level level = mock(Level.class);
-
-        game.setLevel(level);
-
-        game.backToMenu();
-        verify(level).stopTimer();
-    }
 
     @Test
     public void testUpdate() {
