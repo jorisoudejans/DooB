@@ -42,10 +42,8 @@ public class LevelView implements Observer {
             canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 public void handle(KeyEvent key) {
                     for (Player p : level.getPlayers()) {
-                        if (p.isAlive()) {
-                            if (p.getControlKeys().isMoveKey(key.getCode())) {
-                                p.setSpeed(0);
-                            }
+                        if (p.isAlive() && p.getControlKeys().isMoveKey(key.getCode())) {
+                            p.setSpeed(0);
                         }
                     }
                 }
@@ -120,7 +118,8 @@ public class LevelView implements Observer {
             if (player.isAlive()) {
                 player.draw(gc);
                 for (Projectile projectile : player.getProjectiles()) {
-                    gc.drawImage(projectile.getImg(), projectile.getXCoord(), projectile.getYCoord());
+                    gc.drawImage(projectile.getImg(), projectile.getXCoord(), 
+                    		projectile.getYCoord());
                     projectile.draw(gc);
                 }
             }
@@ -147,7 +146,7 @@ public class LevelView implements Observer {
         for (Player player : players) {
             if (player.isAlive()) {
                 player.move();
-                moveProjectiles(player, player.getProjectiles());
+                moveProjectiles(player);
             }
         }
     }
@@ -157,7 +156,7 @@ public class LevelView implements Observer {
      * @param player players
      * @param projectiles projectiles
      */
-    private void moveProjectiles(Player player, List<Projectile> projectiles) {
+    private void moveProjectiles(Player player) {
         for (Projectile projectile: player.getProjectiles()) {
             if (!(projectile.getState() == Projectile.State.FROZEN && level.isProjectileFreeze())) {
                 projectile.move();
@@ -206,12 +205,16 @@ public class LevelView implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        Level level = (Level) o;
+    	Level level = null;
+    	if (o instanceof Level) {
+    		level = (Level) o;
+    	}
         Level.Event event = Level.Event.NULL;
         if (arg instanceof Level.Event) {
             event = (Level.Event) arg;
         }
-        draw(level.getPlayers(), level.getBalls(), level.getWalls(), level.getPowerUpManager(), event);
+        draw(level.getPlayers(), level.getBalls(), level.getWalls(), 
+        		level.getPowerUpManager(), event);
         move(level.getPlayers(), level.getBalls(), level.getWalls());
     }
 }

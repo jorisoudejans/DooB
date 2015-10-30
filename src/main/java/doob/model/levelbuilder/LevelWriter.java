@@ -199,6 +199,7 @@ public class LevelWriter {
 		        rootEle.appendChild(e);	        	
 	        }
 	        dom.appendChild(rootEle);
+	        
 	        try {
 	            Transformer tr = TransformerFactory.newInstance().newTransformer();
 	            tr.setOutputProperty(OutputKeys.INDENT, "yes");

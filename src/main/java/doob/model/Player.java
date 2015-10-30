@@ -213,12 +213,6 @@ public class Player implements Collidable, Drawable {
     private KeyCode leftKey;
     private KeyCode rightKey;
     private KeyCode shootKey;
-    
-    /**
-     * the lastKey value is used, suppressed warning.
-     */
-    @SuppressWarnings("unused")
-	private KeyCode lastKey;
 
     /**
      * Moving action.
@@ -237,7 +231,6 @@ public class Player implements Collidable, Drawable {
       this.leftKey = leftKey;
       this.rightKey = rightKey;
       this.shootKey = shootKey;
-      this.lastKey = KeyCode.SPACE;
     }
 
     /**
@@ -253,9 +246,6 @@ public class Player implements Collidable, Drawable {
         action = Action.LEFT;
       } else if (key == shootKey) {
         action = Action.SHOOT;
-      }
-      if (action != Action.NONE) {
-        lastKey = key;
       }
       return action;
     }

@@ -199,7 +199,7 @@ public void setYCoord(double y) {
 
   @Override
   public Circle getBounds() {
-    return new Circle(xCoord + size / 2, yCoord + size / 2, size / 2);
+    return new Circle((double) xCoord + size / 2, (double) yCoord + size / 2, (double) size / 2);
   }
 
   /**

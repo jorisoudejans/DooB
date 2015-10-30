@@ -59,7 +59,7 @@ public class MenuController {
 	 * Navigate to the highscore sub-menu.
 	 */
 	@FXML void showHighscores() {
-		App.loadScene("/FXML/Highscore.fxml").getController();
+		App.loadScene("/FXML/Highscore.fxml");
 	}
 	
 	/**

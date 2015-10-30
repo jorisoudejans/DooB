@@ -5,7 +5,6 @@ import java.util.Observer;
 
 import doob.model.levelbuilder.DoobElement;
 import javafx.scene.canvas.GraphicsContext;
-import doob.model.levelbuilder.DoobElement;
 
 /**
  * Super class for the view objects of the elements in the levelbuilder.

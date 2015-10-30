@@ -8,7 +8,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import doob.App;
-import doob.util.SoundManager;
 
 /**
  * Controller class for the options menu.

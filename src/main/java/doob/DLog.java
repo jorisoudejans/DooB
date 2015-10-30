@@ -107,15 +107,14 @@ public final class DLog {
         try {
             fileInputStream = new FileInputStream(PROPERTIES_FILE);
             properties.load(fileInputStream);
+        	fileInputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
+        } 
         // Check whether log is enabled.
         isLogOn = properties.getProperty(PROPERTY_LOG_ENABLED).equals("yes");
-
         // Check which types are enabled.
         String typesProperty = properties.getProperty(PROPERTY_LOG_TYPES_ENABLED).toUpperCase();
         String[] typesString = typesProperty.split(",");
