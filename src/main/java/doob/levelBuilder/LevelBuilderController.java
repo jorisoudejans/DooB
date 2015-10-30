@@ -462,21 +462,15 @@ public class LevelBuilderController {
 	 */
 	public boolean validLevel() {
 		if (PlayerElement.getAmount(elementList) <= 0) {
-			final Stage dialog = new Stage();
-			final DisplayPopup popup = App.popup(dialog,
-					"/FXML/DisplayPopup.fxml").getController();
-			String text = "Add at least one player!";
-			popup.setText(text);
-			popup.setDefaultOnOK(dialog);
+			popup("Add at least one player!");
+			return false;
+		}
+		if (BallElement.getAmount(elementList) < 0) {
+			popup("Add at least one ball!");
 			return false;
 		}
 		if (overlapping()) {
-			final Stage dialog = new Stage();
-			final DisplayPopup popup = App.popup(dialog,
-					"/FXML/DisplayPopup.fxml").getController();
-			String text = "Elements can not overlap";
-			popup.setText(text);
-			popup.setDefaultOnOK(dialog);
+			popup("Elements can not overlap!");
 			return false;
 		}
 		return true;
@@ -499,6 +493,19 @@ public class LevelBuilderController {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Show a popup.
+	 * @param message The message the popup shows.
+	 */
+	public void popup(String message) {
+		final Stage dialog = new Stage();
+		final DisplayPopup popup = App.popup(dialog,
+				"/FXML/DisplayPopup.fxml").getController();
+		String text = message;
+		popup.setText(text);
+		popup.setDefaultOnOK(dialog);
 	}
 
 	/**
