@@ -73,16 +73,20 @@ public abstract class Game implements Observer {
 	public void initGame(String levelPath, boolean isCustom) {
 		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
-		readLevels(levelPath, isCustom);
-		ui.setLevelLabel(currentLevel);
-		// gameState = GameState.RUNNING;
-		createTimer();
-		newLevel();
-		readOptions();
-		running = true;
-
-		dLog.setFile("DooB.log");
-		dLog.info("GameUI started.", DLog.Type.STATE);
+		if (readLevels(levelPath, isCustom)) {
+			ui.setLevelLabel(currentLevel);
+			// gameState = GameState.RUNNING;
+			createTimer();
+			newLevel();
+			readOptions();
+			running = true;
+	
+			dLog.setFile("DooB.log");
+			dLog.info("GameUI started.", DLog.Type.STATE);
+		}
+		else {
+			return;
+		}
 	}
 
 	/**
@@ -145,31 +149,36 @@ public abstract class Game implements Observer {
 	 *            The path to the levels that have to be read.
 	 * @param isCustom whether they are custom
 	 */
-	public void readLevels(String levelPath, boolean isCustom) {
+	public boolean readLevels(String levelPath, boolean isCustom) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder dBuilder = factory.newDocumentBuilder();
-
 			Document doc = dBuilder.parse(new File(levelPath));
 			doc.getDocumentElement().normalize();
-
 			NodeList levels = doc.getElementsByTagName("LevelName");
-			for (int i = 0; i < levels.getLength(); i++) {
-				Node n = levels.item(i);
-				String custom;
-				if (isCustom) {
-					custom = "Custom/";
-				} else {
-					custom = "";
+			if (levels.getLength() > 0) {
+				for (int i = 0; i < levels.getLength(); i++) {
+					Node n = levels.item(i);
+					String custom;
+					if (isCustom) {
+						custom = "Custom/";
+					} else {
+						custom = "";
+					}
+					String s = "src/main/resources/level/" + custom + n.getTextContent();
+					levelList.add(s);
 				}
-				String s = "src/main/resources/level/" + custom + n.getTextContent();
-				levelList.add(s);
+				currentLevel = 0;
+				return true;
+			} else {
+				throw new Exception();
 			}
-			currentLevel = 0;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			App.loadScene("/FXML/Menu.fxml");
+			return false;
+			//e.printStackTrace();
 		}
 	}
 

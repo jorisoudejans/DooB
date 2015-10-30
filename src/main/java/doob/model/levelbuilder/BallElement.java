@@ -49,10 +49,8 @@ public class BallElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.xCoord
-				&& x < this.xCoord + this.size
-				&& y >= this.yCoord 
-				&& y < this.yCoord + this.size);
+		return (x >= this.xCoord && x < this.xCoord + this.size
+				&& y >= this.yCoord && y < this.yCoord + this.size);
 	}
 	
 	@Override
