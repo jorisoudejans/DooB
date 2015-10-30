@@ -72,8 +72,6 @@ public class LevelBuilderController {
 	@FXML
 	private CheckBox isMovingDown;
 	@FXML
-	private CheckBox canOpen;
-	@FXML
 	private Pane pane;
 	@FXML
 	private Canvas panelCanvas;

@@ -17,7 +17,6 @@ public class Wall implements Collidable, Drawable {
 	private int endx, endy;
 	private int duration;
 	private int speed;
-	private Rectangle r;
 
 	private boolean open;
 	
@@ -31,7 +30,6 @@ public class Wall implements Collidable, Drawable {
 	public Wall(int x, int y, int width, int height) {
 		this.open = false;
 		this.moveable = false;
-		r = new Rectangle(x, y, width, height);
 		this.xCoord = x;
 		this.yCoord = y;
 		this.width = width; 
@@ -52,7 +50,6 @@ public class Wall implements Collidable, Drawable {
 	public Wall(int x, int y, int width, int height, int endx, int endy, 
 			int duration, int speed) {
 		this.moveable = true;
-		this.r = new Rectangle(x, y, width, height);
 		this.xCoord = x;
 		this.yCoord = y;
 		this.width = width;
