@@ -1,6 +1,7 @@
 package doob.levelBuilder;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -9,12 +10,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Created by Shane on 30-10-2015.
  * Tests for the LevelReader class.
  */
 public class LevelReaderTest {
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        assumeTrue(System.getenv("TRAVIS") == null);
+    }
 
     @Test
     public void testMakeCustomLevelList() throws Exception{

@@ -3,10 +3,7 @@ package doob.levelBuilder;
 import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,17 +16,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import static org.junit.Assume.assumeTrue;
+
 /**
  * Created by Shane on 27-10-2015.
+ * Tests the LevelWriter class.
  */
 public class LevelWriterTest {
 
     private ArrayList<Wall> walls;
     private ArrayList<Ball> balls;
     private ArrayList<Player> players;
-    private String time;
     private String name;
 
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        assumeTrue(System.getenv("TRAVIS") == null);
+    }
     @Before
     public void setUp() {
         walls = new ArrayList<Wall>();
