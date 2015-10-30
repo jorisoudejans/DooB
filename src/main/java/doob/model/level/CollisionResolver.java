@@ -42,7 +42,7 @@ public class CollisionResolver {
 	 */
 	public void playerVersusWall(Player player, Wall wall) {
 		int playerSpeed = player.getSpeed();
-		int wallX = wall.getX();
+		int wallX = wall.getXCoord();
 		int wallWidth = wall.getWidth();
 		int playerWidth = player.getWidth();
 
@@ -124,8 +124,8 @@ public class CollisionResolver {
 	 * @return HitDirection detected
 	 */
 	private HitDirection getHitDirection(Player player, Wall wall) {
-		int playerX = player.getX();
-		int wallX = wall.getX();
+		int playerX = player.getXCoord();
+		int wallX = wall.getXCoord();
 		int wallWidth = wall.getWidth();
 		if (playerX <= wallX) {
 			return HitDirection.LEFT;
@@ -224,7 +224,7 @@ public class CollisionResolver {
 		projectile.getPlayer().incrScore(Ball.SCORE);
 		level.removeBall(ball);
 		level.removeProjectile(projectile);
-		level.getPowerUpManager().spawnPowerups(ball.getX(), ball.getY());
+		level.getPowerUpManager().spawnPowerups(ball.getXCoord(), ball.getYCoord());
 
 		handleDisappearingBall(ball);
 	}
@@ -284,11 +284,11 @@ public class CollisionResolver {
 		Wall closestRight = level.getRight();
 
 		for (Wall wall : level.getWalls()) {
-			if (!wall.isOpen() && wall.getX() > closestLeft.getX()
-					&& wall.getX() < ball.getX()) {
+			if (!wall.isOpen() && wall.getXCoord() > closestLeft.getXCoord()
+					&& wall.getXCoord() < ball.getXCoord()) {
 				closestLeft = wall;
-			} else if (!wall.isOpen() && wall.getX() < closestRight.getX()
-					&& wall.getX() > ball.getX()) {
+			} else if (!wall.isOpen() && wall.getXCoord() < closestRight.getXCoord()
+					&& wall.getXCoord() > ball.getXCoord()) {
 				closestRight = wall;
 			}
 		}
@@ -305,7 +305,7 @@ public class CollisionResolver {
 	 */
 	private boolean isSpaceEmpty(TupleTwo<Wall> walls) {
 		for (Ball ball : level.getBalls()) {
-			if (ball.getX() > walls.t0.getX() && ball.getX() < walls.t1.getX()) {
+			if (ball.getXCoord() > walls.t0.getXCoord() && ball.getXCoord() < walls.t1.getXCoord()) {
 				return false;
 			}
 		}

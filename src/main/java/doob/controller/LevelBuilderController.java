@@ -249,7 +249,8 @@ public class LevelBuilderController {
 				if (BallElement.getAmount(elementList) >= BallElement.MAX_BALLS) {
 					return;
 				}
-				de = new BallElement(0, 0, ballSizeChoice.getValue(), Ball.START_SPEED_X, 0, gc);
+				de = new BallElement(0, 0, ballSizeChoice.getValue(), Ball.START_SPEED_X, 0);
+				de.image();
 				de.addObserver(new DoobElementView(de, gc));
 				giveContent(ballButton, de.getImage());
 				event.consume();
@@ -265,7 +266,8 @@ public class LevelBuilderController {
 		ceilingButton.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				de = new CeilingElement(0, gc);
+				de = new CeilingElement(0);
+				de.image();
 				de.addObserver(new DoobElementView(de, gc));
 				giveContent(ceilingButton, de.getImage());
 				event.consume();
@@ -284,7 +286,8 @@ public class LevelBuilderController {
 				if (WallElement.getAmount(elementList) >= WallElement.MAX_WALLS) {
 					return;
 				}
-				de = new WallElement(0, gc);
+				de = new WallElement(0);
+				de.image();
 				de.addObserver(new DoobElementView(de, gc));
 				giveContent(wallButton, de.getImage());
 				event.consume();
@@ -303,7 +306,8 @@ public class LevelBuilderController {
 				if (PlayerElement.getAmount(elementList) >= PlayerElement.MAX_PLAYERS) {
 					return;
 				}
-				de = new PlayerElement(0, gc, elementList);
+				de = new PlayerElement(0, elementList);
+				de.image();
 				de.addObserver(new DoobElementView(de, gc));
 				giveContent(playerView, de.getImage());
 				event.consume();
@@ -356,11 +360,11 @@ public class LevelBuilderController {
 		for (DoobElement de : elementList) {
 			if (de instanceof BallElement) {
 				BallElement be = (BallElement) de;
-				ballList.add(new Ball(be.getX(), be.getY(), be.getSpeedX(), be
+				ballList.add(new Ball(be.getXCoord(), be.getYCoord(), be.getSpeedX(), be
 						.getSpeedY(), be.getSize()));
 			} else if (de instanceof PlayerElement) {
 				PlayerElement pe = (PlayerElement) de;
-				playerList.add(new Player((int) pe.getX(), (int) pe.getY(), pe
+				playerList.add(new Player((int) pe.getXCoord(), (int) pe.getYCoord(), pe
 						.getWidth(), pe.getHeight(), new Image(
 						"/image/character0_stand.png"), new Image(
 						"/image/character0_left.gif"), new Image(
@@ -368,21 +372,21 @@ public class LevelBuilderController {
 			} else if (de instanceof WallElement) {
 				WallElement we = (WallElement) de;
 				if (canOpen.isSelected()) {
-					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
-							.getWidth(), we.getHeight(), (int) we.getX(),
+					wallList.add(new Wall((int) we.getXCoord(), (int) we.getYCoord(), we
+							.getWidth(), we.getHeight(), (int) we.getXCoord(),
 							(int) we.getHeight() - 100, 1000, 3));
 				} else {
-					wallList.add(new Wall((int) we.getX(), (int) we.getY(), we
+					wallList.add(new Wall((int) we.getXCoord(), (int) we.getYCoord(), we
 							.getWidth(), we.getHeight()));
 				}
 			} else if (de instanceof CeilingElement) {
 				CeilingElement ce = (CeilingElement) de;
 				if (isMovingDown.isSelected()) {
-					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
-							.getWidth(), ce.getHeight(), (int) ce.getX(),
+					wallList.add(new Wall((int) ce.getXCoord(), (int) ce.getYCoord(), ce
+							.getWidth(), ce.getHeight(), (int) ce.getXCoord(),
 							(int) pane.getHeight(), 1000, 1));
 				} else {
-					wallList.add(new Wall((int) ce.getX(), (int) ce.getY(), ce
+					wallList.add(new Wall((int) ce.getXCoord(), (int) ce.getYCoord(), ce
 							.getWidth(), ce.getHeight()));
 				}
 			}

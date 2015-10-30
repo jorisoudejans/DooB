@@ -242,7 +242,7 @@ public class LevelFactory {
         Collections.sort(wallList, new Comparator<Wall>() {
             @Override
             public int compare(Wall w1, Wall w2) {
-                return Integer.compare(w1.getX(), w2.getX());
+                return Integer.compare(w1.getXCoord(), w2.getXCoord());
             }
         });
 

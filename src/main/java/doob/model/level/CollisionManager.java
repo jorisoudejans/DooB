@@ -42,7 +42,7 @@ public class CollisionManager {
         	if (player.isAlive()) {
 	            detectCollision(player);
 	            for (final Projectile p : player.getProjectiles()) {
-	                if (p.getY() <= 0) {
+	                if (p.getYCoord() <= 0) {
 	                    callbacks.add(new CollisionCallback() {
 	                        @Override
 	                        public void perform() {

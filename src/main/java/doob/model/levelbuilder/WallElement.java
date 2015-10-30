@@ -1,10 +1,8 @@
 package doob.model.levelbuilder;
 import java.util.ArrayList;
 
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
-
-
 
 /**
  * This class represents the wall element, which can be added to a level in the levelbuilder.
@@ -16,6 +14,7 @@ public class WallElement extends DoobElement {
 	public static final int WALL_HEIGHT = 650;
 	public static final int WALL_Y = 0;
 	public static final int MAX_WALLS = 2;
+	public static final String IMAGE_PATH = "/image/wall.png";
 	
 	private int width;
 	private int height;
@@ -23,18 +22,22 @@ public class WallElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
-	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public WallElement(double x, GraphicsContext gc) {
-		super(x, WALL_Y, gc);
+	public WallElement(double x) {
+		super(x, WALL_Y);
 		width = WALL_WIDTH;
 		height = WALL_HEIGHT;
+	}
+
+	@Override
+	public void image() {	
+		image = new Image(IMAGE_PATH);
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
-		setX(event.getX() - image.getWidth() / 2);
-		setY(0);
+		setXCoord(event.getX() - image.getWidth() / 2);
+		setYCoord(0);
 		change();
 	}
 
@@ -74,6 +77,4 @@ public class WallElement extends DoobElement {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-
-
 }

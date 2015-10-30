@@ -30,12 +30,12 @@ public class ProjectileTest {
 	
 	@Test
 	public void getterSetterTest() {
-		assertEquals(p1.getX(), d1, 0.001);
-		assertEquals(p1.getY(), d2, 0.001);
-		p1.setX(20);
-		assertEquals(p1.getX(), 20, 0.01);
-		p1.setY(40);
-		assertEquals(p1.getY(), 40, 0.01);
+		assertEquals(p1.getXCoord(), d1, 0.001);
+		assertEquals(p1.getYCoord(), d2, 0.001);
+		p1.setXCoord(20);
+		assertEquals(p1.getXCoord(), 20, 0.01);
+		p1.setYCoord(40);
+		assertEquals(p1.getYCoord(), 40, 0.01);
 	}
 
 	// TODO fix this test.

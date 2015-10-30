@@ -140,7 +140,7 @@ public class PowerUpManager {
         powerupsOnScreenToRemove = new ArrayList<PowerUp>();
         ArrayList<PowerUp> toRemoveWait = new ArrayList<PowerUp>();
         for (PowerUp powerup : powerupsOnScreen) { // move powerups down
-            if (powerup.getLocationY() < level.getFloor().getY() - POWER_UP_HEIGHT) {
+            if (powerup.getLocationY() < level.getFloor().getYCoord() - POWER_UP_HEIGHT) {
                 powerup.setLocationY(powerup.getLocationY() + 2);
             }
             powerup.tickWait();

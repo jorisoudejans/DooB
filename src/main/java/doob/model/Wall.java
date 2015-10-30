@@ -12,7 +12,7 @@ public class Wall implements Collidable, Drawable {
 
 	public static final int BOUNDS_DELTA = 10;
 	
-	private int x, y, width, height;
+	private int xCoord, yCoord, width, height;
 	private boolean moveable;
 	private int endx, endy;
 	private int duration;
@@ -32,8 +32,8 @@ public class Wall implements Collidable, Drawable {
 		this.open = false;
 		this.moveable = false;
 		r = new Rectangle(x, y, width, height);
-		this.x = x;
-		this.y = y;
+		this.xCoord = x;
+		this.yCoord = y;
 		this.width = width; 
 		this.height = height;
 	}
@@ -53,8 +53,8 @@ public class Wall implements Collidable, Drawable {
 			int duration, int speed) {
 		this.moveable = true;
 		this.r = new Rectangle(x, y, width, height);
-		this.x = x;
-		this.y = y;
+		this.xCoord = x;
+		this.yCoord = y;
 		this.width = width;
 		this.height = height;
 		this.endx = endx;
@@ -69,7 +69,7 @@ public class Wall implements Collidable, Drawable {
 	 */
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle(x, y, width + BOUNDS_DELTA, height);
+		return new Rectangle(xCoord, yCoord, width + BOUNDS_DELTA, height);
 	}
 	
 	/**
@@ -79,9 +79,9 @@ public class Wall implements Collidable, Drawable {
 	public void draw(GraphicsContext gc) {
         if (open) {
         	gc.setFill(Color.GRAY);
-        	gc.fillRect(x, y, width, height - 250);
+        	gc.fillRect(xCoord, yCoord, width, height - 250);
         } else {
-        	gc.fillRect(x, y, width, height);
+        	gc.fillRect(xCoord, yCoord, width, height);
         }        
         gc.setFill(Color.BLACK);
     }
@@ -92,26 +92,26 @@ public class Wall implements Collidable, Drawable {
 	@Override
 	public void move() {
 		if (duration > 0) {
-			if (x < endx) {
-				x = x + speed;
+			if (xCoord < endx) {
+				xCoord = xCoord + speed;
 			} else {
-				x = x - speed;
+				xCoord = xCoord - speed;
 			}
-			if (y < endy) {
-				y = y + speed;
+			if (yCoord < endy) {
+				yCoord = yCoord + speed;
 			} else {
-				y = y - speed;
+				yCoord = yCoord - speed;
 			}
 			duration--;
 		}
 	}
 	
-	public int getX() {
-		return x;
+	public int getXCoord() {
+		return xCoord;
 	}
 
-	public int getY() {
-		return y;
+	public int getYCoord() {
+		return yCoord;
 	}
 
 	public boolean isOpen() {
@@ -163,9 +163,9 @@ public class Wall implements Collidable, Drawable {
 			return false; }
 		if (width != other.width) {
 			return false; }
-		if (x != other.x) {
+		if (xCoord != other.xCoord) {
 			return false; }
-		if (y != other.y) {
+		if (yCoord != other.yCoord) {
 			return false; }
 		if (moveable != other.moveable) {
 			return false; }

@@ -35,7 +35,7 @@ public class DoobElementView implements Observer {
 	 * @param gc The graphics context objects that can draw to the canvas.
 	 */
 	public void draw(GraphicsContext gc) {
-		gc.drawImage(observable.getImage(), observable.getX(), observable.getY());
+		gc.drawImage(observable.getImage(), observable.getXCoord(), observable.getYCoord());
 	}
 
 }

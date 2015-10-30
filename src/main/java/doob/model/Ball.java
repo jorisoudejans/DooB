@@ -1,6 +1,5 @@
 package doob.model;
 
-import doob.util.TupleTwo;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,8 +12,8 @@ import org.w3c.dom.Element;
  */
 public class Ball implements Collidable, Drawable {
 
-  private double x;
-  private double y;
+  private double xCoord;
+  private double yCoord;
   private double speedX;
   private double speedY;
   private int size;
@@ -46,8 +45,8 @@ public class Ball implements Collidable, Drawable {
    *          the size of the ball
    */
   public Ball(double x, double y, double speedX, double speedY, int size) {
-    this.x = x;
-    this.y = y;
+    this.xCoord = x;
+    this.yCoord = y;
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
@@ -77,7 +76,7 @@ public class Ball implements Collidable, Drawable {
    */
   public void draw(GraphicsContext graphicsContext) {
 	graphicsContext.setFill(color);
-    graphicsContext.fillOval(this.getX(), this.getY(), this.getSize(), this.getSize());
+    graphicsContext.fillOval(this.getXCoord(), this.getYCoord(), this.getSize(), this.getSize());
     graphicsContext.setFill(Color.BLACK);
   }
 
@@ -96,8 +95,8 @@ public class Ball implements Collidable, Drawable {
    * @return A list of new balls.
    */
   public Ball[] split() {
-    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
-    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
+    Ball ball1 = new Ball(this.xCoord, this.yCoord, START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
+    Ball ball2 = new Ball(this.xCoord, this.yCoord, -START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
     Ball[] res = new Ball[2];
     res[0] = ball1;
     res[1] = ball2;
@@ -112,38 +111,38 @@ public class Ball implements Collidable, Drawable {
     this.size = size;
   }
 
-  public double getX() {
-    return x;
+  public double getXCoord() {
+    return xCoord;
   }
 
-  public void setX(double x) {
-    this.x = x;
+  public void setXCoord(double x) {
+    this.xCoord = x;
   }
 
-  public double getY() {
-    return y;
+  public double getYCoord() {
+    return yCoord;
   }
 
   public double getSpeedY() {
 	return speedY;
 }
 
-public void setY(double y) {
-    this.y = y;
+public void setYCoord(double y) {
+    this.yCoord = y;
   }
 
   /**
    * Horizontal movement by adding a speed to the players x position.
    */
   public void moveHorizontally() {
-    this.x = x + speedX;
+    this.xCoord = xCoord + speedX;
   }
 
   /**
    * Vertical movement by adding a speed to the players y position.
    */
   public void moveVertically() {
-    this.y = y + speedY;
+    this.yCoord = yCoord + speedY;
   }
 
   public double getSpeedX() {
@@ -170,9 +169,9 @@ public void setY(double y) {
     be.setAttribute("id", Integer.toString(id));
 
     Element bx = dom.createElement("x");
-    bx.appendChild(dom.createTextNode(Integer.toString((int) x)));
+    bx.appendChild(dom.createTextNode(Integer.toString((int) xCoord)));
     Element by = dom.createElement("y");
-    by.appendChild(dom.createTextNode(Integer.toString((int) y)));
+    by.appendChild(dom.createTextNode(Integer.toString((int) yCoord)));
     Element bsX = dom.createElement("speedX");
     bsX.appendChild(dom.createTextNode(Integer.toString((int) speedX)));
     Element bsY = dom.createElement("speedY");
@@ -200,7 +199,7 @@ public void setY(double y) {
 
   @Override
   public Circle getBounds() {
-    return new Circle(x + size / 2, y + size / 2, size / 2);
+    return new Circle(xCoord + size / 2, yCoord + size / 2, size / 2);
   }
 
   /**
@@ -225,8 +224,9 @@ public void setY(double y) {
       return false;
     }
     Ball other = (Ball) obj;
-    if (size == other.size && speedX == other.speedX && speedY == other.speedY && x == other.x
-        && y == other.y) {
+    if (size == other.size && speedX == other.speedX 
+    		&& speedY == other.speedY && xCoord == other.xCoord
+        && yCoord == other.yCoord) {
       return true;
     }
     return false;
@@ -235,8 +235,8 @@ public void setY(double y) {
   @Override
   public String toString() {
     return "Ball{"
-            + "x=" + (int) x
-            + ", y=" + (int) y
+            + "x=" + (int) xCoord
+            + ", y=" + (int) yCoord
             + ", size=" + size + '}';
   }
 }

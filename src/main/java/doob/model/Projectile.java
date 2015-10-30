@@ -12,8 +12,8 @@ public abstract class Projectile implements Drawable, Collidable {
 
 	private Image img;
 	private Player player;
-	private double x;
-	private double y;
+	private double xCoord;
+	private double yCoord;
 
 	private State state;
 
@@ -33,8 +33,8 @@ public abstract class Projectile implements Drawable, Collidable {
 	 */
 	public Projectile(Player player, double x, double y) {
 		this.player = player;
-		this.x = x;
-		this.y = y;
+		this.xCoord = x;
+		this.yCoord = y;
 		this.state = State.NORMAL;
 	}
 
@@ -43,12 +43,12 @@ public abstract class Projectile implements Drawable, Collidable {
      * @param gc context to draw in.
      */
 	public void draw(GraphicsContext gc) {
-        gc.drawImage(img, x, y);
+        gc.drawImage(img, xCoord, yCoord);
     }
 
 	@Override
     public Rectangle getBounds() {
-    	return new Rectangle(x, y, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);
+    	return new Rectangle(xCoord, yCoord, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);
     }
 	
 	public Image getImg() {
@@ -59,20 +59,20 @@ public abstract class Projectile implements Drawable, Collidable {
 		this.img = img;
 	}
 
-	public double getX() {
-		return x;
+	public double getXCoord() {
+		return xCoord;
 	}
 
-	public void setX(double x) {
-		this.x = x;
+	public void setXCoord(double x) {
+		this.xCoord = x;
 	}
 	
-	public double getY() {
-		return y;
+	public double getYCoord() {
+		return yCoord;
 	}
 
-	public void setY(double y) {
-		this.y = y;
+	public void setYCoord(double y) {
+		this.yCoord = y;
 	}
 
 	public State getState() {
@@ -95,13 +95,13 @@ public abstract class Projectile implements Drawable, Collidable {
 	 * Moves the projectile in y direction (up and down).
 	 */
 	public void move() {
-		this.y = y - Level.getProjectileSpeed();
+		this.yCoord = yCoord - Level.getProjectileSpeed();
 	}
 
 	@Override
 	public String toString() {
 		return "Projectile{"
-				+ "x=" + x
-				+ ", y=" + y + '}';
+				+ "x=" + xCoord
+				+ ", y=" + yCoord + '}';
 	}
 }

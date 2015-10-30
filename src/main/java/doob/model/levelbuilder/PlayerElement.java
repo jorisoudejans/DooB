@@ -3,7 +3,6 @@ package doob.model.levelbuilder;
 import java.util.ArrayList;
 
 import doob.controller.LevelBuilderController;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 
@@ -22,24 +21,28 @@ public class PlayerElement extends DoobElement {
 
 	private int width;
 	private int height;
-	
+	private ArrayList<DoobElement> elementList;
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
-	 * @param gc The graphics object that can draw to the canvas.
 	 * @param elementList The list of elements on the canvas.
 ]	 */
-	public PlayerElement(double x, GraphicsContext gc, ArrayList<DoobElement> elementList) {
-		super(x, PLAYER_Y, gc);
+	public PlayerElement(double x, ArrayList<DoobElement> elementList) {
+		super(x, PLAYER_Y);
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
+		this.elementList = elementList;
+	}
+	
+	@Override
+	public void image() {
 		image = new Image("/image/character" + getAmount(elementList) + "_stand.png");
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
-		setX(event.getX() - image.getWidth() / 2);
-		setY(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
+		setXCoord(event.getX() - image.getWidth() / 2);
+		setYCoord(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
 		change();
 	}
 	

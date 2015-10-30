@@ -36,7 +36,7 @@ public class BallElementView extends BuilderElementView implements Observer {
 	@Override
 	public void draw() {
 		gc.setFill(color);
-		gc.fillOval(be.getX(), be.getY(), be.getSize(), be.getSize());
+		gc.fillOval(be.getXCoord(), be.getYCoord(), be.getSize(), be.getSize());
 		gc.setFill(Color.BLACK);
 	}
 
