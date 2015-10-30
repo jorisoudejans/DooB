@@ -40,6 +40,7 @@ public class LevelFactory {
      *
      * @param path path to the XML-file
      * @param canvas javaFX bounds
+     * @param type the game mode
      */
     public LevelFactory(String path, Canvas canvas, String type) {
         this.file = new File(path);
@@ -218,20 +219,13 @@ public class LevelFactory {
     }
 
     /**
-     * Builds up the given level.
-     * @param level the level to build
-     * @return the built level
+     * Build and sets the walls for a level.
+     * @param level level for which the walls are build.
      */
-    private Level setup(Level level) {
-        LevelController levelController = new LevelController(level);
-        LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
-        levelView.setLevelController(levelController);
-        level.addObserver(levelView);
-        level.addObserver(levelController);
-
+    private void buildWalls(Level level) {
         Wall right = new Wall(bounds.getWidth().intValue(), 0, 1, bounds.getHeight().intValue());
+ Wall ceiling = new Wall(0, 0, bounds.getWidth().intValue(), 1);
         Wall left = new Wall(0, 0, 1, bounds.getHeight().intValue());
-        Wall ceiling = new Wall(0, 0, bounds.getWidth().intValue(), 1);
         Wall floor = new Wall(0, bounds.getHeight().intValue(), bounds.getWidth().intValue(), 1);
 
         level.setLeft(left);
@@ -250,6 +244,22 @@ public class LevelFactory {
         wallList.add(0, left);
         wallList.add(floor);
         wallList.add(ceiling);
+    }
+
+    /**
+     * Builds up the given level.
+     * @param level the level to build
+     * @return the built level
+     */
+    private Level setup(Level level) {
+        LevelController levelController = new LevelController(level);
+        LevelView levelView = new LevelView(canvas.getGraphicsContext2D(), level);
+        levelView.setLevelController(levelController);
+        level.addObserver(levelView);
+        level.addObserver(levelController);
+
+        buildWalls(level);
+
         level.setBalls(ballList);
         level.setPlayers(playerList);
         level.setWalls(wallList);

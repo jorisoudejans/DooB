@@ -438,7 +438,7 @@ public class LevelBuilderController {
 					try {
 						new LevelWriter(ballList, wallList, playerList, Integer
 								.parseInt(timeField.getText()), name)
-								.saveToFXML();
+								.saveToXML();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
