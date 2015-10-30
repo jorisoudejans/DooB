@@ -7,21 +7,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import doob.App;
 import doob.model.Score;
+import doob.popup.InputPopup;
 
 /**
  * Class to control the highscores menu.
@@ -34,23 +28,25 @@ public class HighscoreMenuController {
 	private TableColumn<Score, Integer> scoreCol;
 	@FXML
 	private TableView<Score> scoreTable;
-
-	private HighscoreController hsc;
-
-	/**
-	 * Initialize.
-	 */
 	@FXML
-	public void initialize() {
-		updateTable();
-	}
+	private Label gameModeLabel;
+	
+	private HighscoreController hsc;
+	private String source;
+	private String labelText;
+
+	private static final int CELL_SIZE = 70;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
+	 * @param source The path to the highscores file.
+	 * @param labelText The gamemode shown above the highscores.
 	 */
-	public void updateTable() {
-		hsc = new HighscoreController(
-				"src/main/resources/Highscore/highscores.xml");
+	public void updateTable(String source, String labelText) {
+		this.source = source;
+		this.labelText = labelText;
+		gameModeLabel.setText(labelText);
+		hsc = new HighscoreController(source);
 		ArrayList<Score> scoreList = hsc.read();
 		nameCol.setCellValueFactory(new PropertyValueFactory<Score, String>(
 				"name"));
@@ -59,63 +55,37 @@ public class HighscoreMenuController {
 		ObservableList<Score> oscoreList = FXCollections
 				.observableArrayList(scoreList);
 		scoreTable.setItems(oscoreList);
-		scoreTable.setFixedCellSize(70);
+		scoreTable.setFixedCellSize(CELL_SIZE);
 	}
 	
 	/**
 	 * Insert a new score into the table and the highscore file.
 	 * @param score The score to be inserted.
+	 * @param player The player for whom the popup is shown.
 	 */
-	public void insertScore(final int score) {
+	public void insertScore(final int score, int player) {
 		if (hsc.highScoreIndex(score) == -1) {
-			return;
+			return;	
 		}
 		final Stage dialog = new Stage();
-		dialog.initOwner(App.getStage());
-		
-		Label l = new Label("You got a highscore! Enter your name");
-		l.setFont(new Font(22));
-		final TextField tf = new TextField();
-		tf.setMaxWidth(350);
-		tf.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		final InputPopup popup = App.popup(dialog,
+				"/FXML/InputPopup.fxml").getController();
+		String text = " Please enter the name of the level:";
+		popup.setText(text);
+		popup.setOnOK(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(KeyEvent e) {
-				if (e.getCode() == KeyCode.ENTER) {
-					handleAction(dialog, tf, score);
+			public void handle(ActionEvent event) {
+				String name = popup.getInput();
+				if (name.length() > 0) {
+					int index = hsc.highScoreIndex(score);
+					dialog.close();
+					hsc.addScore(new Score(name, score), index);
+					hsc.write();
+					updateTable(source, labelText);
+					scoreTable.getSelectionModel().select(index);
 				}
 			}
 		});
-		
-		Button b = new Button("OK");
-		b.setPrefWidth(100);
-		b.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				handleAction(dialog, tf, score);
-			}
-		});
-		
-		VBox popUpVBox = new VBox(10);
-		popUpVBox.setAlignment(Pos.CENTER);
-        popUpVBox.getChildren().add(l);
-        popUpVBox.getChildren().add(tf);
-        popUpVBox.getChildren().add(b);
-
-        Scene dialogScene = new Scene(popUpVBox, 400, 150);
-		dialog.setScene(dialogScene);
-		dialog.show();
-	}
-	
-	private void handleAction(Stage dialog, TextField tf, int score) {
-		String name = tf.getText();
-		if (name.length() > 0) {
-			int index = hsc.highScoreIndex(score);
-			dialog.close();
-			hsc.addScore(new Score(name, score), index);
-			hsc.write();
-			updateTable();
-			scoreTable.getSelectionModel().select(index);
-		}
 	}
 	
 	/**
@@ -124,6 +94,14 @@ public class HighscoreMenuController {
 	@FXML
 	public void backToMenu() {
 		App.loadScene("/FXML/Menu.fxml");
+	}
+	
+	/**
+	 * Navigate to the highscores menu.
+	 */
+	@FXML
+	public void showHighScores() {
+		App.loadScene("/FXML/HighScore.fxml");
 	}
 
 }

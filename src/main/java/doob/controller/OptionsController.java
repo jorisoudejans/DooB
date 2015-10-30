@@ -29,6 +29,7 @@ public class OptionsController {
 	private KeyCode left;
 	private KeyCode right;
 	private KeyCode shoot;
+	//TODO are these necessary?
 
 	private double volume;
 

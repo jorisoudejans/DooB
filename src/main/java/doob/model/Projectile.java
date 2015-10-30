@@ -1,5 +1,6 @@
 package doob.model;
 
+import doob.model.level.Level;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -49,7 +50,7 @@ public abstract class Projectile implements Drawable, Collidable {
     public Rectangle getBounds() {
     	return new Rectangle(x, y, img != null ? img.getWidth() : 50, img != null ? img.getHeight() : 50);
     }
-
+	
 	public Image getImg() {
 		return img;
 	}

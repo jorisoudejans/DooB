@@ -1,12 +1,16 @@
 package doob.level;
 
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import doob.DLog;
-import doob.model.*;
+import doob.model.Ball;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.Wall;
+import doob.model.level.Level;
 import doob.model.powerup.PowerUp;
 import doob.util.SoundManager;
 import doob.util.TupleTwo;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 
 /**
  * Class to handle collision resolving.
@@ -71,14 +75,8 @@ public class CollisionResolver {
         } else {
             level.onEvent(Level.Event.LOST_LIFE);
         }
-
-        level.freeze(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-                level.notifyObservers();
-                dLog.info("Lost a life", DLog.Type.STATE);
-            }
-        });
+        
+        dLog.info("Lost a life", DLog.Type.STATE);
     }
 
     /**
@@ -129,7 +127,7 @@ public class CollisionResolver {
         level.getPowerUpManager().spawnPowerups(ball.getX(), ball.getY());
 
         handleDisappearingBall(ball);
-        SoundManager.playSound(SoundManager.DOOB_EFFECT);
+        SoundManager.playSound(SoundManager.POP_EFFECT);
     }
 
     /**

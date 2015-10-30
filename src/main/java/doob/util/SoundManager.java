@@ -12,9 +12,10 @@ public final class SoundManager {
 	private static MediaPlayer soundEffect;
 	private static double volume;
 	
-	public static final String GAME_TUNE = "/Sounds/tune.mp3";
-	public static final String DIE_EFFECT = "/Sounds/die.mp3";
-	public static final String DOOB_EFFECT = "/Sounds/doob.mp3";
+	public static final String DIE_EFFECT = "/Sounds/aww.mp3";
+	public static final String POP_EFFECT = "/Sounds/pop.mp3";
+	public static final String LEVEL_COMPLETE = "/Sounds/congratulations.mp3";
+	public static final String GAME_WON = "/Sounds/applaus.mp3";
 	public static final int MAX_VOLUME = 100;
 	
 	private SoundManager() {
@@ -35,7 +36,6 @@ public final class SoundManager {
 	 */
 	public static void playSound(String path) {
 		soundEffect = new MediaPlayer(new Media(SoundManager.class.getResource(path).toString()));
-		System.out.println(volume);
 		soundEffect.setVolume(volume);
 		soundEffect.play();
 	}

@@ -1,7 +1,6 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
-import doob.model.Level;
+import doob.model.level.Level;
 import doob.model.Player;
 
 /**
@@ -13,7 +12,7 @@ public class ProtectOncePowerUp extends PowerUp {
     public static final int DURATION = 500;
 
     /**
-     * Adds one life to player.
+     * Sets the player state to invulnerable.
      * @param level the level the power-up is in.
      * @param player the player that picked up the power-up.
      */
@@ -24,7 +23,7 @@ public class ProtectOncePowerUp extends PowerUp {
     }
 
     /**
-     * Does nothing.
+     * Return to initial state.
      * @param level the level the power-up is in.
      */
     @Override
@@ -33,7 +32,7 @@ public class ProtectOncePowerUp extends PowerUp {
     }
 
     /**
-     * Has no duration.
+     * Get duration of power-up.
      * @return duration
      */
     @Override
@@ -42,7 +41,7 @@ public class ProtectOncePowerUp extends PowerUp {
     }
 
     /**
-     * Path to heart icon.
+     * Path to shield-one icon.
      * @return path
      */
     @Override

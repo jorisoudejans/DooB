@@ -1,8 +1,8 @@
 package doob.model.powerup;
 
 import doob.model.Collidable;
-import doob.model.Level;
 import doob.model.Player;
+import doob.model.level.Level;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -13,14 +13,14 @@ import javafx.scene.shape.Shape;
 public abstract class PowerUp implements Collidable {
 
 	// Chances
-	public static final float CHANCE_TIME = 0.1f;
-	public static final float CHANCE_LIFE = 0.1f;
-	public static final float CHANCE_POINTS = 0.1f;
-	public static final float CHANCE_PROTECT_ONCE = 0.1f;
-	public static final float CHANCE_FREEZE_BALLS = 0.1f;
-	public static final float CHANCE_PLAYER_SPEED = 0.1f;
-	public static final float CHANCE_PROJECTILE_SPEED = 0.1f;
-	public static final float CHANCE_PROJECTILE_FREEZE = 0.1f;
+	public static final float CHANCE_TIME = 0.02f;
+	public static final float CHANCE_LIFE = 0.01f;
+	public static final float CHANCE_POINTS = 0.02f;
+	public static final float CHANCE_PROTECT_ONCE = 0.02f;
+	public static final float CHANCE_FREEZE_BALLS = 0.02f;
+	public static final float CHANCE_PLAYER_SPEED = 0.02f;
+	public static final float CHANCE_PROJECTILE_SPEED = 0.02f;
+	public static final float CHANCE_PROJECTILE_FREEZE = 0.02f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 
@@ -123,14 +123,14 @@ public abstract class PowerUp implements Collidable {
 	}
 
 	/**
-	 * Game tick on power-up. Decrease time left.
+	 * GameUI tick on power-up. Decrease time left.
 	 */
 	public void tickActive() {
 		this.activeTime--;
 	}
 
 	/**
-	 * Game tick on power-up. Decrease time left.
+	 * GameUI tick on power-up. Decrease time left.
 	 */
 	public void tickWait() {
 		this.currentWaitTime--;

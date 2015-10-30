@@ -1,9 +1,14 @@
 package doob.model;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+
+import java.util.List;
 
 /**
  * Player class, acts as both model and view.
@@ -19,7 +24,10 @@ public class Player implements Collidable, Drawable {
   private int lives;
   private int score;
   
+  private ControlKeys controlKeys;
+  
   public static final int LIVES = 5;
+  public static final int DOUBLE_LIVES = 10;
   public static final int START_SPEED = 4;
   public static final int BOUNCE_BACK_DISTANCE = 10;
 
@@ -28,6 +36,7 @@ public class Player implements Collidable, Drawable {
   private Image imageRight;
 
   private State state;
+  private ArrayList<Projectile> projectiles;
 
   /**
    * Possible player states.
@@ -64,10 +73,11 @@ public class Player implements Collidable, Drawable {
     this.score = 0;
     this.lives = LIVES;
     this.state = State.NORMAL;
-
+    controlKeys = null;
     imageStand = imageS;
     imageLeft = imageL;
     imageRight = imageR;
+    projectiles = new ArrayList<Projectile>();
   }
 
   @Override
@@ -121,10 +131,6 @@ public class Player implements Collidable, Drawable {
     return y;
   }
 
-  public void setY(int y) {
-    this.y = y;
-  }
-
   public int getSpeed() {
     return speed;
   }
@@ -152,7 +158,11 @@ public class Player implements Collidable, Drawable {
   public void setScore(int score) {
     this.score = score;
   }
-  
+
+  /**
+   * Increments score by amount.
+   * @param scoreIncr amount to increment
+   */
   public void incrScore(int scoreIncr) {
 	  score = score + scoreIncr;
   }
@@ -165,11 +175,27 @@ public class Player implements Collidable, Drawable {
     this.state = state;
   }
 
+  public ControlKeys getControlKeys() {
+    return controlKeys;
+  }
+
+  public void setControlKeys(ControlKeys controlKeys) {
+    this.controlKeys = controlKeys;
+  }
+
+  public List<Projectile> getProjectiles() {
+	return projectiles;
+}
+
   /**
    * Decreases lives by one.
    */
   public void die() {
     lives--;
+  }
+  
+  public boolean isAlive() {
+	  return lives > 0;
   }
 
   @Override
@@ -178,4 +204,72 @@ public class Player implements Collidable, Drawable {
             + "x=" + x
             + ", lives=" + lives + '}';
   }
+
+
+  /**
+   * Represents control keys for player.
+   */
+  public static class ControlKeys {
+    private KeyCode leftKey;
+    private KeyCode rightKey;
+    private KeyCode shootKey;
+    
+    /**
+     * the lastKey value is used, suppressed warning.
+     */
+    @SuppressWarnings("unused")
+	private KeyCode lastKey;
+
+    /**
+     * Moving action.
+     */
+    public enum Action {
+      NONE, LEFT, SHOOT, RIGHT
+    }
+
+    /**
+     * Get new instance.
+     * @param leftKey left
+     * @param rightKey right
+     * @param shootKey shoot
+     */
+    public ControlKeys(KeyCode leftKey, KeyCode rightKey, KeyCode shootKey) {
+      this.leftKey = leftKey;
+      this.rightKey = rightKey;
+      this.shootKey = shootKey;
+      this.lastKey = KeyCode.SPACE;
+    }
+
+    /**
+     * Determines if the key pressed matches a player set key.
+     * @param key pressed key
+     * @return Action result
+     */
+    public Action determineAction(KeyCode key) {
+      Action action = Action.NONE;
+      if (key == rightKey) {
+        action = Action.RIGHT;
+      } else if (key == leftKey) {
+        action = Action.LEFT;
+      } else if (key == shootKey) {
+        action = Action.SHOOT;
+      }
+      if (action != Action.NONE) {
+        lastKey = key;
+      }
+      return action;
+    }
+
+    /**
+     * Determines whether the key pressed moves the character.
+     * @param press input key
+     * @return true if the key moves the player
+     */
+    public boolean isMoveKey(KeyCode press) {
+      return press == rightKey || press == leftKey;
+    }
+
+  }
+
+
 }

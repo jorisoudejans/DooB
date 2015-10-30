@@ -7,11 +7,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doob.controller.HighscoreMenuController">
    <children>
-      <Label layoutX="442.0" layoutY="14.0" text="Highscores">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
       <TableView fx:id="scoreTable" layoutX="300.0" layoutY="62.0" prefHeight="740.0" prefWidth="400.0">
         <columns>
           <TableColumn fx:id="nameCol" editable="false" prefWidth="199.0" resizable="false" sortable="false" text="Name" />
@@ -21,6 +16,11 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#backToMenu" prefHeight="50.0" prefWidth="150.0" text=" Back to Menu" />
+      <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#showHighScores" prefHeight="50.0" prefWidth="150.0" text=" Back to Highscores" />
+      <Label fx:id="gameModeLabel" layoutX="430.0" layoutY="14.0" text="&lt;GameMode&gt;">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

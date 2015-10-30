@@ -1,8 +1,11 @@
 package doob.model;
 
+import doob.util.TupleTwo;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Class to represent a ball.
@@ -15,7 +18,6 @@ public class Ball implements Collidable, Drawable {
   private double speedX;
   private double speedY;
   private int size;
-  private int splitBounce;
   private Color color;
 
   public static final int SPLIT_BOUNCE = -4;
@@ -23,6 +25,11 @@ public class Ball implements Collidable, Drawable {
   public static final int START_SPEED_X = 2;
   public static final int MIN_SIZE = 32;
   public static final int SCORE = 100;
+  
+  public static final int MEGA = 128;
+  public static final int BIG = 64;
+  public static final int MEDIUM = 32;
+  public static final int SMALL = 16;
 
   /**
    * Constructor.
@@ -44,20 +51,21 @@ public class Ball implements Collidable, Drawable {
     this.speedX = speedX;
     this.speedY = speedY;
     this.size = size;
-    this.splitBounce = SPLIT_BOUNCE;
-    setColor();
+    this.color = getColor(size);
   }
 
   /**
    * Sets the value of the color variable dependent of the size of the ball.
+   * @param size The size of the ball.
+   * @return The color of the ball.
    */
-  public void setColor() {
-	  switch(size) {
-	  case 128: color = Color.RED; break;
-	  case 64 : color = Color.GREEN; break;
-	  case 32 : color = Color.BLUE; break;
-	  case 16 : color = Color.PURPLE; break;
-	  default : color = Color.BLACK;
+  public static Color getColor(int size) {
+	  switch (size) {
+	  case MEGA : return Color.RED; 
+	  case BIG : return Color.GREEN; 
+	  case MEDIUM : return Color.BLUE; 
+	  case SMALL : return Color.PURPLE; 
+	  default : return Color.BLACK;
 	  }
   }
 
@@ -88,8 +96,8 @@ public class Ball implements Collidable, Drawable {
    * @return A list of new balls.
    */
   public Ball[] split() {
-    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, splitBounce, this.size / 2);
-    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, splitBounce, this.size / 2);
+    Ball ball1 = new Ball(this.x, this.y, START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
+    Ball ball2 = new Ball(this.x, this.y, -START_SPEED_X, SPLIT_BOUNCE, this.size / 2);
     Ball[] res = new Ball[2];
     res[0] = ball1;
     res[1] = ball2;
@@ -116,7 +124,11 @@ public class Ball implements Collidable, Drawable {
     return y;
   }
 
-  public void setY(double y) {
+  public double getSpeedY() {
+	return speedY;
+}
+
+public void setY(double y) {
     this.y = y;
   }
 
@@ -147,6 +159,36 @@ public class Ball implements Collidable, Drawable {
   }
 
   /**
+   * Gives the representation as DOM for this ball.
+   * @param dom the current context Document
+   * @param id current ball id
+   * @return DOM element containing the data
+   */
+  public Element getDomRepresentation(Document dom, int id) {
+
+    Element be = dom.createElement("ball");
+    be.setAttribute("id", Integer.toString(id));
+
+    Element bx = dom.createElement("x");
+    bx.appendChild(dom.createTextNode(Integer.toString((int) x)));
+    Element by = dom.createElement("y");
+    by.appendChild(dom.createTextNode(Integer.toString((int) y)));
+    Element bsX = dom.createElement("speedX");
+    bsX.appendChild(dom.createTextNode(Integer.toString((int) speedX)));
+    Element bsY = dom.createElement("speedY");
+    bsY.appendChild(dom.createTextNode(Integer.toString((int) speedY)));
+    Element bs = dom.createElement("size");
+    bs.appendChild(dom.createTextNode(Integer.toString(size)));
+
+    be.appendChild(bx);
+    be.appendChild(by);
+    be.appendChild(bsX);
+    be.appendChild(bsY);
+    be.appendChild(bs);
+    return be;
+  }
+
+  /**
    * Increase the vertical speed by adding up a parameter.
    *
    * @param speedDY
@@ -173,7 +215,7 @@ public class Ball implements Collidable, Drawable {
     }
     return (int) -((Math.log(size) / Math.log(2)) * 2);
   }
-
+  
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {

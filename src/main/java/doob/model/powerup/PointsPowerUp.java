@@ -1,11 +1,10 @@
 package doob.model.powerup;
 
-import doob.model.Collidable;
-import doob.model.Level;
+import doob.model.level.Level;
 import doob.model.Player;
 
 /**
- * Power-up that adds a life to the player.
+ * Power-up that adds a point to the player.
  */
 @PowerUpChance(chance = PowerUp.CHANCE_POINTS)
 public class PointsPowerUp extends PowerUp {
@@ -13,7 +12,7 @@ public class PointsPowerUp extends PowerUp {
     public static final int POINTS_TO_ADD = 500;
 
     /**
-     * Adds one life to player.
+     * Adds points to player.
      * @param level the level the power-up is in.
      * @param player the player that picked up the power-up.
      */
@@ -42,7 +41,7 @@ public class PointsPowerUp extends PowerUp {
     }
 
     /**
-     * Path to heart icon.
+     * Path to star icon.
      * @return path
      */
     @Override

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<level>
+	<time>2000</time>
+    <playerList>
+        <player id="1">
+            <x>420</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+        <player id="2">
+            <x>500</x>
+            <y>575</y>
+            <width>50</width>
+            <height>72</height>
+        </player>
+    </playerList>
+    <ballList>
+        <ball id="1">
+            <x>25</x>
+            <y>200</y>
+            <speedX>2</speedX>
+            <speedY>0</speedY>
+            <size>128</size>
+        </ball>
+    </ballList>
+
+</level>

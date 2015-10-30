@@ -9,16 +9,17 @@ import javafx.scene.shape.Rectangle;
  *
  */
 public class Wall implements Collidable, Drawable {
+
+	public static final int BOUNDS_DELTA = 10;
 	
 	private int x, y, width, height;
 	private boolean moveable;
 	private int endx, endy;
 	private int duration;
 	private int speed;
+	private Rectangle r;
 
 	private boolean open;
-	private String condition;	//TODO Use an ENUM for this
-	private Rectangle r;
 	
 	/**
 	 * Constructor for a simple wall which is not moveable.
@@ -46,12 +47,12 @@ public class Wall implements Collidable, Drawable {
 	 * @param endx The x end-position of the wall
 	 * @param endy The y end-position of the wall
 	 * @param duration How long does is take to move the wall
-	 * @param condition When does the wall have to move
+	 * @param speed the speed with which the wall moves.
 	 */
 	public Wall(int x, int y, int width, int height, int endx, int endy, 
-			int duration, int speed, String condition) {
+			int duration, int speed) {
 		this.moveable = true;
-		r = new Rectangle(x, y, width, height);
+		this.r = new Rectangle(x, y, width, height);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -60,7 +61,6 @@ public class Wall implements Collidable, Drawable {
 		this.endy = endy;
 		this.duration = duration;
 		this.speed = speed;
-		this.condition = condition;
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Wall implements Collidable, Drawable {
 	 */
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
+		return new Rectangle(x, y, width + BOUNDS_DELTA, height);
 	}
 	
 	/**
@@ -110,16 +110,8 @@ public class Wall implements Collidable, Drawable {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	public boolean isOpen() {
@@ -134,16 +126,8 @@ public class Wall implements Collidable, Drawable {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public int getHeight() {
 		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	public boolean isMoveable() {
@@ -154,8 +138,16 @@ public class Wall implements Collidable, Drawable {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
-		this.duration = duration;
+	public int getEndx() {
+		return endx;
+	}
+
+	public int getEndy() {
+		return endy;
+	}
+
+	public int getSpeed() {
+		return speed;
 	}
 
 	@Override
@@ -179,8 +171,6 @@ public class Wall implements Collidable, Drawable {
 			return false; }
 		if (!moveable) {
 			return true; }
-		if (!condition.equals(other.condition)) {
-			return false; }
 		if (duration != other.duration) {
 			return false; }
 		if (endx != other.endx) {
