@@ -383,7 +383,15 @@ public abstract class Game implements Observer {
 		}
 		readOptions();
 	}
-	
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+
 	/**
 	 * Show the highscores.
 	 */
