@@ -4,6 +4,7 @@ import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -34,7 +35,6 @@ public class LevelWriterTest {
         walls = new ArrayList<Wall>();
         balls = new ArrayList<Ball>();
         players = new ArrayList<Player>();
-        name = "Tests/";
     }
 
     @After
@@ -46,40 +46,108 @@ public class LevelWriterTest {
         }
     }
 
-    private Element getElement(String file, String tag) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = factory.newDocumentBuilder();
+    private boolean equalXML(String path1, String path2) throws Exception{
 
-            Document doc = dBuilder.parse(file);
-            doc.getDocumentElement().normalize();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        dbf.setCoalescing(true);
+        dbf.setIgnoringElementContentWhitespace(true);
+        dbf.setIgnoringComments(true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
 
-            NodeList nListBall = doc.getElementsByTagName(tag);
-            Node nNode = nListBall.item(0);
+        Document doc1 = db.parse(new File(path1));
+        doc1.normalizeDocument();
 
-            return (Element) nNode;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        Document doc2 = db.parse(new File(path2));
+        doc2.normalizeDocument();
+
+        return doc1.isEqualNode(doc2);
     }
 
+
     @Test
-    public void testWritePlayers() {
+    public void testWritePlayers() throws Exception {
         Player pl1 = new Player(420, 575, 50, 72, null, null, null);
         Player pl2 = new Player(500, 600, 100, 20, null, null, null);
 
         players.add(pl1);
         players.add(pl2);
 
-        name = name + "playerTest";
+        name = "playerTest";
+
+        String pathOut = "src/main/resources/level/Custom/playerTest.xml";
+        String pathExp = "src/test/resources/level/Custom/playerTestOut.xml";
+
 
         LevelWriter lw = new LevelWriter(balls, walls, players, 0, name);
-        try {
-            lw.saveToXML();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        lw.saveToXML();
+        Assert.assertTrue(equalXML(pathOut, pathExp));
+
+    }
+
+    @Test
+    public void testWriteWalls() throws Exception{
+        Wall wall1 = new Wall(400, 500, 45, 90);
+        Wall wall2 = new Wall(100, 541, 468, 132,200, 100, 2000, 5);
+
+        walls.add(wall1);
+        walls.add(wall2);
+
+        name = "wallTest";
+
+        String pathOut = "src/main/resources/level/Custom/wallTest.xml";
+        String pathExp = "src/test/resources/level/Custom/wallTestOut.xml";
+
+
+        LevelWriter lw = new LevelWriter(balls, walls, players, 0, name);
+
+        lw.saveToXML();
+        Assert.assertTrue(equalXML(pathOut, pathExp));
+    }
+
+    @Test
+    public void testWriteBalls() throws Exception{
+        Ball ball1 = new Ball(400, 500, 4, 2, 64);
+        Ball ball2 = new Ball(100, 100, -8, 0, 256);
+
+        balls.add(ball1);
+        balls.add(ball2);
+
+        name = "ballTest";
+
+        String pathOut = "src/main/resources/level/Custom/ballTest.xml";
+        String pathExp = "src/test/resources/level/Custom/ballTestOut.xml";
+
+
+        LevelWriter lw = new LevelWriter(balls, walls, players, 0, name);
+
+        lw.saveToXML();
+        Assert.assertTrue(equalXML(pathOut, pathExp));
+    }
+
+    @Test
+    public void testWriteCustomLevels() throws Exception{
+        String pathOut = "src/main/resources/level/CustomSPLevels.xml";
+        String pathExp = "src/test/resources/level/CustomSPLevelsOut.xml";
+
+        String tempPath = "src/main/resources/level/CustomSPLevelsCopy.xml";
+
+        //copy current customLevels file to switch back later
+        Files.copy(Paths.get(pathOut), Paths.get(tempPath));
+
+        String[] levels = {"CustomLevel1", "MyLevel23"};
+        LevelWriter.writeCustomLevels(levels);
+
+
+        Assert.assertTrue(equalXML(pathOut, pathExp));
+
+        //switch back to the right customLevels
+        Files.deleteIfExists(Paths.get(pathOut));
+        Files.copy(Paths.get(tempPath), Paths.get(pathOut));
+        Files.deleteIfExists(Paths.get(tempPath));
+
+
     }
 
 }

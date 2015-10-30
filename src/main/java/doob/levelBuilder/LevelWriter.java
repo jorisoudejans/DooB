@@ -120,8 +120,7 @@ public class LevelWriter {
 	 */
 	private Element writeWalls() {
 		Element res = dom.createElement("wallList");
-		if (walls.size() == 0) {
-			res.appendChild(dom.createTextNode("")); }
+
 		for (int i = 0; i < walls.size(); i++) {
 			Wall w = walls.get(i);
 			walls(i);

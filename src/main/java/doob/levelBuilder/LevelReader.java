@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class LevelReader {
 	
-	private static final String PATH = "src/main/resources/level/Custom/";
+	private static String path = "src/main/resources/level/Custom/";
 	private String[] customNames;
 	
 	/**
@@ -17,7 +17,7 @@ public class LevelReader {
 	 * @return the pathname of the list.
 	 */
 	public String makeCustomLevelList() {
-		File folder = new File(PATH);
+		File folder = new File(path);
 		File[] customLevels = folder.listFiles();
 		customNames = new String[customLevels.length];
 		for (int i = 0; i < customLevels.length; i++) {
@@ -26,6 +26,10 @@ public class LevelReader {
 		LevelWriter.writeCustomLevels(customNames);
 		String res = "src/main/resources/level/CustomSPLevels.xml";
 		return res;
+	}
+
+	public void setPath(String p) {
+		this.path = p;
 	}
 
 }
