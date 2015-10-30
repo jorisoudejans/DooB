@@ -56,7 +56,7 @@ public class CeilingElement extends DoobElement {
 	public int getAmount(ArrayList<DoobElement> elementList) {
 		int res = 0;
 		for (DoobElement el : elementList) {
-			if (el instanceof BallElement) {
+			if (el instanceof CeilingElement) {
 				res++;
 			}
 		}

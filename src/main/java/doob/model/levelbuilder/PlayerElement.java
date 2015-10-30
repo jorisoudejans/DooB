@@ -54,7 +54,7 @@ public class PlayerElement extends DoobElement {
 	public static int getAmount(ArrayList<DoobElement> elementList) {
 		int res = 0;
 		for (DoobElement el : elementList) {
-			if (el instanceof BallElement) {
+			if (el instanceof PlayerElement) {
 				res++;
 			}
 		}
@@ -79,7 +79,9 @@ public class PlayerElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.xCoord && x < this.xCoord + this.width
-				&& y >= this.yCoord && y < this.yCoord + this.height);
+		return (x >= this.xCoord 
+				&& x < this.xCoord + this.width
+				&& y >= this.yCoord 
+				&& y < this.yCoord + this.height);
 	}
 }

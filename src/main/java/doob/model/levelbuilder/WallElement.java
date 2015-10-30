@@ -41,10 +41,6 @@ public class WallElement extends DoobElement {
 		change();
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
 	@Override
 	public boolean liesInside(double x, double y) {
 		return (x >= this.xCoord && x < this.xCoord + this.width
@@ -59,11 +55,15 @@ public class WallElement extends DoobElement {
 	public static int getAmount(ArrayList<DoobElement> elementList) {
 		int res = 0;
 		for (DoobElement el : elementList) {
-			if (el instanceof BallElement) {
+			if (el instanceof WallElement) {
 				res++;
 			}
 		}
 		return res;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 
 	public void setWidth(int width) {
