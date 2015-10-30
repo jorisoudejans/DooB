@@ -12,8 +12,8 @@
       <Pane layoutX="200.0" layoutY="100.0" prefHeight="600.0" prefWidth="600.0" style="-fx-border-style: solid;">
          <children>
             <Line endX="300.0" endY="600.0" startX="300.0" strokeWidth="0.5" />
-            <Slider layoutX="348.0" layoutY="463.0" prefHeight="57.0" prefWidth="216.0" />
-            <Label layoutX="116.0" layoutY="474.0" text="Volume">
+            <Slider fx:id="volumeBar" layoutX="348.0" layoutY="469.0" onMouseReleased="#setVolume" prefHeight="57.0" prefWidth="216.0" value="100.0" />
+            <Label layoutX="116.0" layoutY="480.0" text="Volume">
                <font>
                   <Font size="24.0" />
                </font>

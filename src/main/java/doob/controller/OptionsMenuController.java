@@ -3,10 +3,12 @@ package doob.controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import doob.App;
+import doob.util.SoundManager;
 
 /**
  * Controller class for the options menu.
@@ -21,6 +23,9 @@ public class OptionsMenuController {
 	private Button rightButton;
 	@FXML
 	private Button shootButton;
+	@FXML
+	private Slider volumeBar;
+	private double volume;
 	@FXML
 	private Button leftButtonMP;
 	@FXML
@@ -46,6 +51,7 @@ public class OptionsMenuController {
 	 */
 	@FXML
 	public void initialize() {
+		volume = -1;
 		selectedKey = Key.NONE;
 		anchorPane.setOnKeyPressed(new ControlAdapter());
 
@@ -58,6 +64,7 @@ public class OptionsMenuController {
 		leftButton.setText(oc.getLeft().getName());
 		rightButton.setText(oc.getRight().getName());
 		shootButton.setText(oc.getShoot().getName());
+		volumeBar.setValue(oc.getVolume());
 		
 		leftButtonMP.setText(ocMP.getLeft().getName());
 		rightButtonMP.setText(ocMP.getRight().getName());
@@ -72,6 +79,14 @@ public class OptionsMenuController {
 	public void backToMenu() {
 		write();
 		App.loadScene("/FXML/Menu.fxml");
+	}
+
+	/**
+	 * Set the volume depending on the value of the volume scrollbar.
+	 */
+	@FXML
+	public void setVolume() {
+		volume = volumeBar.getValue();
 	}
 
 	/**
@@ -211,6 +226,9 @@ public class OptionsMenuController {
 		}
 		if (shootKey != null) {
 			oc.setShoot(shootKey);
+		}
+		if (volume != -1) {
+			oc.setVolume(volume);
 		}
 		if (leftKeyMP != null) {
 			ocMP.setLeft(leftKeyMP);

@@ -25,6 +25,7 @@ import doob.game.GameUI;
 import doob.model.Player;
 import doob.model.level.Level;
 import doob.model.level.LevelFactory;
+import doob.util.SoundManager;
 import doob.util.TupleTwo;
 
 
@@ -184,6 +185,7 @@ public abstract class Game implements Observer {
 			Player.ControlKeys keys = new Player.ControlKeys(oc.getLeft(), 
 					oc.getRight(), oc.getShoot());
 			level.getPlayers().get(i).setControlKeys(keys);
+			SoundManager.setVolume(oc.getVolume());
 		}
 	}
 
@@ -267,6 +269,7 @@ public abstract class Game implements Observer {
 		emptyProgressBar();
 		dLog.info("Level " + (currentLevel + 1) + " completed!",
 				DLog.Type.STATE);
+		SoundManager.playSound(SoundManager.LEVEL_COMPLETE);
 		timer.stop();
 		level.freeze(new EventHandler<ActionEvent>() {
 			@Override
@@ -280,6 +283,7 @@ public abstract class Game implements Observer {
 					// gameState = GameState.WON;
 					dLog.info("GameUI won!", DLog.Type.STATE);
 					loadHighscores();
+					SoundManager.playSound(SoundManager.GAME_WON);
 				}
 			}
 		});
@@ -290,6 +294,7 @@ public abstract class Game implements Observer {
 	 */
 	public void onZeroLives() {
 		dLog.info("Game over!", DLog.Type.STATE);
+		SoundManager.playSound(SoundManager.DIE_EFFECT);
 		level.stopTimer();
 		level.freeze(new EventHandler<ActionEvent>() {
 			@Override
@@ -303,6 +308,7 @@ public abstract class Game implements Observer {
 	 * Handle gameStateChange lost a life.
 	 */
 	public void onLostLife() {
+		SoundManager.playSound(SoundManager.DIE_EFFECT);
 		level.stopTimer();
 		level.freeze(new EventHandler<ActionEvent>() {
 			@Override
