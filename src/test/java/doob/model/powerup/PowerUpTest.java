@@ -52,6 +52,28 @@ public abstract class PowerUpTest {
     }
 
     /**
+     * Tests wait time ticking.
+     */
+    @Test
+    public void testTickWait() {
+        PowerUp p = getPowerUp();
+        int t = p.getCurrentWaitTime();
+        p.tickWait();
+        Assert.assertEquals(t-1, p.getCurrentWaitTime());
+    }
+
+    /**
+     * Tests active time decreasing properly.
+     */
+    @Test
+    public void testTickActive() {
+        PowerUp p = getPowerUp();
+        double t = p.getActiveTime();
+        p.tickActive();
+        Assert.assertEquals(t-1, p.getActiveTime(), 0.01);
+    }
+
+    /**
      * Tests sprite method.
      */
     @Test
