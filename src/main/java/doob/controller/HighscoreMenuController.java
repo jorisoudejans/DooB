@@ -7,19 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import doob.App;
 import doob.model.Score;
+import doob.popup.InputPopup;
 
 /**
  * Class to control the highscores menu.
@@ -38,11 +33,8 @@ public class HighscoreMenuController {
 	private HighscoreController hsc;
 	private String source;
 	private String labelText;
-	
-	private static final int BUTTON_WIDTH = 100;
-	private static final int TEXT_FIELD_WIDTH = 350;
+
 	private static final int CELL_SIZE = 70;
-	private static final int FONT_SIZE = 22;
 	
 	/**
 	 * Read the highscores file and insert the scores into the table.
@@ -75,17 +67,14 @@ public class HighscoreMenuController {
 			return;	
 		}
 		final Stage dialog = new Stage();
-		dialog.initOwner(App.getStage());
-		Label l = new Label("Player " + player + " got a highscore! Enter your name");
-		l.setFont(new Font(FONT_SIZE));
-		final TextField tf = new TextField();
-		tf.setMaxWidth(TEXT_FIELD_WIDTH);		
-		Button b = new Button("OK");
-		b.setPrefWidth(BUTTON_WIDTH);
-		b.setOnAction(new EventHandler<ActionEvent>() {
+		final InputPopup popup = App.popup(dialog,
+				"/FXML/InputPopup.fxml").getController();
+		String text = " Please enter the name of the level:";
+		popup.setText(text);
+		popup.setOnOK(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent e) {
-				String name = tf.getText();
+			public void handle(ActionEvent event) {
+				String name = popup.getInput();
 				if (name.length() > 0) {
 					int index = hsc.highScoreIndex(score);
 					dialog.close();
@@ -96,16 +85,6 @@ public class HighscoreMenuController {
 				}
 			}
 		});
-		
-		VBox popUpVBox = new VBox(10);
-		popUpVBox.setAlignment(Pos.CENTER);
-        popUpVBox.getChildren().add(l);
-        popUpVBox.getChildren().add(tf);
-        popUpVBox.getChildren().add(b);
-
-        Scene dialogScene = new Scene(popUpVBox, 500, 150);
-		dialog.setScene(dialogScene);
-		dialog.show();
 	}
 	
 	/**

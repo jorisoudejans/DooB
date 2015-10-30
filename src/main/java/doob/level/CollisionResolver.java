@@ -1,9 +1,15 @@
 package doob.level;
 
-import doob.model.*;
-import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import doob.DLog;
+import doob.model.Ball;
+import doob.model.Level;
+import doob.model.Level.Event;
+import doob.model.Player;
+import doob.model.Projectile;
+import doob.model.SurvivalLevel;
+import doob.model.Wall;
 import doob.model.powerup.PowerUp;
 import doob.util.TupleTwo;
 
@@ -129,20 +135,14 @@ public class CollisionResolver {
                 gameOver = false;
             }
         }
+        
         if (gameOver) {
-            level.onEvent(Level.Event.ZERO_LIVES);
+        	level.onEvent(Level.Event.ZERO_LIVES);
         } else {
             level.onEvent(Level.Event.LOST_LIFE);
-        }
+        }      
         
-        level.freeze(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-                level.continueNextLevel();
-                dLog.info("Lost a life", DLog.Type.STATE);
-            }
-        });
-
+        dLog.info("Lost a life", DLog.Type.STATE);
     }
 
 	/**
@@ -237,7 +237,7 @@ public class CollisionResolver {
 		if (walls.t0 == level.getLeft() && walls.t1 == level.getRight()
 				&& !(level instanceof SurvivalLevel)) {
 			level.onEvent(Level.Event.ALL_BALLS_GONE);
-			level.stopTimer();
+			//level.stopTimer();
 			//level.continueNextLevel();
 			dLog.info("All balls gone", DLog.Type.STATE);
 		} else if (walls.t0 == level.getLeft()) {

@@ -1,19 +1,21 @@
 package doob.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 import doob.DLog;
 import doob.level.CollisionManager;
 import doob.level.CollisionResolver;
 import doob.level.PowerUpManager;
 import doob.model.powerup.PowerUp;
 import doob.util.BoundsTuple;
-import javafx.animation.AnimationTimer;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 
 /**
  * Level class, created from LevelFactory.
@@ -106,21 +108,12 @@ public abstract class Level extends Observable {
      * Create a freeze of 2 seconds when a level fails or is completed.
      * @param afterFreeze handler for what to do after the freeze.
      */
-    public void freeze(EventHandler<WorkerStateEvent> afterFreeze) {
-        Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    Thread.sleep(FREEZE_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-        timer.stop();
-        sleeper.setOnSucceeded(afterFreeze);
-        new Thread(sleeper).start();
+    public void freeze(EventHandler<ActionEvent> afterFreeze) {
+        stopTimer();
+    	Timeline timeline = new Timeline(new KeyFrame(
+		        Duration.millis(FREEZE_TIME), afterFreeze));
+		timeline.setCycleCount(1);
+		timeline.play();
     }
 
     /**

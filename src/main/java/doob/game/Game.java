@@ -8,12 +8,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import doob.controller.LevelController;
-import doob.level.LevelFactory;
-import doob.level.LevelView;
-import doob.util.BoundsTuple;
 import javafx.animation.AnimationTimer;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -34,8 +31,10 @@ import org.w3c.dom.NodeList;
 import doob.App;
 import doob.DLog;
 import doob.controller.OptionsController;
+import doob.level.LevelFactory;
 import doob.model.Level;
 import doob.model.Player;
+import doob.model.Level.Event;
 
 
 /**
@@ -275,9 +274,9 @@ public abstract class Game implements Observer {
 				}
 			}
 			update(null, Level.Event.LOST_LIFE);
-			level.freeze(new EventHandler<WorkerStateEvent>() {
+			level.freeze(new EventHandler<ActionEvent>() {
 	            @Override
-	            public void handle(WorkerStateEvent event) {
+	            public void handle(ActionEvent event) {
 	                level.continueNextLevel();
 	                dLog.info("Lost a life", DLog.Type.STATE);
 	                level.startTimer();
@@ -326,13 +325,13 @@ public abstract class Game implements Observer {
 			Level.Event event = (Level.Event) arg;
 			switch (event) {
 				case ZERO_LIVES:
-					//App.loadHighscoreScene(score, score2, gameMode);
+					onZeroLives();
 					break;
 				case ALL_BALLS_GONE:
 					onAllBallsGone();
 					break;
 				case LOST_LIFE:
-					newLevel();
+					onLostLife();
 					break;
 				default:
 					break;
@@ -348,9 +347,9 @@ public abstract class Game implements Observer {
 		dLog.info("Level " + (currentLevel + 1) + " completed!",
 				DLog.Type.STATE);
 		timer.stop();
-		level.freeze(new EventHandler<WorkerStateEvent>() {
+		level.freeze(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(WorkerStateEvent event) {
+			public void handle(ActionEvent event) {
 				if (currentLevel < levelList.size() - 1) {
 					currentLevel++;
 					levelLabel.setText((currentLevel + 1) + "");
@@ -361,6 +360,33 @@ public abstract class Game implements Observer {
 					dLog.info("Game won!", DLog.Type.STATE);
 					loadHighscores();
 				}
+			}
+		});
+	}
+	
+	/**
+	 * Handle gameStateChange zero lives.
+	 */
+	public void onZeroLives() {
+		dLog.info("Game over!", DLog.Type.STATE);
+		level.stopTimer();
+		level.freeze(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				loadHighscores();
+			}
+		});
+	}
+	
+	/**
+	 * Handle gameStateChange lost a life.
+	 */
+	public void onLostLife() {
+		level.stopTimer();
+		level.freeze(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				newLevel();
 			}
 		});
 	}
