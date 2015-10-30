@@ -1,8 +1,8 @@
 package doob.model.powerup;
 
 import doob.model.Collidable;
-import doob.model.level.Level;
 import doob.model.Player;
+import doob.model.level.Level;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -123,14 +123,14 @@ public abstract class PowerUp implements Collidable {
 	}
 
 	/**
-	 * Game tick on power-up. Decrease time left.
+	 * GameUI tick on power-up. Decrease time left.
 	 */
 	public void tickActive() {
 		this.activeTime--;
 	}
 
 	/**
-	 * Game tick on power-up. Decrease time left.
+	 * GameUI tick on power-up. Decrease time left.
 	 */
 	public void tickWait() {
 		this.currentWaitTime--;

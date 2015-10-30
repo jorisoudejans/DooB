@@ -3,7 +3,6 @@ package doob.controller;
 import doob.App;
 import doob.game.GameFactory;
 import javafx.fxml.FXML;
-import doob.game.SinglePlayerGame;
 
 /**
  * Opening menu.
@@ -21,7 +20,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playSinglePlayer() {
-		gameFactory.getGame("singlePlayer").initialize();
+		gameFactory.getGame("singlePlayer");
 	}
 	
 	/**
@@ -29,7 +28,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playDuelMode() {
-		gameFactory.getGame("duelMode").initialize();
+		gameFactory.getGame("duelMode");
 	}
 	
 	/**
@@ -37,7 +36,7 @@ public class MenuController {
 	 */
 	@FXML
 	public void playCoopMode() {
-		gameFactory.getGame("coopMode").initialize();
+		gameFactory.getGame("coopMode");
 	}
 	
 	/**
@@ -45,14 +44,22 @@ public class MenuController {
 	 */
 	@FXML
 	public void playSurvivalMode() {
-		gameFactory.getGame("survivalMode").initialize();
+		gameFactory.getGame("survivalMode");
+	}
+
+	/**
+	 * Play the custom created levels.
+	 */
+	@FXML
+	public void playCustom() {
+		gameFactory.getGame("customMode");
 	}
 	
 	/**
 	 * Navigate to the highscore sub-menu.
 	 */
 	@FXML void showHighscores() {
-		App.loadScene("/fxml/Highscore.fxml").getController();
+		App.loadScene("/FXML/Highscore.fxml").getController();
 	}
 	
 	/**
@@ -100,20 +107,11 @@ public class MenuController {
 	}
 	
 	/**
-	 * Play the custom created levels.
-	 */
-	@FXML
-	public void playCustom() {
-		SinglePlayerGame spg = App.loadScene("/FXML/SinglePlayerGame.fxml").getController();
-		spg.initializeCustom();
-	}
-	
-	/**
 	 * Navigate to the levelbuilder.
 	 */
 	@FXML
 	public void buildLevel() {
-		App.loadScene("/fxml/levelbuilder.fxml");
+		App.loadScene("/FXML/levelbuilder.fxml");
 	}
 	
 	/**
