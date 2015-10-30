@@ -1,15 +1,8 @@
 package doob.controller;
 
 
+import doob.game.GameUI;
 import org.junit.Test;
-
-import doob.game.Game;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests controller of game by using a junit rule.
@@ -17,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by hidde on 9/8/15.
  */
 
-public class GameControllerTest extends ControllerTest {
+public class GameUITest extends ControllerTest {
 
     /**
      * Tests that our game controller exists in file.
@@ -40,12 +33,12 @@ public class GameControllerTest extends ControllerTest {
      */
     //@Test
     //public void testGetGameState() {
-    //    assertEquals(GameController.GameState.RUNNING, getGameController().getGameState());
+    //    assertEquals(GameUI.GameState.RUNNING, getGameController().getGameState());
     //}
 
     @Test
     public void testCreateFreeze() throws InterruptedException{
-        /*GameController gameController = getGameController();
+        /*GameUI gameController = getGameController();
         Level level = gameController.getLevel();
         level.update(); // times now differ
         assertThat(level.getDuration(), IsNot.not(equalTo(level.getCurrentTime())));
@@ -55,7 +48,7 @@ public class GameControllerTest extends ControllerTest {
         assertEquals(level.getDuration(), level.getCurrentTime());*/
     }
 
-    private Game getGameController() {
-        return (Game)getController("/fxml/game.fxml");
+    private GameUI getGameController() {
+        return (GameUI)getController("/FXML/game.fxml");
     }
 }

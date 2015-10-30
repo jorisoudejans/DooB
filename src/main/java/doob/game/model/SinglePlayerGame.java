@@ -1,9 +1,9 @@
-package doob.game;
+package doob.game.model;
 
-import javafx.scene.image.Image;
 import doob.App;
 import doob.controller.HighscoreMenuController;
 import doob.model.levelbuilder.LevelReader;
+import doob.util.TupleTwo;
 
 /**
  * Class to play a singleplayer game.
@@ -14,7 +14,7 @@ public class SinglePlayerGame extends Game {
 	 * Load the list of single-player levels.
 	 */
 	public void initialize() {
-		initGame("src/main/resources/Level/SinglePlayerLevels.xml");
+		initNormalGame("src/main/resources/Level/SinglePlayerLevels.xml");
 	}
 	
 	/**
@@ -24,22 +24,21 @@ public class SinglePlayerGame extends Game {
 		LevelReader lr = new LevelReader();
 		initCustomGame(lr.makeCustomLevelList());		
 	}
-	
+
 	@Override
-	public void updateLives() {
-		gc.clearRect(0, 0, lives1.getWidth(), lives1.getHeight());
-		int lives = level.getPlayers().get(0).getLives();
-		
-		for (int i = 0; i < lives; i++) {
-			gc.drawImage(new Image("/image/heart.png"), i
-					* HEART_SPACE, HEART_Y);
-		}
+	public TupleTwo<Integer> getLives() {
+		return new TupleTwo<Integer>(
+				level.getPlayers().get(0).getLives(),
+				0
+		);
 	}
 
 	@Override
-	public void updateScore() {
-		score = level.getPlayers().get(0).getScore();
-		scoreTextView1.setText(score + "");
+	public TupleTwo<Integer> getScores() {
+		return new TupleTwo<Integer>(
+				level.getPlayers().get(0).getScore(),
+				0
+		);
 	}
 
 	@Override
@@ -51,6 +50,6 @@ public class SinglePlayerGame extends Game {
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
 		hsmc.updateTable("src/main/resources/Highscore/highscores.xml", "SinglePlayer Mode");
-		hsmc.insertScore(score, 1);
+		hsmc.insertScore(getScores().t0, 1);
 	}
 }

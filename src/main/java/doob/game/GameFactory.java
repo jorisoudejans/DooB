@@ -1,6 +1,7 @@
 package doob.game;
 
 import doob.App;
+import doob.game.model.*;
 
 /**
  * Factory class for games.
@@ -19,20 +20,25 @@ public class GameFactory {
      */
     // Suppress because we know the paths are good, so no null pointers here.
     @SuppressWarnings("ConstantConditions")
-    public Game getGame(String type) {
-        if (type == null) {
-            return App.loadScene(PATH_SINGLE_PLAYER).getController();
-        }
+    public GameUI getGame(String type) {
+        String path = PATH_SINGLE_PLAYER;
+        Game game = new SinglePlayerGame();
         if (type.equals("duelMode")) {
-            return App.loadScene(PATH_DUEL_MODE).getController();
+            game = new DuelGame();
+            path = PATH_DUEL_MODE;
         }
         if (type.equals("coopMode")) {
-            return App.loadScene(PATH_COOP_MODE).getController();
+            game = new CoopGame();
+            path = PATH_COOP_MODE;
         }
         if (type.equals("survivalMode")) {
-            return App.loadScene(PATH_SURVIVAL_MODE).getController();
+            game = new SurvivalGame();
+            path = PATH_SURVIVAL_MODE;
         }
-        return App.loadScene(PATH_SINGLE_PLAYER).getController();
+        GameUI controller = App.loadScene(path).getController();
+        game.setUI(controller);
+        controller.setGame(game);
+        return controller;
     }
 
 }

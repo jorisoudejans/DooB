@@ -1,38 +1,28 @@
-package doob.game;
+package doob.game.model;
 
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import doob.model.level.LevelFactory;
-import javafx.animation.AnimationTimer;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import doob.App;
 import doob.DLog;
 import doob.controller.OptionsController;
-import doob.model.level.Level;
+import doob.game.GameUI;
 import doob.model.Player;
+import doob.model.level.Level;
+import doob.model.level.LevelFactory;
+import doob.util.TupleTwo;
+import javafx.animation.AnimationTimer;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -40,103 +30,63 @@ import doob.model.Player;
  */
 public abstract class Game implements Observer {
 
-	@FXML
-	protected Canvas canvas;
-	@FXML
-	protected Pane pane;
-	@FXML
-	protected Canvas lives1;
-	@FXML
-	protected Canvas lives2;
-	@FXML
-	protected Label scoreTextView1;
-	@FXML
-	protected Label scoreTextView2;
-	@FXML
-	protected ProgressBar progressBar;
-	@FXML
-	protected Label levelLabel;
-	@FXML
-	protected Button playPauseButton;
-
-	// private GameState gameState;
-	protected ArrayList<String> levelList;
-	protected int currentLevel;
+	private List<String> levelList;
+	private int currentLevel;
 	protected Level level;
 	private AnimationTimer timer;
-	protected GraphicsContext gc;
-	protected GraphicsContext gc2;
 	private double progress;
 	private boolean running;
-	protected int score;
-	protected int score2;
-	public static final int HEART_SPACE = 40;
-	public static final int HEART_Y = 8;
 	private static final int TIME_BONUS = 3;
 	private static final double PROGRESS_PER_TICK = 0.01;
 
 	private DLog dLog;
 
+	private GameUI ui;
+
+	/**
+	 * Init normal game.
+	 * @param levelPath path to file
+	 */
+	public void initNormalGame(String levelPath) {
+		initGame(levelPath, false);
+	}
+
+	/**
+	 * Init custom game.
+	 * @param levelPath path to file
+	 */
+	public void initCustomGame(String levelPath) {
+		initGame(levelPath, true);
+	}
+
 	/**
 	 * Initialization of the game pane.
 	 * 
-	 * @throws IOException
-	 *             it DooB.log can't be accessed.
 	 * @param levelPath
-	 *            The path of the levels to be read.
+	 *            The path of the levels to be read
+	 * @param isCustom custom game or not
 	 */
-	protected void initGame(String levelPath) {
+	public void initGame(String levelPath, boolean isCustom) {
 		dLog = DLog.getInstance();
 		levelList = new ArrayList<String>();
-		readLevels(levelPath);
-		levelLabel.setText((currentLevel + 1) + "");
+		readLevels(levelPath, isCustom);
+		ui.setLevelLabel(currentLevel);
 		// gameState = GameState.RUNNING;
 		createTimer();
 		newLevel();
 		readOptions();
-		gc = lives1.getGraphicsContext2D();
-		gc2 = lives2.getGraphicsContext2D();
-		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
-		GraphicsContext gcBg = background.getGraphicsContext2D();
-		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0,
-				canvas.getWidth(), canvas.getHeight());
-		pane.getChildren().add(background);
-		background.toBack();
 		running = true;
 
 		dLog.setFile("DooB.log");
-		dLog.info("Game started.", DLog.Type.STATE);
+		dLog.info("GameUI started.", DLog.Type.STATE);
 	}
-	
-	/**
-	 * Initialization of the custom game pane.
-	 * 
-	 * @throws IOException
-	 *             it DooB.log can't be accessed.
-	 * @param levelPath
-	 *            The path of the levels to be read.
-	 */
-	protected void initCustomGame(String levelPath) {
-		dLog = DLog.getInstance();
-		levelList = new ArrayList<String>();
-		readCustomLevels(levelPath);
-		levelLabel.setText((currentLevel + 1) + "");
-		// gameState = GameState.RUNNING;
-		createTimer();
-		newLevel();
-		readOptions();
-		gc = lives1.getGraphicsContext2D();
-		gc2 = lives2.getGraphicsContext2D();
-		Canvas background = new Canvas(canvas.getWidth(), canvas.getHeight());
-		GraphicsContext gcBg = background.getGraphicsContext2D();
-		gcBg.drawImage(new Image("/image/background.jpg"), 0, 0,
-				canvas.getWidth(), canvas.getHeight());
-		pane.getChildren().add(background);
-		background.toBack();
-		running = true;
 
-		dLog.setFile("DooB.log");
-		dLog.info("Game started.", DLog.Type.STATE);
+	/**
+	 * Set controller for this class.
+	 * @param ui controller
+	 */
+	public void setUI(GameUI ui) {
+		this.ui = ui;
 	}
 
 	/**
@@ -145,27 +95,17 @@ public abstract class Game implements Observer {
 	public abstract void initialize();
 
 	/**
-	 * Navigate back to the menu.
-	 */
-	@FXML
-	public void backToMenu() {
-		level.stopTimer();
-		App.loadScene("/FXML/Menu.fxml");
-	}
-
-	/**
 	 * Continues or pauses the game dependent on wheter it is running or not.
 	 */
-	@FXML
 	public void pausePlay() {
 		if (running) {
 			level.stopTimer();
 			running = false;
-			playPauseButton.setText("Play");
+			ui.setPlayPauseButton("Play");
 		} else {
 			level.startTimer();
 			running = true;
-			playPauseButton.setText("Pause");
+			ui.setPlayPauseButton("Pause");
 		}
 	}
 
@@ -184,15 +124,24 @@ public abstract class Game implements Observer {
 		};
 		timer.start();
 	}
-	
+
 	/**
-	 * Reads all levels out of the levelsfile as a string and puts them in a
+	 * Navigate back to the menu.
+	 */
+	public void backToMenu() {
+		level.stopTimer();
+		App.loadScene("/FXML/Menu.fxml");
+	}
+
+	/**
+	 * Reads all levels out of the levels file as a string and puts them in a
 	 * list of strings with all levels.
-	 * 
+	 *
 	 * @param levelPath
 	 *            The path to the levels that have to be read.
+	 * @param isCustom whether they are custom
 	 */
-	public void readCustomLevels(String levelPath) {
+	public void readLevels(String levelPath, boolean isCustom) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
@@ -204,7 +153,13 @@ public abstract class Game implements Observer {
 			NodeList levels = doc.getElementsByTagName("LevelName");
 			for (int i = 0; i < levels.getLength(); i++) {
 				Node n = levels.item(i);
-				String s = "src/main/resources/level/Custom/" + n.getTextContent();
+				String custom;
+				if (isCustom) {
+					custom = "Custom/";
+				} else {
+					custom = "";
+				}
+				String s = "src/main/resources/level/" + custom + n.getTextContent();
 				levelList.add(s);
 			}
 			currentLevel = 0;
@@ -213,36 +168,6 @@ public abstract class Game implements Observer {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Reads all levels out of the levelsfile as a string and puts them in a
-	 * list of strings with all levels.
-	 * 
-	 * @param levelPath
-	 *            The path to the levels that have to be read.
-	 */
-	public void readLevels(String levelPath) {
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder dBuilder = factory.newDocumentBuilder();
-
-			Document doc = dBuilder.parse(new File(levelPath));
-			doc.getDocumentElement().normalize();
-
-			NodeList levels = doc.getElementsByTagName("LevelName");
-			for (int i = 0; i < levels.getLength(); i++) {
-				Node n = levels.item(i);
-				String s = "src/main/resources/level/" + n.getTextContent();
-				levelList.add(s);
-			}
-			currentLevel = 0;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	/**
 	 * Reads all options from the options xml.
@@ -274,7 +199,7 @@ public abstract class Game implements Observer {
 			update(null, Level.Event.LOST_LIFE);
 			return;
 		}
-		progressBar.setProgress(progress);
+		ui.setProgress(progress);
 	}
 
 	/**
@@ -289,7 +214,7 @@ public abstract class Game implements Observer {
 				if (progress <= 0) {
 					this.stop();
 				} else {
-					progressBar.setProgress(progress);
+					ui.setProgress(progress);
 					for (Player p : level.getPlayers()) {
 						p.incrScore(TIME_BONUS);
 					}
@@ -297,11 +222,6 @@ public abstract class Game implements Observer {
 				}
 			}
 		}.start();
-	}
-
-
-	public Level getLevel() {
-		return level;
 	}
 
 	/**
@@ -342,28 +262,48 @@ public abstract class Game implements Observer {
 			public void handle(WorkerStateEvent event) {
 				if (currentLevel < levelList.size() - 1) {
 					currentLevel++;
-					levelLabel.setText((currentLevel + 1) + "");
+					ui.setLevelLabel(currentLevel);
 					newLevel();
 					timer.start();
 				} else {
 					// gameState = GameState.WON;
-					dLog.info("Game won!", DLog.Type.STATE);
+					dLog.info("GameUI won!", DLog.Type.STATE);
 					loadHighscores();
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Updates the amount of lives every gamestep.
 	 */
-	public abstract void updateLives();
+	public void updateLives() {
+		ui.setLives(getLives());
+	}
+
+	/**
+	 * Get amount of lives each player has. For single player,
+	 * return 0 for second player.
+	 * @return lives
+	 */
+	public abstract TupleTwo<Integer> getLives();
 	
 	/**
 	 * Updates the score every gamestep.
 	 */
-	public abstract void updateScore();
+	public void updateScore() {
+		ui.setScores(getScores());
+	}
+	/**
+	 * Get score of each player. For single player,
+	 * return 0 for second player.
+	 * @return scores
+	 */
+	public abstract TupleTwo<Integer> getScores();
 
+	/**
+	 * Construct new level.
+	 */
 	public abstract void newLevel();
 	
 	/**
@@ -376,7 +316,8 @@ public abstract class Game implements Observer {
 			level.stopTimer();
 			players = level.getPlayers();
 		}
-		level = new LevelFactory(levelList.get(currentLevel), canvas, type).build();
+		// TODO Remove canvas here.
+		level = new LevelFactory(levelList.get(currentLevel), ui.getCanvas(), type).build();
 		level.addObserver(this);
 		if (players != null) {
 			for (int i = 0; i < players.size(); i++) {
