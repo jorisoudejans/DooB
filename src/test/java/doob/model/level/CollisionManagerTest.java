@@ -174,10 +174,12 @@ public class CollisionManagerTest {
     @Test
     public void testProjectileVersusCeiling() {
         Player player = new Player(0, 0, 0, 0, null, null, null);
+        Wall wall = new Wall(0, 0, 960, 1);
         Projectile projectile = new Spike(player, 0, -10, -1);
         player.getProjectiles().add(projectile);
 
         when(level.getPlayers()).thenReturn(asList(player));
+        when(level.getWalls()).thenReturn(asList(wall));
 
         collisionManager.detectCollisions();
         verify(collisionResolver).projectileVersusCeiling(projectile);
