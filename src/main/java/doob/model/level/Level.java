@@ -96,7 +96,7 @@ public abstract class Level extends Observable {
      */
     public void shoot(Player player) {
         if (player.getProjectiles().size() < 1) {
-        	player.getProjectiles().add(new Spike(player, player.getX() + player.getWidth() / 2
+        	player.getProjectiles().add(new Spike(player, player.getXCoord() + player.getWidth() / 2
             		 - PROJECTILE_WIDTH, bounds.getHeight(), PROJECTILE_START_SPEED));
             dLog.info(player.toString() + " shot projectile.", DLog.Type.PLAYER_INTERACTION);
         }

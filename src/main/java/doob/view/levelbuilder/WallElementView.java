@@ -31,7 +31,7 @@ public class WallElementView extends BuilderElementView implements Observer {
 	
 	@Override
 	public void draw() {
-		gc.fillRect(we.getX(), we.getY(), we.getWidth(), we.getHeight());
+		gc.fillRect(we.getXCoord(), we.getYCoord(), we.getWidth(), we.getHeight());
 	}
 
 }

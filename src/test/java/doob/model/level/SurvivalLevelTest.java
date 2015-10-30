@@ -52,8 +52,8 @@ public class SurvivalLevelTest extends LevelTest {
     public void testSpawnSameSizeBalls1() {
         level.spawnSameSizeBalls(3, 32);
 
-        assertEquals((double) 250, level.getBalls().get(0).getX(), 1);
-        assertEquals((double) 750, level.getBalls().get(2).getX(), 1);
+        assertEquals((double) 250, level.getBalls().get(0).getXCoord(), 1);
+        assertEquals((double) 750, level.getBalls().get(2).getXCoord(), 1);
     }
 
     /**
@@ -64,7 +64,7 @@ public class SurvivalLevelTest extends LevelTest {
         level.spawnSameSizeBalls(2, 64);
 
         assertEquals(2, level.getBalls().size());
-        assertEquals((double) 250, level.getBalls().get(0).getY(), 1);
+        assertEquals((double) 250, level.getBalls().get(0).getYCoord(), 1);
     }
 
     /**

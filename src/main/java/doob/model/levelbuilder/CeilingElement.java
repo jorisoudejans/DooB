@@ -2,10 +2,10 @@ package doob.model.levelbuilder;
 
 import java.util.ArrayList;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.shape.Rectangle;
+
 
 
 
@@ -26,19 +26,22 @@ public class CeilingElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param y Y coordinate.
-	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public CeilingElement(double y, GraphicsContext gc) {
-		super(CEILING_X, y, gc);
+	public CeilingElement(double y) {
+		super(CEILING_X, y);
 		width = CEILING_WIDTH;
-		height = CEILING_HEIGHT;
+		height = CEILING_HEIGHT;		
+	}
+	
+	@Override
+	public void image() {
 		image = new Image(IMAGE_PATH);
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
-		setY(event.getY() - image.getHeight() / 2);
-		setX(0);
+		setYCoord(event.getY() - image.getHeight() / 2);
+		setXCoord(0);
 		change();
 	}
 

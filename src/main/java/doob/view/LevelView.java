@@ -120,7 +120,7 @@ public class LevelView implements Observer {
             if (player.isAlive()) {
                 player.draw(gc);
                 for (Projectile projectile : player.getProjectiles()) {
-                    gc.drawImage(projectile.getImg(), projectile.getX(), projectile.getY());
+                    gc.drawImage(projectile.getImg(), projectile.getXCoord(), projectile.getYCoord());
                     projectile.draw(gc);
                 }
             }

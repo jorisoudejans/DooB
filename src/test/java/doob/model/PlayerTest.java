@@ -45,8 +45,8 @@ public class PlayerTest extends DrawableTest {
     @Override
     public void testMove() {
         super.testMove(); // calls move() on drawable
-        assertEquals(PLAYER_INITIAL_X, player.getX()); // player hasn't moved from starting position
-        assertEquals(PLAYER_INITIAL_Y, player.getY());
+        assertEquals(PLAYER_INITIAL_X, player.getXCoord()); // player hasn't moved from starting position
+        assertEquals(PLAYER_INITIAL_Y, player.getYCoord());
     }
 
     /**
@@ -56,7 +56,7 @@ public class PlayerTest extends DrawableTest {
     public void testMoveNotY() {
         player.setSpeed(50);
         player.move();
-        assertEquals(PLAYER_INITIAL_Y, player.getY());
+        assertEquals(PLAYER_INITIAL_Y, player.getYCoord());
     }
 
     /**
@@ -66,7 +66,7 @@ public class PlayerTest extends DrawableTest {
     public void testMoveRight() {
         player.setSpeed(10);
         player.move();
-        assertEquals(310, player.getX());
+        assertEquals(310, player.getXCoord());
     }
 
     /**
@@ -76,7 +76,7 @@ public class PlayerTest extends DrawableTest {
     public void testMoveLeft() {
         player.setSpeed(-10);
         player.move();
-        assertEquals(290, player.getX());
+        assertEquals(290, player.getXCoord());
     }
 
     /**
@@ -87,7 +87,7 @@ public class PlayerTest extends DrawableTest {
         player.setSpeed(10);
         player.move();
         player.move();
-        assertEquals(320, player.getX());
+        assertEquals(320, player.getXCoord());
     }
 
     /**
@@ -101,7 +101,7 @@ public class PlayerTest extends DrawableTest {
         player.move();
         player.move();
         player.move();
-        assertEquals(350, player.getX());
+        assertEquals(350, player.getXCoord());
     }
 
     /**
@@ -116,7 +116,7 @@ public class PlayerTest extends DrawableTest {
         player.setSpeed(30);
         player.move();
         player.move();
-        assertEquals(390, player.getX());
+        assertEquals(390, player.getXCoord());
     }
 
     /**
@@ -132,7 +132,7 @@ public class PlayerTest extends DrawableTest {
         player.move();
         player.setSpeed(-10); // left
         player.move();
-        assertEquals(310, player.getX());
+        assertEquals(310, player.getXCoord());
     }
 
 

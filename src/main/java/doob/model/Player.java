@@ -17,8 +17,8 @@ public class Player implements Collidable, Drawable {
 
   private int width;
   private int height;
-  private int x;
-  private int y;
+  private int xCoord;
+  private int yCoord;
   private int speed;
   private int moveSpeed;
   private int lives;
@@ -66,8 +66,8 @@ public class Player implements Collidable, Drawable {
   public Player(int x, int y, int width, int height, Image imageS, Image imageL, Image imageR) {
     this.width = width;
     this.height = height;
-    this.x = x;
-    this.y = y;
+    this.xCoord = x;
+    this.yCoord = y;
     this.speed = 0;
     this.moveSpeed = START_SPEED;
     this.score = 0;
@@ -82,7 +82,7 @@ public class Player implements Collidable, Drawable {
 
   @Override
   public Shape getBounds() {
-    return new Rectangle(x, y, width, height);
+    return new Rectangle(xCoord, yCoord, width, height);
   }
 
   /**
@@ -101,7 +101,7 @@ public class Player implements Collidable, Drawable {
     if (speed < 0) {
       image = imageLeft;
     }
-    g.drawImage(image, x, y);
+    g.drawImage(image, xCoord, yCoord);
   }
 
   public int getWidth() {
@@ -112,23 +112,23 @@ public class Player implements Collidable, Drawable {
    * Moves the player by adding a certain speed to it's x position.
    */
   public void move() {
-    this.x = x + speed;
+    this.xCoord = xCoord + speed;
   }
 
   public void setSpeed(int speed) {
     this.speed = speed;
   }
 
-  public int getX() {
-    return x;
+  public int getXCoord() {
+    return xCoord;
   }
 
   public void setX(int x) {
-    this.x = x;
+    this.xCoord = x;
   }
 
-  public int getY() {
-    return y;
+  public int getYCoord() {
+    return yCoord;
   }
 
   public int getSpeed() {
@@ -201,7 +201,7 @@ public class Player implements Collidable, Drawable {
   @Override
   public String toString() {
     return "Player{"
-            + "x=" + x
+            + "x=" + xCoord
             + ", lives=" + lives + '}';
   }
 

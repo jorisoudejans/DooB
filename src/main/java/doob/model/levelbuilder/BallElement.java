@@ -2,10 +2,10 @@ package doob.model.levelbuilder;
 
 import java.util.ArrayList;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.shape.Rectangle;
+
 
 
 
@@ -27,27 +27,32 @@ public class BallElement extends DoobElement {
 	 * @param size Size of the ball.
 	 * @param speedX Horizontal speed of the ball.
 	 * @param speedY Initial Vertical speed of the ball.
-	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public BallElement(double x, double y, int size, int speedX, int speedY, GraphicsContext gc) {
-		super(x, y, gc);
+	public BallElement(double x, double y, int size, int speedX, int speedY) {
+		super(x, y);
 		this.size = size;
 		this.speedX = speedX;
 		this.speedY = speedY;
+	}
+	
+	@Override
+	public void image() {
 		this.image = new Image("/image/balls/ball" + size + ".png");
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
-		setX(event.getX() - image.getWidth() / 2);
-		setY(event.getY() - image.getHeight() / 2);
+		setXCoord(event.getX() - image.getWidth() / 2);
+		setYCoord(event.getY() - image.getHeight() / 2);
 		change();
 	}
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.xCoord && x < this.xCoord + this.size
-				&& y >= this.yCoord && y < this.yCoord + this.size);
+		return (x >= this.xCoord
+				&& x < this.xCoord + this.size
+				&& y >= this.yCoord 
+				&& y < this.yCoord + this.size);
 	}
 	
 	@Override

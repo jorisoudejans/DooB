@@ -2,11 +2,11 @@ package doob.model.levelbuilder;
 
 import java.util.ArrayList;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.shape.Rectangle;
 import doob.controller.LevelBuilderController;
+
 
 
 
@@ -23,25 +23,29 @@ public class PlayerElement extends DoobElement {
 
 	private int width;
 	private int height;
-	
+	private ArrayList<DoobElement> elementList;
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
-	 * @param gc The graphics object that can draw to the canvas.
 	 * @param elementList The list of elements on the canvas.
 ]	 */
-	public PlayerElement(double x, GraphicsContext gc, ArrayList<DoobElement> elementList) {
-		super(x, PLAYER_Y, gc);
+	public PlayerElement(double x, ArrayList<DoobElement> elementList) {
+		super(x, PLAYER_Y);
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
+		this.elementList = elementList;
+	}
+	
+	@Override
+	public void image() {
 		image = new Image("/image/character" + getAmount(elementList) + "_stand.png");
 		System.out.println(getAmount(elementList));
 	}
 	
 	@Override
 	public void drop(DragEvent event) {
-		setX(event.getX() - image.getWidth() / 2);
-		setY(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
+		setXCoord(event.getX() - image.getWidth() / 2);
+		setYCoord(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
 		change();
 	}
 	
@@ -78,8 +82,10 @@ public class PlayerElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.xCoord && x < this.xCoord + this.width
-				&& y >= this.yCoord && y < this.yCoord + this.height);
+		return (x >= this.xCoord 
+				&& x < this.xCoord + this.width
+				&& y >= this.yCoord 
+				&& y < this.yCoord + this.height);
 	}
 	
 	@Override

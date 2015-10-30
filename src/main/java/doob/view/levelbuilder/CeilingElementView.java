@@ -31,7 +31,7 @@ public class CeilingElementView extends BuilderElementView implements Observer {
 	
 	@Override
 	public void draw() {
-		gc.fillRect(ce.getX(), ce.getY(), ce.getWidth(), ce.getHeight());
+		gc.fillRect(ce.getXCoord(), ce.getYCoord(), ce.getWidth(), ce.getHeight());
 	}
 
 }

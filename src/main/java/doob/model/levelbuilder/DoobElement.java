@@ -2,7 +2,6 @@ package doob.model.levelbuilder;
 
 import java.util.Observable;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.shape.Rectangle;
@@ -15,7 +14,6 @@ public abstract class DoobElement extends Observable {
 	protected double xCoord;
 	protected double yCoord;
 	protected boolean placed;
-	protected GraphicsContext gc;
 	protected Image image;
 
 	/**
@@ -25,12 +23,10 @@ public abstract class DoobElement extends Observable {
 	 *            X coordinate.
 	 * @param yCoord
 	 *            Y coordinate.
-	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public DoobElement(double xCoord, double yCoord, GraphicsContext gc) {
+	public DoobElement(double xCoord, double yCoord) {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
-		this.gc = gc;
 		placed = false;
 	}
 
@@ -60,19 +56,19 @@ public abstract class DoobElement extends Observable {
 		notifyObservers();
 	}
 	
-	public double getX() {
+	public double getXCoord() {
 		return xCoord;
 	}
 
-	public double getY() {
+	public double getYCoord() {
 		return yCoord;
 	}
 
-	public void setX(double x) {
+	public void setXCoord(double x) {
 		this.xCoord = x;
 	}
 
-	public void setY(double y) {
+	public void setYCoord(double y) {
 		this.yCoord = y;
 	}
 
@@ -91,5 +87,10 @@ public abstract class DoobElement extends Observable {
 	public void setImage(Image image) {
 		this.image = image;
 	}
+	
+	/**
+	 * To set the image.
+	 */
+	public abstract void image();
 
 }

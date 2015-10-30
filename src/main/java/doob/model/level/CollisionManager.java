@@ -44,7 +44,7 @@ public class CollisionManager {
 	            	break;
 	            }
 	            for (final Projectile p : player.getProjectiles()) {
-	                if (p.getY() <= 0) {
+	                if (p.getYCoord() <= 0) {
 	                    callbacks.add(new CollisionCallback() {
 	                        @Override
 	                        public void perform() {

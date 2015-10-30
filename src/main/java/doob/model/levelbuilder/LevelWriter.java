@@ -66,9 +66,9 @@ public class LevelWriter {
 			Element pe = dom.createElement("player");
 			pe.setAttribute("id", Integer.toString(i + 1));
 			Element px = dom.createElement("x");
-			px.appendChild(dom.createTextNode(Integer.toString(p.getX())));
+			px.appendChild(dom.createTextNode(Integer.toString(p.getXCoord())));
 			Element py = dom.createElement("y");
-			py.appendChild(dom.createTextNode(Integer.toString(p.getY())));
+			py.appendChild(dom.createTextNode(Integer.toString(p.getYCoord())));
 			Element pw = dom.createElement("width");
 			pw.appendChild(dom.createTextNode(Integer.toString(p.getWidth())));
 			Element ph = dom.createElement("height");
@@ -100,9 +100,9 @@ public class LevelWriter {
 		we = dom.createElement("wall");
 		we.setAttribute("id", Integer.toString(i + 1));			
 		Element wx = dom.createElement("x");
-		wx.appendChild(dom.createTextNode(Integer.toString(w.getX())));
+		wx.appendChild(dom.createTextNode(Integer.toString(w.getXCoord())));
 		Element wy = dom.createElement("y");
-		wy.appendChild(dom.createTextNode(Integer.toString(w.getY())));
+		wy.appendChild(dom.createTextNode(Integer.toString(w.getYCoord())));
 		Element ww = dom.createElement("width");
 		ww.appendChild(dom.createTextNode(Integer.toString(w.getWidth())));
 		Element wh = dom.createElement("height");

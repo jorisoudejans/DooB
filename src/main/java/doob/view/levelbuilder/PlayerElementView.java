@@ -32,7 +32,7 @@ public class PlayerElementView extends BuilderElementView implements Observer {
 	
 	@Override
 	public void draw() {
-		gc.drawImage(new Image("/image/character0_stand.png"), pe.getX(), pe.getY());
+		gc.drawImage(new Image("/image/character0_stand.png"), pe.getXCoord(), pe.getYCoord());
 	}
 
 }
