@@ -40,7 +40,9 @@ public class CollisionManager {
         this.callbacks = new ArrayList<CollisionCallback>();
         for (Player player : level.getPlayers()) {
         	if (player.isAlive()) {
-	            detectCollision(player);
+	            if (detectCollision(player)) {
+	            	break;
+	            }
 	            for (final Projectile p : player.getProjectiles()) {
 	                if (p.getY() <= 0) {
 	                    callbacks.add(new CollisionCallback() {
@@ -67,7 +69,7 @@ public class CollisionManager {
      * Detects collisions for the current player.
      * @param player current
      */
-    private void detectCollision(Player player) {
+    private boolean detectCollision(Player player) {
         for (Wall w : level.getWalls()) { // playerVersusWall
             if (collides(player, w)) {
                 collisionResolver.playerVersusWall(player, w);
@@ -81,8 +83,10 @@ public class CollisionManager {
         for (Ball ball : level.getBalls()) {
             if (collides(player, ball)) {
                 collisionResolver.playerVersusBall(player, ball);
+                return true;
             }
         }
+        return false;
     }
 
     /**
