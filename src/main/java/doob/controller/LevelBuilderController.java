@@ -474,7 +474,7 @@ public class LevelBuilderController {
 			popup("Add at least one player!");
 			return false;
 		}
-		if (BallElement.getAmount(elementList) < 0) {
+		if (BallElement.getAmount(elementList) <= 0) {
 			popup("Add at least one ball!");
 			return false;
 		}
