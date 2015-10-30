@@ -36,7 +36,6 @@ public final class SoundManager {
 	 * @param path The path to the tune to play.
 	 */
 	public static void playSound(String path) {
-		System.out.println(volume);
 		soundEffect = new MediaPlayer(new Media(SoundManager.class.getResource(path).toString()));
 		soundEffect.setVolume(volume);
 		soundEffect.play();

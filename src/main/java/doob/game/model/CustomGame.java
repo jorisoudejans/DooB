@@ -2,20 +2,22 @@ package doob.game.model;
 
 import doob.App;
 import doob.controller.HighscoreMenuController;
+import doob.model.levelbuilder.LevelReader;
 import doob.util.TupleTwo;
 
 /**
  * Class to play a singleplayer game.
  */
-public class SinglePlayerGame extends Game {
+public class CustomGame extends Game {
 
 	/**
 	 * Load the list of single-player levels.
 	 */
 	public void initialize() {
-		initNormalGame("src/main/resources/Level/SinglePlayerLevels.xml");
+		LevelReader lr = new LevelReader();
+		initCustomGame(lr.makeCustomLevelList());
 	}
-
+	
 	@Override
 	public TupleTwo<Integer> getLives() {
 		return new TupleTwo<Integer>(
@@ -34,13 +36,13 @@ public class SinglePlayerGame extends Game {
 
 	@Override
 	public void newLevel() {
-		super.newLevel("single");
+		super.newLevel("customMode");
 	}
 
 	@Override
 	public void loadHighscores() {
 		HighscoreMenuController hsmc = App.loadScene("/FXML/HighscoreMenu.fxml").getController();
-		hsmc.updateTable("src/main/resources/Highscore/highscores.xml", "SinglePlayer Mode");
+		hsmc.updateTable("src/main/resources/Highscore/customhighscores.xml", "Custom Mode");
 		hsmc.insertScore(getScores().t0, 1);
 	}
 }

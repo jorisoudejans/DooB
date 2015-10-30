@@ -35,6 +35,10 @@ public class GameFactory {
             game = new SurvivalGame();
             path = PATH_SURVIVAL_MODE;
         }
+        if (type.equals("customMode")) {
+        	game = new CustomGame();
+            path = PATH_SINGLE_PLAYER;
+        }
         GameUI controller = App.loadScene(path).getController();
         game.setUI(controller);
         controller.setGame(game);
