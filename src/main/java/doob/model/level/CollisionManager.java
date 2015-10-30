@@ -44,14 +44,16 @@ public class CollisionManager {
 	            	break;
 	            }
 	            for (final Projectile p : player.getProjectiles()) {
-	                if (p.getYCoord() <= 0) {
-	                    callbacks.add(new CollisionCallback() {
-	                        @Override
-	                        public void perform() {
-	                            collisionResolver.projectileVersusCeiling(p);
-	                        }
-	                    });
-	                }
+	            	for (Wall w : level.getWalls()) {
+		                if (!w.equals(level.getFloor()) && collides(w, p)) {
+		                    callbacks.add(new CollisionCallback() {
+		                        @Override
+		                        public void perform() {
+		                            collisionResolver.projectileVersusCeiling(p);
+		                        }
+		                    });
+		                }
+	            	}
 	            }
         	}
         }
