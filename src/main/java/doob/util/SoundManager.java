@@ -42,25 +42,12 @@ public final class SoundManager {
 		soundEffect.play();
 	}
 	
-	/**
-	 * Because the volume scale is not linear the value of the volume slider has
-	 * to be converted to a convenient value.
-	 * @param xIn The value to be converted.
-	 * @return The right volume.
-	 */
-	private static double volumeFunction(double x) {
-		double a = x / SoundManager.MAX_VOLUME;
-		double b = Math.pow(SoundManager.MAX_VOLUME, a);
-		double c = b / SoundManager.MAX_VOLUME;
-		return c;
-	}
-	
 	public static double getVolume() {
 		return volume;
 	}
 	
 	public static void setVolume(double volume) {
-		SoundManager.volume = volumeFunction(volume);
+		SoundManager.volume = volume / MAX_VOLUME;
 	}
 
 }
