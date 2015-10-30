@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
  * Controller class for a popup in the levelbuilder.
@@ -33,6 +35,14 @@ public class InputPopup {
 	 */
 	public void setOnOK(EventHandler<ActionEvent> handler) {
 		popupOKButton.setOnAction(handler);
+		popupTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.ENTER) {
+					popupOKButton.fire();
+				}
+			}
+		});
 	}
 	
 	/**

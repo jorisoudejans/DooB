@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import doob.App;
@@ -69,7 +70,7 @@ public class HighscoreMenuController {
 		final Stage dialog = new Stage();
 		final InputPopup popup = App.popup(dialog,
 				"/FXML/InputPopup.fxml").getController();
-		String text = " Please enter the name of the level:";
+		String text = "Player " + player + " has a highscore! Enter your name:";
 		popup.setText(text);
 		popup.setOnOK(new EventHandler<ActionEvent>() {
 			@Override

@@ -6,6 +6,7 @@ import doob.model.Player;
 import doob.model.Projectile;
 import doob.model.Wall;
 import doob.model.powerup.PowerUp;
+import doob.util.SoundManager;
 import doob.util.TupleTwo;
 
 /**
@@ -211,6 +212,7 @@ public class CollisionResolver {
 		level.removeProjectile(projectile);
 		level.getPowerUpManager().spawnPowerups(ball.getXCoord(), ball.getYCoord());
 
+		SoundManager.playSound(SoundManager.POP_EFFECT);
 		handleDisappearingBall(ball);
 	}
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <options>
-	<sound>45</sound>
+	<volume>45</volume>
     <controls>
         <left>J</left>
         <right>L</right>

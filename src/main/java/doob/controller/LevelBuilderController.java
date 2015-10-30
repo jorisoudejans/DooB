@@ -29,7 +29,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import doob.App;
-import doob.levelBuilder.DoobElementView;
 import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
@@ -41,6 +40,7 @@ import doob.model.levelbuilder.PlayerElement;
 import doob.model.levelbuilder.WallElement;
 import doob.popup.DisplayPopup;
 import doob.popup.InputPopup;
+import doob.view.levelbuilder.DoobElementView;
 
 
 /**

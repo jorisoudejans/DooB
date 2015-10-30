@@ -31,7 +31,7 @@ public class OptionsController {
 	private KeyCode shoot;
 	//TODO are these necessary?
 
-	private int sound;
+	private double volume;
 
 	/**
 	 * Constructor.
@@ -55,7 +55,7 @@ public class OptionsController {
 			doc.getDocumentElement().normalize();
 
 			parseControls(doc);
-			parseSound(doc);
+			parseVolume(doc);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,13 +85,13 @@ public class OptionsController {
 	}
 
 	/**
-	 * Parses the sound level from the XML.
+	 * Parses the volume level from the XML.
 	 * @param doc The document to be parsed.
 	 */
-	public void parseSound(Document doc) {
-		NodeList nListBall = doc.getElementsByTagName("sound");
+	public void parseVolume(Document doc) {
+		NodeList nListBall = doc.getElementsByTagName("volume");
 		Node nNode = nListBall.item(0);
-		this.sound = Integer.parseInt(nNode.getTextContent());
+		this.volume = Double.parseDouble(nNode.getTextContent());
 	}
 
 	/**
@@ -123,9 +123,9 @@ public class OptionsController {
 		Element rootElement = doc.createElement("options");
 		doc.appendChild(rootElement);
 		
-		Element sound = doc.createElement("sound");
-		sound.appendChild(doc.createTextNode(Integer.toString(this.sound)));
-		rootElement.appendChild(sound);
+		Element volumeEl = doc.createElement("volume");
+		volumeEl.appendChild(doc.createTextNode(Double.toString(this.volume)));
+		rootElement.appendChild(volumeEl);
 
 		Element controls = doc.createElement("controls");
 		rootElement.appendChild(controls);
@@ -176,8 +176,8 @@ public class OptionsController {
 		return shoot;
 	}
 
-	public int getSound() {
-		return sound;
+	public double getVolume() {
+		return volume;
 	}
 
 	public void setLeft(KeyCode left) {
@@ -192,7 +192,7 @@ public class OptionsController {
 		this.shoot = shoot;
 	}
 
-	public void setSound(int sound) {
-		this.sound = sound;
+	public void setVolume(double volume) {
+		this.volume = volume;
 	}
 }
