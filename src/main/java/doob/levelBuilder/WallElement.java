@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.DragEvent;
+import javafx.scene.shape.Rectangle;
 
 
 
@@ -47,6 +48,11 @@ public class WallElement extends DoobElement {
 	public boolean liesInside(double x, double y) {
 		return (x >= this.xCoord && x < this.xCoord + this.width
 				&& y >= this.yCoord && y < this.yCoord + this.height);
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(xCoord, yCoord, width, height);
 	}
 	
 	/**

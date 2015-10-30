@@ -5,6 +5,7 @@ import java.util.Observable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Superclass of all drawingelements.
@@ -48,6 +49,8 @@ public abstract class DoobElement extends Observable {
 	 * @return whether it lies inside
 	 */
 	public abstract boolean liesInside(double x, double y);
+	
+	public abstract Rectangle getBounds();
 	
 	/**
 	 * Pretend the object is changed and notify all observers.

@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -414,8 +415,8 @@ public class LevelBuilderController {
 		final ArrayList<Wall> wallList = parseWalls();
 		final ArrayList<Player> playerList = parsePlayers();
 		final Stage dialog = new Stage();
-		final InputPopup popup = App.popup(dialog,
-				"/FXML/InputPopup.fxml").getController();
+		final InputPopup popup = App.popup(dialog, "/FXML/InputPopup.fxml")
+				.getController();
 		String text = "Please enter the name of the level:";
 		popup.setText(text);
 		popup.setOnOK(new EventHandler<ActionEvent>() {
@@ -424,8 +425,8 @@ public class LevelBuilderController {
 				String name = popup.getInput();
 				if (name.length() > 0) {
 					try {
-						new LevelWriter(ballList, wallList, playerList,
-								Integer.parseInt(timeField.getText()), name)
+						new LevelWriter(ballList, wallList, playerList, Integer
+								.parseInt(timeField.getText()), name)
 								.saveToFXML();
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -452,10 +453,11 @@ public class LevelBuilderController {
 		}
 		return ballList;
 	}
-	
+
 	/**
-	 * Check if all constraints for the level are met.
-	 * If not show a message popup with the constraint failure.
+	 * Check if all constraints for the level are met. If not show a message
+	 * popup with the constraint failure.
+	 * 
 	 * @return True if the level is valid, False else.
 	 */
 	public boolean validLevel() {
@@ -468,8 +470,35 @@ public class LevelBuilderController {
 			popup.setDefaultOnOK(dialog);
 			return false;
 		}
-		// Possibly more constraints
+		if (overlapping()) {
+			final Stage dialog = new Stage();
+			final DisplayPopup popup = App.popup(dialog,
+					"/FXML/DisplayPopup.fxml").getController();
+			String text = "Elements can not overlap";
+			popup.setText(text);
+			popup.setDefaultOnOK(dialog);
+			return false;
+		}
 		return true;
+	}
+
+	/**
+	 * Checks if 2 elements that are not allowed to overlap are overlapping.
+	 * @return True if 2 elements are overlapping, False else.
+	 */
+	public boolean overlapping() {
+		for (DoobElement el1 : elementList) {
+			for (DoobElement el2 : elementList) {
+				if (el1 != el2 && (el1 instanceof PlayerElement || el1 instanceof BallElement)) {
+					Bounds bound1 = el1.getBounds().getBoundsInParent();
+					Bounds bound2 = el2.getBounds().getBoundsInParent();
+					if (bound1.intersects(bound2)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

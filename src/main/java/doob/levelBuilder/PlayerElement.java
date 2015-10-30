@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
+import javafx.scene.shape.Rectangle;
 
 
 
@@ -78,5 +79,10 @@ public class PlayerElement extends DoobElement {
 	public boolean liesInside(double x, double y) {
 		return (x >= this.xCoord && x < this.xCoord + this.width
 				&& y >= this.yCoord && y < this.yCoord + this.height);
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(xCoord, yCoord, width, height);
 	}
 }
