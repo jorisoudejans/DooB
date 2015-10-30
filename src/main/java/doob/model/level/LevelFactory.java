@@ -1,28 +1,32 @@
 package doob.model.level;
 
-import doob.controller.LevelController;
-import doob.model.*;
-import doob.util.BoundsTuple;
-import doob.view.LevelView;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import doob.controller.LevelController;
+import doob.model.Ball;
+import doob.model.Player;
+import doob.model.Wall;
+import doob.util.BoundsTuple;
+import doob.view.LevelView;
+
 /**
  * Class for parsing levels.
  */
 public class LevelFactory {
-
 
     public static final int NUMBER_OF_PLAYER_IMAGES = 3;
 
