@@ -1,5 +1,6 @@
 package doob.model;
 
+import doob.model.level.Level;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

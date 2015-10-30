@@ -1,5 +1,6 @@
 package doob.levelBuilder;
 
+import doob.model.levelbuilder.LevelReader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

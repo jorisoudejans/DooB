@@ -3,6 +3,7 @@ package doob.levelBuilder;
 import doob.model.Ball;
 import doob.model.Player;
 import doob.model.Wall;
+import doob.model.levelbuilder.LevelWriter;
 import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

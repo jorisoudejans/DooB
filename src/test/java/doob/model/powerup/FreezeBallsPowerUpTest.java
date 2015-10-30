@@ -1,6 +1,5 @@
 package doob.model.powerup;
 
-import doob.model.Level;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
