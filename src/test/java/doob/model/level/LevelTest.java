@@ -1,13 +1,12 @@
 package doob.model.level;
 
-import doob.model.level.Level;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for Level.
@@ -35,9 +34,9 @@ public abstract class LevelTest {
      */
     @Test
     public void testFreeze() {
-        getLevel().freeze(new EventHandler<WorkerStateEvent>() {
+        getLevel().freeze(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(WorkerStateEvent event) {
+            public void handle(ActionEvent event) {
                 called = true;
             }
         });

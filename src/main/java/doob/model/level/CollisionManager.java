@@ -40,7 +40,9 @@ public class CollisionManager {
         this.callbacks = new ArrayList<CollisionCallback>();
         for (Player player : level.getPlayers()) {
         	if (player.isAlive()) {
-	            detectCollision(player);
+	            if (detectCollision(player)) {
+	            	break;
+	            }
 	            for (final Projectile p : player.getProjectiles()) {
 	                if (p.getY() <= 0) {
 	                    callbacks.add(new CollisionCallback() {
@@ -54,7 +56,9 @@ public class CollisionManager {
         	}
         }
         for (Ball ball : level.getBalls()) {
-            detectCollision(ball);
+            if (detectCollision(ball)) {
+            	break;
+            }
         }
         for (CollisionCallback callback : callbacks) {
             callback.perform();
@@ -65,7 +69,7 @@ public class CollisionManager {
      * Detects collisions for the current player.
      * @param player current
      */
-    private void detectCollision(Player player) {
+    private boolean detectCollision(Player player) {
         for (Wall w : level.getWalls()) { // playerVersusWall
             if (collides(player, w)) {
                 collisionResolver.playerVersusWall(player, w);
@@ -79,15 +83,17 @@ public class CollisionManager {
         for (Ball ball : level.getBalls()) {
             if (collides(player, ball)) {
                 collisionResolver.playerVersusBall(player, ball);
+                return true;
             }
         }
+        return false;
     }
 
     /**
      * Detects collisions for the current ball.
      * @param ball current ball to be checked for collisions
      */
-    private void detectCollision(final Ball ball) {
+    private boolean detectCollision(final Ball ball) {
         for (final Wall w : level.getWalls()) { // ballVersusWall
             if (collides(ball, w)) {
                 callbacks.add(new CollisionCallback() {
@@ -108,10 +114,12 @@ public class CollisionManager {
 		                        collisionResolver.ballVersusProjectile(ball, p);
 		                    }
 		                });
+		                return true;
 		            }
 		        }
         	}
         }
+        return false;
     }
 
     private boolean collides(Collidable c1, Collidable c2) {

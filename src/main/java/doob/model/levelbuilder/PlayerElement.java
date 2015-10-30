@@ -1,7 +1,12 @@
 package doob.model.levelbuilder;
 
+import java.util.ArrayList;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
+import javafx.scene.shape.Rectangle;
 import doob.controller.LevelBuilderController;
-import javafx.scene.input.MouseEvent;
 
 
 
@@ -22,16 +27,37 @@ public class PlayerElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
+	 * @param gc The graphics object that can draw to the canvas.
+	 * @param elementList The list of elements on the canvas.
 ]	 */
-	public PlayerElement(double x) {
-		super(x, PLAYER_Y);
+	public PlayerElement(double x, GraphicsContext gc, ArrayList<DoobElement> elementList) {
+		super(x, PLAYER_Y, gc);
 		width = PLAYER_WIDTH;
 		height = PLAYER_HEIGHT;
+		image = new Image("/image/character" + getAmount(elementList) + "_stand.png");
+		System.out.println(getAmount(elementList));
 	}
 	
 	@Override
-	public void handleDrag(MouseEvent event) {
-		setX(event.getSceneX() - LevelBuilderController.PANE_X - PlayerElement.PLAYER_WIDTH / 2);
+	public void drop(DragEvent event) {
+		setX(event.getX() - image.getWidth() / 2);
+		setY(LevelBuilderController.PANE_HEIGHT - PLAYER_HEIGHT - 1);
+		change();
+	}
+	
+	/**
+	 * Return the amount of elements of this class in the given list.
+	 * @param elementList The list where to check the amount of elements from.
+	 * @return The amount of elements of this class in the list.
+	 */
+	public static int getAmount(ArrayList<DoobElement> elementList) {
+		int res = 0;
+		for (DoobElement el : elementList) {
+			if (el instanceof PlayerElement) {
+				res++;
+			}
+		}
+		return res;
 	}
 
 	public int getWidth() {
@@ -52,7 +78,12 @@ public class PlayerElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.x && x < this.x + this.width
-				&& y >= this.y && y < this.y + this.height);
+		return (x >= this.xCoord && x < this.xCoord + this.width
+				&& y >= this.yCoord && y < this.yCoord + this.height);
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(xCoord, yCoord, width, height);
 	}
 }

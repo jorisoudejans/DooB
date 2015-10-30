@@ -1,7 +1,10 @@
 package doob.model.levelbuilder;
 
-import doob.controller.LevelBuilderController;
-import javafx.scene.input.MouseEvent;
+import java.util.ArrayList;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.DragEvent;
+import javafx.scene.shape.Rectangle;
 
 
 
@@ -22,16 +25,19 @@ public class WallElement extends DoobElement {
 	/**
 	 * Constructor.
 	 * @param x X coordinate.
+	 * @param gc The graphics object that can draw to the canvas.
 	 */
-	public WallElement(double x) {
-		super(x, WALL_Y);
+	public WallElement(double x, GraphicsContext gc) {
+		super(x, WALL_Y, gc);
 		width = WALL_WIDTH;
 		height = WALL_HEIGHT;
 	}
 	
 	@Override
-	public void handleDrag(MouseEvent event) {
-		setX(event.getSceneX() - LevelBuilderController.PANE_X - WallElement.WALL_WIDTH / 2);
+	public void drop(DragEvent event) {
+		setX(event.getX() - image.getWidth() / 2);
+		setY(0);
+		change();
 	}
 
 	public int getWidth() {
@@ -40,8 +46,28 @@ public class WallElement extends DoobElement {
 
 	@Override
 	public boolean liesInside(double x, double y) {
-		return (x >= this.x && x < this.x + this.width
-				&& y >= this.y && y < this.y + this.height);
+		return (x >= this.xCoord && x < this.xCoord + this.width
+				&& y >= this.yCoord && y < this.yCoord + this.height);
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle(xCoord, yCoord, width, height);
+	}
+	
+	/**
+	 * Return the amount of elements of this class in the given list.
+	 * @param elementList The list where to check the amount of elements from.
+	 * @return The amount of elements of this class in the list.
+	 */
+	public static int getAmount(ArrayList<DoobElement> elementList) {
+		int res = 0;
+		for (DoobElement el : elementList) {
+			if (el instanceof WallElement) {
+				res++;
+			}
+		}
+		return res;
 	}
 
 	public void setWidth(int width) {

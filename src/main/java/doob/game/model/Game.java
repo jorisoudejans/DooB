@@ -1,6 +1,23 @@
 package doob.game.model;
 
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import doob.App;
 import doob.DLog;
 import doob.controller.OptionsController;
@@ -9,20 +26,6 @@ import doob.model.Player;
 import doob.model.level.Level;
 import doob.model.level.LevelFactory;
 import doob.util.TupleTwo;
-import javafx.animation.AnimationTimer;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
@@ -197,6 +200,14 @@ public abstract class Game implements Observer {
 				}
 			}
 			update(null, Level.Event.LOST_LIFE);
+			level.freeze(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                level.continueNextLevel();
+	                dLog.info("Lost a life", DLog.Type.STATE);
+	                level.startTimer();
+	            }
+	        });
 			return;
 		}
 		ui.setProgress(progress);
@@ -235,13 +246,13 @@ public abstract class Game implements Observer {
 			Level.Event event = (Level.Event) arg;
 			switch (event) {
 				case ZERO_LIVES:
-					//App.loadHighscoreScene(score, score2, gameMode);
+					onZeroLives();
 					break;
 				case ALL_BALLS_GONE:
 					onAllBallsGone();
 					break;
 				case LOST_LIFE:
-					newLevel();
+					onLostLife();
 					break;
 				default:
 					break;
@@ -257,9 +268,9 @@ public abstract class Game implements Observer {
 		dLog.info("Level " + (currentLevel + 1) + " completed!",
 				DLog.Type.STATE);
 		timer.stop();
-		level.freeze(new EventHandler<WorkerStateEvent>() {
+		level.freeze(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(WorkerStateEvent event) {
+			public void handle(ActionEvent event) {
 				if (currentLevel < levelList.size() - 1) {
 					currentLevel++;
 					ui.setLevelLabel(currentLevel);
@@ -274,6 +285,33 @@ public abstract class Game implements Observer {
 		});
 	}
 
+	/**
+	 * Handle gameStateChange zero lives.
+	 */
+	public void onZeroLives() {
+		dLog.info("Game over!", DLog.Type.STATE);
+		level.stopTimer();
+		level.freeze(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				loadHighscores();
+			}
+		});
+	}
+	
+	/**
+	 * Handle gameStateChange lost a life.
+	 */
+	public void onLostLife() {
+		level.stopTimer();
+		level.freeze(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				newLevel();
+			}
+		});
+	}
+	
 	/**
 	 * Updates the amount of lives every gamestep.
 	 */
