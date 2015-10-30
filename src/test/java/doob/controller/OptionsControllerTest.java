@@ -49,9 +49,9 @@ public class OptionsControllerTest {
 
             OptionsController oc = new OptionsController("test");
 
-            oc.parseSound(doc);
+            oc.parseVolume(doc);
 
-            assertEquals(87, oc.getSound());
+            assertTrue(87 == oc.getVolume());
 
         }catch(Exception e){
             e.printStackTrace();
@@ -71,7 +71,8 @@ public class OptionsControllerTest {
         assertEquals(KeyCode.J, oc.getLeft());
         assertEquals(KeyCode.L, oc.getRight());
         assertEquals(KeyCode.I, oc.getShoot());
-        assertEquals(45, oc.getSound());
+        System.out.println(oc.getVolume());
+        assertTrue(45 == oc.getVolume());
 
     }
 }
