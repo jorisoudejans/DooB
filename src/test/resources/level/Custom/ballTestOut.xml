@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<level>
+    <time>0</time>
+    <ballList>
+        <ball id="0">
+            <x>400</x>
+            <y>500</y>
+            <speedX>4</speedX>
+            <speedY>2</speedY>
+            <size>64</size>
+        </ball>
+        <ball id="1">
+            <x>100</x>
+            <y>100</y>
+            <speedX>-8</speedX>
+            <speedY>0</speedY>
+            <size>256</size>
+        </ball>
+    </ballList>
+</level>

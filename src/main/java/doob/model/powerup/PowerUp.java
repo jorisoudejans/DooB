@@ -13,14 +13,14 @@ import javafx.scene.shape.Shape;
 public abstract class PowerUp implements Collidable {
 
 	// Chances
-	public static final float CHANCE_TIME = 0.02f;
-	public static final float CHANCE_LIFE = 0.01f;
-	public static final float CHANCE_POINTS = 0.02f;
-	public static final float CHANCE_PROTECT_ONCE = 0.02f;
-	public static final float CHANCE_FREEZE_BALLS = 0.02f;
+	public static final float CHANCE_TIME = 0.03f;
+	public static final float CHANCE_LIFE = 0.004f;
+	public static final float CHANCE_POINTS = 0.08f;
+	public static final float CHANCE_PROTECT_ONCE = 0.008f;
+	public static final float CHANCE_FREEZE_BALLS = 0.004f;
 	public static final float CHANCE_PLAYER_SPEED = 0.02f;
-	public static final float CHANCE_PROJECTILE_SPEED = 0.02f;
-	public static final float CHANCE_PROJECTILE_FREEZE = 0.02f;
+	public static final float CHANCE_PROJECTILE_SPEED = 0.03f;
+	public static final float CHANCE_PROJECTILE_FREEZE = 0.03f;
 
 	public static final int DEFAULT_WAIT_CYCLES = 500;
 
