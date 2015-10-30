@@ -256,6 +256,10 @@ public class CollisionResolver {
 		} else if (walls.t1 == level.getRight()) {
 			walls.t0.setOpen(true);
 		}
+		if (level.getBalls().size() == 0 && !(level instanceof SurvivalLevel)) {
+			level.onEvent(Level.Event.ALL_BALLS_GONE);
+			dLog.info("All balls gone", DLog.Type.STATE);				
+		}
 
 	}
 
