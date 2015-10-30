@@ -212,9 +212,9 @@ public class LevelFactory {
     public Level build() {
 
         parseXML();
-
-        Level level;
-        if (type.equals("coop") || type.equals("duel") || type.equals("single")) {
+        Level level = null;
+        if (type.equals("coop") || type.equals("duel") || type.equals("single")
+        		|| type.equals("customMode")) {
             level = new CampaignLevel(bounds);
         } else {
             level = new SurvivalLevel(bounds);
