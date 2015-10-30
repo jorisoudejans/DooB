@@ -5,6 +5,7 @@ import com.sun.javafx.robot.FXRobotFactory;
 import doob.controller.LevelController;
 import doob.controller.MenuController;
 import doob.game.SinglePlayerGame;
+import doob.model.Player;
 import doob.model.level.Level;
 import javafx.application.Application;
 import javafx.event.EventType;
@@ -48,7 +49,7 @@ public class AppSmokeTest {
                 App.launch(App.class);
             }
         }).start();
-        Thread.sleep(200);
+        Thread.sleep(1000);
     }
 
     @Before
@@ -82,9 +83,12 @@ public class AppSmokeTest {
 
         Thread.sleep(500);
 
-        Scene scene = App.getStage().getScene();
+        Level level = gameController.getLevel();
+        Player p1 = level.getPlayers().get(0);
+        p1.setMoveSpeed(10);
 
-        FXRobot robot = FXRobotFactory.createRobot(scene);
-        robot.keyPress(KeyCode.KP_RIGHT);
+        for (int i = 0; i < 100; i++) {
+            p1.move();
+        }
     }
 }
